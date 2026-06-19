@@ -1,0 +1,36 @@
+import { createApp } from './app';
+import { env } from './config/env';
+import { logger } from './lib/logger';
+import { startJobWorker } from './modules/decks/jobs.worker';
+import { connectDB, disconnectDB } from './lib/db';
+
+async function main(): Promise<void> {
+  await connectDB();
+
+  const app = createApp();
+  const server = app.listen(env.port, () => {
+    logger.info(
+      { port: env.port, env: env.nodeEnv },
+      'YDeck main server started'
+    );
+  });
+
+  // background worker for advancing deck jobs (in-memory MVP)
+  const stopWorker = startJobWorker();
+
+  const shutdown = async (sig: string): Promise<void> => {
+    logger.info({ sig }, 'Shutting down');
+    stopWorker();
+    server.close(() => logger.info('HTTP server closed'));
+    await disconnectDB();
+    process.exit(0);
+  };
+  process.on('SIGINT', () => void shutdown('SIGINT'));
+  process.on('SIGTERM', () => void shutdown('SIGTERM'));
+}
+
+main().catch((err) => {
+  // eslint-disable-next-line no-console
+  console.error('Fatal startup error', err);
+  process.exit(1);
+});
