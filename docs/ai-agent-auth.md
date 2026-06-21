@@ -37,7 +37,7 @@ Relevant current endpoints:
 
 ## LLM Provider Configuration
 
-The main server owns the API key for the primary cloud LLM. The agent loop should call the provider through the server-side LLM abstraction, not from a browser or user device.
+The main server owns the API key for the primary cloud LLM. The agent loop should call the provider through the server-side LLM abstraction, not from a browser or user device. DeepSeek is the preferred default provider; OpenAI and Gemini remain supported alternatives.
 
 Supported values:
 
@@ -50,6 +50,8 @@ Supported values:
 | `LLM_PROVIDER=mock` | Use deterministic mock output for non-production testing |
 
 Production should set exactly one active provider and keep provider API keys in server-side secret storage. These keys are not user credentials and must not be returned through device context, auth responses, logs, or client-facing APIs.
+
+For local debugging, `LLM_STREAM_OUTPUT=true` and `LLM_LOG_OUTPUT=true` print provider output to server stdout as it arrives. Disable `LLM_LOG_OUTPUT` in environments where prompts or generated deck content may contain private customer data.
 
 ## Recommended Architecture
 
@@ -519,13 +521,17 @@ Current relevant main server environment variables:
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `LLM_PROVIDER` | `mock` | Main LLM provider: `openai`, `gemini`, `deepseek`, `openai-compatible`, or `mock` |
+| `PORT` | `2026` | Main server HTTP port for local/development runs |
+| `LLM_PROVIDER` | `deepseek` | Main LLM provider: `deepseek`, `openai`, `gemini`, `openai-compatible`, or `mock` |
 | `OPENAI_API_KEY` | none | OpenAI API key when `LLM_PROVIDER=openai` |
 | `OPENAI_MODEL` | `gpt-4.1-mini` | OpenAI model used by the cloud deck agent |
 | `GEMINI_API_KEY` | none | Gemini API key when `LLM_PROVIDER=gemini` |
 | `GEMINI_MODEL` | `gemini-2.5-flash` | Gemini model used by the cloud deck agent |
 | `DEEPSEEK_API_KEY` | none | DeepSeek API key when `LLM_PROVIDER=deepseek` |
 | `DEEPSEEK_MODEL` | `deepseek-v4-flash` | DeepSeek model used by the cloud deck agent |
+| `LLM_STREAM_OUTPUT` | `true` | Requests streaming output from supported providers |
+| `LLM_LOG_OUTPUT` | `true` | Prints raw LLM output to server stdout for debugging |
+| `AGENT_FLOW_LOG_OUTPUT` | `true` in non-production | Prints agentic send/receive traces for job input, LLM prompts/responses, tool calls/results, fallback saves, and job completion |
 | `LLM_BASE_URL` | none | Base URL for `openai-compatible` providers |
 | `LLM_API_KEY` | none | API key for `openai-compatible` providers |
 | `LLM_MODEL` | `ydeck-cloud-agent` | Model name for `openai-compatible` providers |

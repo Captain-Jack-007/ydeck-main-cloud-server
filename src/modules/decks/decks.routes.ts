@@ -9,6 +9,8 @@ import { ApiError } from "../../lib/errors";
 import { isObjectId } from "../../lib/ids";
 import { jobBus, type JobEvent } from "./jobs.events";
 import { recordUsage } from "../usage/usage.service";
+import { effectiveCloudConfig } from "../agents/cloudLlm";
+import { ensureCloudDeckHtml, type CloudDeckArtifact } from "../agents/tools/cloudDeck.tools";
 import {
   DeckJobModel,
   DeckProjectModel,
@@ -33,11 +35,45 @@ const createJobSchema = z.object({
   type: z.enum(["generate", "refine", "export", "share"]),
   inputParams: z.record(z.string(), z.unknown()).optional(),
   pipeline: z.enum(["agentic", "mock"]).optional(),
+  mode: z.enum(["cloud"]).optional(),
+});
+
+const listProjectsQuerySchema = z.object({
+  workspaceId: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  cursor: z.string().optional(),
 });
 
 decksRouter.use(requireUser);
 
 // ----- projects -----
+decksRouter.get(
+  "/projects",
+  asyncHandler(async (req, res) => {
+    const parsed = listProjectsQuerySchema.safeParse(req.query);
+    if (!parsed.success) throw ApiError.badRequest("Invalid projects query", parsed.error.issues);
+
+    const workspaceIds = await listReadableWorkspaceIds(req.auth!.userId, parsed.data.workspaceId);
+    const query: Record<string, unknown> = { workspaceId: { $in: workspaceIds } };
+    if (parsed.data.cursor) {
+      const cursorDate = new Date(parsed.data.cursor);
+      if (!Number.isNaN(cursorDate.getTime())) query.updatedAt = { $lt: cursorDate };
+    }
+
+    const projects = await DeckProjectModel.find(query)
+      .sort({ updatedAt: -1, _id: -1 })
+      .limit(parsed.data.limit + 1);
+    const page = projects.slice(0, parsed.data.limit);
+    const summaries = await Promise.all(page.map((project) => projectSummary(project)));
+    const next = projects.length > parsed.data.limit ? projects[parsed.data.limit] : null;
+
+    res.json({
+      projects: summaries,
+      nextCursor: next ? (next as unknown as { updatedAt: Date }).updatedAt.toISOString() : null,
+    });
+  }),
+);
+
 decksRouter.get(
   "/workspaces/:workspaceId/projects",
   requireWorkspaceRole("viewer"),
@@ -71,7 +107,26 @@ decksRouter.get(
   "/projects/:projectId",
   asyncHandler(async (req, res) => {
     const project = await loadProjectWithAccess(req.params.projectId, req.auth!.userId);
-    res.json(project.toJSON());
+    res.json(await projectDetail(project));
+  }),
+);
+
+decksRouter.get(
+  "/decks/:deckId",
+  asyncHandler(async (req, res) => {
+    const project = await loadProjectWithAccess(req.params.deckId, req.auth!.userId);
+    res.json(await projectDetail(project));
+  }),
+);
+
+decksRouter.get(
+  "/decks/:deckId/json",
+  asyncHandler(async (req, res) => {
+    const project = await loadProjectWithAccess(req.params.deckId, req.auth!.userId);
+    const meta = projectMeta(project);
+    const artifact = normalizeDeckArtifactForResponse(meta.deckArtifact);
+    if (!artifact) throw ApiError.notFound("Deck artifact not found");
+    res.json(artifact);
   }),
 );
 
@@ -105,6 +160,7 @@ decksRouter.post(
   asyncHandler(async (req, res) => {
     const project = await loadProjectWithAccess(req.params.projectId, req.auth!.userId, "editor");
     const workspaceId = String(project.workspaceId);
+    const cloud = await effectiveCloudConfig();
     const job = await DeckJobModel.create({
       projectId: project.id,
       workspaceId,
@@ -114,6 +170,9 @@ decksRouter.post(
       inputParams: {
         ...(req.body.inputParams ?? {}),
         pipeline: req.body.pipeline ?? "agentic",
+        mode: req.body.mode ?? "cloud",
+        cloudProvider: cloud.llmProvider,
+        cloudModel: cloud.llmProvider === "mock" ? "mock" : cloud.models[cloud.llmProvider],
       },
     });
     await recordUsage(workspaceId, `deck.job.${req.body.type}`, 1);
@@ -137,6 +196,12 @@ decksRouter.post(
       throw ApiError.badRequest("Job is already in a terminal state");
     }
     job.status = "canceled";
+    job.resultMeta = {
+      ...(typeof job.resultMeta === "object" && job.resultMeta !== null && !Array.isArray(job.resultMeta) ? job.resultMeta : {}),
+      stoppedBy: "user",
+      stoppedAt: new Date().toISOString(),
+      canContinue: true,
+    };
     job.finishedAt = new Date();
     await job.save();
     jobBus.emitJob({ jobId: job.id, status: job.status, progress: job.progress, at: new Date().toISOString() });
@@ -156,7 +221,26 @@ decksRouter.get(
     res.flushHeaders?.();
 
     const send = (event: JobEvent): void => {
-      res.write(`data: ${JSON.stringify(event)}\n\n`);
+      if (event.channel) {
+        res.write(
+          `data: ${JSON.stringify({
+            type: event.channel,
+            data: event.payload ?? {
+              jobId: event.jobId,
+              status: event.status,
+              progress: event.progress,
+              errorMessage: event.errorMessage,
+            },
+          })}\n\n`,
+        );
+        return;
+      }
+      res.write(
+        `data: ${JSON.stringify({
+          type: "job.status",
+          data: event,
+        })}\n\n`,
+      );
     };
 
     // send current snapshot first
@@ -209,4 +293,89 @@ async function assertMembership(workspaceId: string, userId: string, minRole: st
   const m = await WorkspaceMemberModel.findOne({ workspaceId, userId });
   if (!m) throw ApiError.forbidden("Not a member of this workspace");
   if (RANK[m.role] < RANK[minRole]) throw ApiError.forbidden(`Role '${minRole}' or higher required`);
+}
+
+async function listReadableWorkspaceIds(userId: string, requested?: string): Promise<string[]> {
+  if (requested) {
+    if (!isObjectId(requested)) throw ApiError.badRequest("Invalid workspaceId");
+    await assertMembership(requested, userId, "viewer");
+    return [requested];
+  }
+  const memberships = await WorkspaceMemberModel.find({ userId }).select("workspaceId");
+  return memberships.map((m) => String(m.workspaceId));
+}
+
+async function projectSummary(project: DeckProjectDoc) {
+  const latestJob = await DeckJobModel.findOne({ projectId: project.id })
+    .sort({ createdAt: -1 })
+    .select("status progress type resultMeta errorMessage inputParams createdAt updatedAt")
+    .lean();
+  const meta = projectMeta(project);
+  const artifact = deckArtifact(meta, latestJob?.resultMeta);
+
+  return {
+    ...project.toJSON(),
+    status: latestJob?.status ?? (artifact ? "done" : "draft"),
+    progress: latestJob?.progress ?? (artifact ? 100 : 0),
+    lastJobId: latestJob ? String(latestJob._id) : meta.lastJobId ?? null,
+    meta: enrichProjectMeta(meta, artifact, latestJob?.inputParams, latestJob?.resultMeta),
+  };
+}
+
+async function projectDetail(project: DeckProjectDoc) {
+  return projectSummary(project);
+}
+
+function projectMeta(project: DeckProjectDoc): Record<string, unknown> {
+  return typeof project.meta === "object" && project.meta !== null
+    ? { ...(project.meta as Record<string, unknown>) }
+    : {};
+}
+
+function deckArtifact(projectMetaValue: Record<string, unknown>, resultMeta?: unknown): Record<string, unknown> | null {
+  const projectArtifact = normalizeDeckArtifactForResponse(projectMetaValue.deckArtifact);
+  if (projectArtifact) return projectArtifact;
+  const resultArtifact = isRecord(resultMeta) ? normalizeDeckArtifactForResponse(resultMeta.deckArtifact) : null;
+  if (resultArtifact) return resultArtifact;
+  return null;
+}
+
+function enrichProjectMeta(
+  meta: Record<string, unknown>,
+  artifact: Record<string, unknown> | null,
+  inputParams?: unknown,
+  resultMeta?: unknown,
+): Record<string, unknown> {
+  const input = isRecord(inputParams) ? inputParams : {};
+  const result = isRecord(resultMeta) ? resultMeta : {};
+  const slides = Array.isArray(artifact?.slides) ? artifact.slides : undefined;
+  return {
+    ...meta,
+    deckArtifact: artifact ?? meta.deckArtifact ?? null,
+    slideCount: result.slideCount ?? meta.slideCount ?? slides?.length ?? input.slideCount ?? null,
+    deckType: artifact?.deckType ?? meta.deckType ?? input.deckType ?? null,
+    designStyle: artifact?.designStyle ?? meta.designStyle ?? input.designStyle ?? input.style ?? null,
+    language: artifact?.language ?? meta.language ?? input.language ?? null,
+  };
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function normalizeDeckArtifactForResponse(value: unknown): Record<string, unknown> | null {
+  if (!isDeckArtifactLike(value)) return null;
+  return ensureCloudDeckHtml(value) as Record<string, unknown>;
+}
+
+function isDeckArtifactLike(value: unknown): value is CloudDeckArtifact {
+  return (
+    isRecord(value) &&
+    typeof value.deckTitle === "string" &&
+    typeof value.deckType === "string" &&
+    typeof value.designStyle === "string" &&
+    typeof value.language === "string" &&
+    Array.isArray(value.slides) &&
+    value.slides.every((slide) => isRecord(slide) && typeof slide.title === "string")
+  );
 }

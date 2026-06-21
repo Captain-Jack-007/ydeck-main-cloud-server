@@ -12,6 +12,9 @@ const pairingCodeSchema = new Schema(
   baseSchemaOptions,
 );
 
+pairingCodeSchema.index({ expiresAt: 1 });
+pairingCodeSchema.index({ workspaceId: 1 });
+
 export type PairingCode = InferSchemaType<typeof pairingCodeSchema>;
 export type PairingCodeDoc = HydratedDocument<PairingCode>;
 export const PairingCodeModel = model("PairingCode", pairingCodeSchema);

@@ -2,6 +2,7 @@ import { registerCloudDeckTools } from "./cloudDeck.tools";
 import { registerChatTools } from "./chat.tools";
 import { registerDeckDocumentTools } from "./deckDocument.tools";
 import { registerFileTools } from "./file.tools";
+import { registerImageAssetTools } from "./imageAsset.tools";
 import { registerMemoryTools } from "./memory.tools";
 import { registerWebTools } from "./web.tools";
 import { executeRegisteredTool, getTool, listTools } from "./registry";
@@ -13,6 +14,7 @@ export function bootstrapTools(): void {
   registerCloudDeckTools();
   registerDeckDocumentTools();
   registerFileTools();
+  registerImageAssetTools();
   registerChatTools();
   registerMemoryTools();
   registerWebTools();

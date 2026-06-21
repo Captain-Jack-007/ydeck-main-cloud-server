@@ -2,6 +2,8 @@ node_modules
 dist
 .env
 .env.local
+.mongo-data
+.mongo-log
 *.log
 .DS_Store
 prisma/migrations/dev.db*

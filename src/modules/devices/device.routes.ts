@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router, type ErrorRequestHandler } from "express";
 import rateLimit from "express-rate-limit";
 import { z } from "zod";
 
@@ -12,6 +12,7 @@ import { randomNumericCode, randomToken, sha256Hex } from "../../lib/crypto";
 import { env } from "../../config/env";
 import { recordUsage } from "../usage/usage.service";
 import {
+  AuditLogModel,
   DeviceModel,
   PairingCodeModel,
   SubscriptionModel,
@@ -25,7 +26,7 @@ import {
 export const deviceRouter: Router = Router();
 
 const createCodeSchema = z.object({
-  workspaceId: z.string().min(1),
+  workspaceId: z.string().min(1).optional(),
 });
 
 const activateSchema = z.object({
@@ -45,25 +46,29 @@ deviceRouter.post(
   requireUser,
   validate(createCodeSchema),
   asyncHandler(async (req, res) => {
-    if (!isObjectId(req.body.workspaceId)) throw ApiError.badRequest("Invalid workspaceId");
-    const membership = await WorkspaceMemberModel.findOne({
-      workspaceId: req.body.workspaceId,
-      userId: req.auth!.userId,
-    });
+    const workspaceId = await resolvePairingWorkspaceId(req.auth!.userId, req.body.workspaceId);
+    const membership = await WorkspaceMemberModel.findOne({ workspaceId, userId: req.auth!.userId });
     if (!membership) throw ApiError.forbidden("Not a member of that workspace");
 
     const code = randomNumericCode(6);
     await PairingCodeModel.create({
       userId: req.auth!.userId,
-      workspaceId: req.body.workspaceId,
+      workspaceId,
       codeHash: sha256Hex(code),
       expiresAt: new Date(Date.now() + env.pairingCodeTtl * 1000),
+    });
+    await auditDeviceEvent({
+      userId: req.auth!.userId,
+      workspaceId,
+      action: "device.pairing_code.create",
+      targetType: "pairing_code",
+      req,
     });
 
     res.status(201).json({
       code,
       expiresInSeconds: env.pairingCodeTtl,
-      workspaceId: req.body.workspaceId,
+      workspaceId,
     });
   }),
 );
@@ -75,10 +80,20 @@ deviceRouter.post(
   validate(activateSchema),
   asyncHandler(async (req, res) => {
     const codeHash = sha256Hex(req.body.code);
-    const pairing = await PairingCodeModel.findOne({ codeHash });
-    if (!pairing) throw ApiError.unauthorized("Invalid code");
-    if (pairing.usedAt) throw ApiError.unauthorized("Code already used");
-    if (pairing.expiresAt < new Date()) throw ApiError.unauthorized("Code expired");
+    const pairing = await PairingCodeModel.findOneAndUpdate(
+      { codeHash, usedAt: null, expiresAt: { $gt: new Date() } },
+      { $set: { usedAt: new Date() } },
+      { new: true },
+    );
+    if (!pairing) {
+      await auditDeviceEvent({
+        action: "device.activate.failed",
+        targetType: "pairing_code",
+        req,
+        meta: { reason: "invalid_or_expired_code" },
+      });
+      throw new ApiError(401, "INVALID_PAIRING_CODE", "Invalid or expired pairing code");
+    }
 
     const rawToken = randomToken(32);
     const device = await DeviceModel.create({
@@ -88,15 +103,22 @@ deviceRouter.post(
       platform: req.body.platform ?? null,
       appVersion: req.body.appVersion ?? null,
       fingerprint: req.body.fingerprint ?? null,
+      tokenPrefix: rawToken.slice(0, 8),
       tokenHash: sha256Hex(rawToken),
       status: "active",
       lastIp: req.ip,
       expiresAt: new Date(Date.now() + env.deviceTokenTtl * 1000),
     });
-
-    pairing.usedAt = new Date();
-    await pairing.save();
     await recordUsage(String(pairing.workspaceId), "device.activated", 1);
+    await auditDeviceEvent({
+      userId: String(pairing.userId),
+      workspaceId: String(pairing.workspaceId),
+      action: "device.activate",
+      targetType: "device",
+      targetId: device.id,
+      req,
+      meta: { platform: device.platform, appVersion: device.appVersion },
+    });
 
     res.status(201).json({
       deviceId: device.id,
@@ -115,7 +137,7 @@ deviceRouter.get(
   asyncHandler(async (req, res) => {
     const devices = await DeviceModel.find({ workspaceId: req.params.workspaceId })
       .sort({ createdAt: -1 })
-      .select("name platform appVersion status lastSeenAt pairedAt expiresAt");
+      .select("name platform appVersion fingerprint tokenPrefix status lastHeartbeatAt lastSeenAt pairedAt expiresAt revokedAt revokedBy createdAt");
     res.json(devices.map((d) => d.toJSON()));
   }),
 );
@@ -129,8 +151,18 @@ deviceRouter.delete(
     const device = await DeviceModel.findById(req.params.deviceId);
     if (!device || String(device.workspaceId) !== req.params.workspaceId) throw ApiError.notFound("Device not found");
     device.status = "revoked";
+    device.revokedAt = new Date();
+    device.set("revokedBy", req.auth!.userId);
     await device.save();
-    res.status(204).end();
+    await auditDeviceEvent({
+      userId: req.auth!.userId,
+      workspaceId: req.params.workspaceId,
+      action: "device.revoke",
+      targetType: "device",
+      targetId: device.id,
+      req,
+    });
+    res.json({ success: true });
   }),
 );
 
@@ -142,7 +174,7 @@ deviceRouter.post(
   asyncHandler(async (req, res) => {
     await DeviceModel.updateOne(
       { _id: req.device!.deviceId },
-      { $set: { lastSeenAt: new Date(), lastIp: req.ip ?? null } },
+      { $set: { lastHeartbeatAt: new Date(), lastSeenAt: new Date(), lastIp: req.ip ?? null } },
     );
     res.json({ ok: true, serverTime: new Date().toISOString() });
   }),
@@ -155,13 +187,13 @@ deviceRouter.get(
     const workspace = await WorkspaceModel.findById(req.device!.workspaceId);
     if (!workspace) throw ApiError.notFound("Workspace not found");
     const sub = await SubscriptionModel.findOne({ workspaceId: workspace.id });
-    const validUntil = sub?.currentPeriodEnd ?? new Date(Date.now() + 24 * 3600 * 1000);
+    const validUntil = sub?.currentPeriodEnd ?? new Date(Date.now() + env.deviceTokenTtl * 1000);
     res.json({
       workspaceId: workspace.id,
-      plan: workspace.plan,
+      plan: "local",
       subscriptionStatus: sub?.status ?? "active",
       validUntil,
-      features: featuresForPlan(workspace.plan),
+      features: featuresForPlan("local"),
     });
   }),
 );
@@ -186,7 +218,7 @@ deviceRouter.get(
     ]);
     if (!user) throw ApiError.notFound("User not found");
 
-    const validUntil = sub?.currentPeriodEnd ?? new Date(Date.now() + 24 * 3600 * 1000);
+    const validUntil = sub?.currentPeriodEnd ?? device.expiresAt;
     res.json({
       user: {
         id: user.id,
@@ -213,16 +245,34 @@ deviceRouter.get(
         logoUrl: branding?.logoUrl ?? null,
       },
       license: {
-        plan: workspace.plan,
+        plan: "local",
         subscriptionStatus: sub?.status ?? "active",
         validUntil,
-        features: featuresForPlan(workspace.plan),
+        features: featuresForPlan("local"),
       },
     });
   }),
 );
 
+const desktopDeviceErrorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+  if (!(err instanceof ApiError)) return next(err);
+  res.status(err.status).json({
+    success: false,
+    error: err.code === "UNAUTHORIZED" ? "UNAUTHENTICATED" : err.code,
+    message: err.message,
+  });
+};
+
+deviceRouter.use(desktopDeviceErrorHandler);
+
 function featuresForPlan(plan: string): Record<string, boolean> {
+  if (plan === "local") {
+    return {
+      privateAgent: true,
+      cloudDecks: true,
+      advancedTemplates: true,
+    };
+  }
   return {
     privateAgent: plan === "pro" || plan === "team" || plan === "enterprise",
     cloudDecks: true,
@@ -230,4 +280,35 @@ function featuresForPlan(plan: string): Record<string, boolean> {
     teamWorkspaces: plan === "team" || plan === "enterprise",
     sso: plan === "enterprise",
   };
+}
+
+async function resolvePairingWorkspaceId(userId: string, requested?: string): Promise<string> {
+  if (requested) {
+    if (!isObjectId(requested)) throw ApiError.badRequest("Invalid workspaceId");
+    return requested;
+  }
+  const membership = await WorkspaceMemberModel.findOne({ userId }).sort({ createdAt: 1 });
+  if (!membership) throw ApiError.badRequest("No workspace available for pairing");
+  return String(membership.workspaceId);
+}
+
+async function auditDeviceEvent(input: {
+  userId?: string | null;
+  workspaceId?: string | null;
+  action: string;
+  targetType?: string;
+  targetId?: string;
+  req: { ip?: string; headers: Record<string, unknown> };
+  meta?: Record<string, unknown>;
+}): Promise<void> {
+  await AuditLogModel.create({
+    userId: input.userId ?? null,
+    workspaceId: input.workspaceId ?? null,
+    action: input.action,
+    targetType: input.targetType ?? null,
+    targetId: input.targetId ?? null,
+    ip: input.req.ip ?? null,
+    userAgent: typeof input.req.headers["user-agent"] === "string" ? input.req.headers["user-agent"] : null,
+    meta: input.meta ?? null,
+  });
 }

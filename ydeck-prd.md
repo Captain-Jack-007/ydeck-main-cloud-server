@@ -1,5 +1,146 @@
 # PRD: YDeck Main Server
 
+## 0. Current Direction: Cloud Mode First
+
+YDeck Main Server is now scoped as a **cloud-first production backend**.
+
+The current implementation should focus on:
+
+```text
+Cloud API
+Cloud job system
+Cloud multi-agent orchestration
+Cloud file processing
+Cloud slide rendering and QA
+Cloud export services
+Cloud storage
+Cloud realtime updates
+Cloud social delivery
+```
+
+Private/local mode remains a future strategy, but it is **not the current
+production scope** for this repository. Do not block web/cloud work on local
+LLM runtime, desktop local storage, offline generation, on-prem deployment, or
+private server operations.
+
+Current technical positioning:
+
+```text
+YDeck Cloud Mode is a cloud-based multi-agent presentation system that creates,
+edits, reviews, exports, and delivers professional decks through web and social
+channels.
+```
+
+Cloud-first production architecture:
+
+```text
+Web / Telegram / WhatsApp / Discord
+        ↓
+Cloud API Gateway
+        ↓
+Auth + Workspace Service
+        ↓
+Job Service
+        ↓
+Cloud Multi-Agent Orchestrator
+        ↓
+Specialist Agents
+        ↓
+Render + QA + Export Services
+        ↓
+Cloud Storage + Database
+        ↓
+Realtime Events / Delivery
+```
+
+Production cloud agent flow:
+
+```text
+User prompt / uploaded file
+        ↓
+Create cloud job
+        ↓
+Request Classifier Agent
+        ↓
+Planner Agent
+        ↓
+Context Agent
+        ↓
+File / Research Agent if needed
+        ↓
+Outline Agent
+        ↓
+Content Agent
+        ↓
+Layout Agent
+        ↓
+HTML Designer Agent
+        ↓
+Screenshot Renderer
+        ↓
+Vision QA Agent
+        ↓
+Repair Agent
+        ↓
+Export Agent
+        ↓
+Delivery Agent
+```
+
+Cloud production events exposed to the frontend:
+
+```text
+deck.plan
+deck.context
+deck.file
+deck.research
+deck.outline
+deck.content
+slide.preview
+deck.qa
+deck.repair
+deck.export
+deck.version
+deck.done
+deck.error
+```
+
+Cloud production artifacts saved by stage:
+
+```text
+Job
+DeckBrief
+ContextArtifact
+FileExtractionArtifact
+ResearchArtifact
+OutlineArtifact
+ContentArtifact
+LayoutArtifact
+DesignArtifact
+QAArtifact
+RepairArtifact
+ExportArtifact
+FinalDeckArtifact
+```
+
+Implementation priority:
+
+```text
+1. Deterministic cloud orchestrator code
+2. Agent schemas with strict JSON outputs
+3. Agent registry
+4. Workflow registry
+5. Realtime events for every visible stage
+6. HTML preview and design QA loop
+7. PPTX/PDF export
+8. Social delivery gateways
+```
+
+The existing local/private sections in this PRD describe future expansion and
+account-level compatibility, not the current cloud production build target.
+
+---
+
 ## 1. Product Name
 
 **YDeck Main Server**

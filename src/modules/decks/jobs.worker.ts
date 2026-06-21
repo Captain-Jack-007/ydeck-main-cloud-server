@@ -2,7 +2,7 @@ import { DeckJobModel, type JobStatus, type JobType } from "../../models";
 import { logger } from "../../lib/logger";
 import { jobBus } from "./jobs.events";
 import { env } from "../../config/env";
-import { runCloudDeckAgentJob } from "../agents/cloudDeckAgent";
+import { runCloudProductionDeckJob } from "../agents/cloudProductionAgent";
 
 const POLL_MS = 1000;
 
@@ -24,7 +24,7 @@ async function advanceOne(): Promise<void> {
   const pipeline = input.pipeline ?? "agentic";
   if (env.agentLoopEnabled && pipeline === "agentic" && ["generate", "refine"].includes(job.type)) {
     try {
-      await runCloudDeckAgentJob(job);
+      await runCloudProductionDeckJob(job);
     } catch (err) {
       logger.warn({ err, jobId: job.id }, "job_worker.agentic_failed");
       await failJob(job.id, (err as Error).message);

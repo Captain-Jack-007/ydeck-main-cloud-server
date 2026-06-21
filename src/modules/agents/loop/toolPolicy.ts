@@ -5,6 +5,8 @@ export const COMMON_TOOL_NAMES = new Set([
   "ask_user",
   "create_deck",
   "create_document",
+  "design_deck",
+  "design_slide",
   "edit_document",
   "inspect_project",
   "list_files",

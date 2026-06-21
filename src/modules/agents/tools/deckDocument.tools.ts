@@ -35,6 +35,8 @@ interface SlideBodyShape {
   bullets?: string[];
   speakerNotes?: string;
   body?: string;
+  html?: string;
+  previewHtml?: string;
 }
 
 export function registerDeckDocumentTools(): void {

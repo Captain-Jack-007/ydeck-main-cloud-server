@@ -18,7 +18,8 @@ const KEYWORD_HINTS: Array<{ words: string[]; tools: string[] }> = [
   { words: ["template", "theme", "pack", "plugin"], tools: ["list_packs"] },
   { words: ["brand", "workspace", "preference", "style"], tools: ["read_workspace_context"] },
   { words: ["project", "current deck", "existing deck"], tools: ["inspect_project"] },
-  { words: ["create", "generate", "slides", "deck"], tools: ["create_deck", "create_document"] },
+  { words: ["create", "generate", "slides", "deck"], tools: ["design_deck", "create_deck", "create_document"] },
+  { words: ["design", "visual", "html", "preview", "beautiful", "layout"], tools: ["design_deck", "design_slide", "list_packs"] },
   { words: ["refine", "rewrite", "improve", "update", "edit"], tools: ["update_deck", "update_document", "edit_document"] },
   { words: ["suggest", "review", "critique"], tools: ["suggest_document"] },
 ];

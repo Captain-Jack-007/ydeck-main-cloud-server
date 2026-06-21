@@ -4,7 +4,11 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "db:start": "node scripts/mongo-dev.js start",
+    "db:stop": "node scripts/mongo-dev.js stop",
+    "kill:port": "node scripts/kill-port.js 2026",
+    "dev": "npm run db:start && npm run kill:port && tsx watch src/server.ts",
+    "dev:with-db": "npm run dev",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit"
@@ -23,9 +27,11 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.6.3",
     "morgan": "^1.11.0",
+    "multer": "^2.2.0",
     "nanoid": "^5.1.11",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
+    "socket.io": "^4.8.3",
     "zod": "^4.4.3"
   },
   "devDependencies": {
@@ -35,6 +41,7 @@
     "@types/express-serve-static-core": "^4.19.8",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.1.0",
     "@types/node": "^25.9.2",
     "tsx": "^4.22.4",
     "typescript": "^5.9.3"

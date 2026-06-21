@@ -29,6 +29,7 @@ export const verifyEmailSchema = z.object({
 });
 
 export const updateMeSchema = z.object({
+  name: z.string().min(1).max(120).nullable().optional(),
   displayName: z.string().min(1).max(120).nullable().optional(),
   avatarUrl: z.string().url().max(2048).nullable().optional(),
   locale: z.string().min(2).max(20).nullable().optional(),

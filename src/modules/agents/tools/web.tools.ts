@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { env } from "../../../config/env";
 import { registerTool } from "./registry";
 import type { ToolResult } from "./types";
 
@@ -37,7 +38,7 @@ export function registerWebTools(): void {
               })),
             )
           : results;
-        return { ok: true, content: `${enriched.length} results`, data: { results: enriched, provider: "duckduckgo-html" } };
+        return { ok: true, content: `${enriched.length} results`, data: { results: enriched, provider: env.tavilyApiKey ? "tavily" : "duckduckgo-html" } };
       } catch (err) {
         return { ok: false, content: `web_search failed: ${(err as Error).message}`, error: "SEARCH_FAILED" };
       }
@@ -92,6 +93,44 @@ export function registerWebTools(): void {
 }
 
 async function webSearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
+  if (env.tavilyApiKey) return tavilySearch(query, limit);
+  return duckDuckGoSearch(query, limit);
+}
+
+async function tavilySearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
+  const res = await fetch("https://api.tavily.com/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${env.tavilyApiKey}`,
+    },
+    body: JSON.stringify({
+      query,
+      max_results: limit,
+      search_depth: "advanced",
+      include_answer: false,
+      include_raw_content: false,
+    }),
+  });
+  if (!res.ok) throw new Error(`Tavily search failed: ${res.status} ${await res.text()}`);
+  const body = (await res.json()) as {
+    results?: Array<{
+      title?: string;
+      url?: string;
+      content?: string;
+    }>;
+  };
+  return (body.results ?? [])
+    .filter((result) => result.url)
+    .slice(0, limit)
+    .map((result) => ({
+      title: result.title ?? result.url ?? "Untitled source",
+      url: result.url ?? "",
+      snippet: result.content ?? "",
+    }));
+}
+
+async function duckDuckGoSearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
   const url = `https://duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
   const res = await fetch(url, { headers: { "User-Agent": "YDeckMainServer/1.0" } });
   if (!res.ok) throw new Error(`Search HTTP ${res.status}`);

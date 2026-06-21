@@ -6,6 +6,15 @@ import { requireAdmin, requireUser } from "../../middleware/auth";
 import { ApiError } from "../../lib/errors";
 import { isObjectId } from "../../lib/ids";
 import {
+  CLOUD_MODELS,
+  CLOUD_PROVIDERS,
+  effectiveCloudConfig,
+  getCloudModelStatus,
+  testCloudProvider,
+  updateCloudConfig,
+  type CloudProviderName,
+} from "../agents/cloudLlm";
+import {
   DeckProjectModel,
   DeviceModel,
   SessionModel,
@@ -15,10 +24,20 @@ import {
   WorkspaceMemberModel,
   WorkspaceModel,
 } from "../../models";
+import { z } from "zod";
 
 export const adminRouter: Router = Router();
 
 adminRouter.use(requireUser, requireAdmin);
+
+function maskKey(key: string): string | null {
+  if (!key) return null;
+  if (key.length <= 8) return "****";
+  return `${key.slice(0, 3)}...${key.slice(-4)}`;
+}
+
+const StoredCloudProviderSchema = z.enum(["openai", "anthropic", "gemini", "deepseek", "openai-compatible"]);
+const CloudProviderSchema = z.enum(["mock", "openai", "anthropic", "gemini", "deepseek", "openai-compatible"]);
 
 // ---- users ----
 adminRouter.get(
@@ -138,6 +157,138 @@ adminRouter.get(
       },
     ]);
     res.json(records);
+  }),
+);
+
+// ---- cloud mode / model providers ----
+adminRouter.get(
+  "/models/status",
+  asyncHandler(async (_req, res) => {
+    res.json(await getCloudModelStatus());
+  }),
+);
+
+adminRouter.get(
+  "/models",
+  asyncHandler(async (_req, res) => {
+    const cfg = await effectiveCloudConfig();
+    const status = await getCloudModelStatus();
+    res.json({
+      active: {
+        provider: cfg.llmProvider,
+        model: cfg.llmProvider === "mock" ? "mock" : cfg.models[cfg.llmProvider],
+        mode: "cloud",
+        streamOutput: cfg.streamOutput,
+        logOutput: cfg.logOutput,
+      },
+      status,
+      availableProviders: CLOUD_PROVIDERS,
+    });
+  }),
+);
+
+const ModelSwitchSchema = z.object({
+  provider: CloudProviderSchema,
+  model: z.string().min(1).max(200).optional(),
+  baseUrl: z.string().url().optional(),
+});
+
+adminRouter.post(
+  "/models",
+  asyncHandler(async (req, res) => {
+    const parsed = ModelSwitchSchema.safeParse(req.body ?? {});
+    if (!parsed.success) throw ApiError.badRequest("Invalid model payload", parsed.error.issues);
+    const provider = parsed.data.provider;
+    const cfg = await updateCloudConfig({
+      llmProvider: provider,
+      provider: provider === "mock" ? undefined : provider,
+      model: provider === "mock" ? undefined : parsed.data.model,
+      baseUrl: provider === "openai-compatible" ? parsed.data.baseUrl : undefined,
+    });
+    res.json({
+      success: true,
+      activeProvider: cfg.llmProvider,
+      model: cfg.llmProvider === "mock" ? "mock" : cfg.models[cfg.llmProvider],
+      status: await getCloudModelStatus(),
+    });
+  }),
+);
+
+adminRouter.get(
+  "/cloud-providers",
+  asyncHandler(async (_req, res) => {
+    const cfg = await effectiveCloudConfig();
+    const providers = CLOUD_PROVIDERS.filter((p) => p !== "mock").map((p) => {
+      const provider = p as Exclude<CloudProviderName, "mock">;
+      return {
+        provider,
+        hasKey: cfg.keys[provider].length > 0,
+        maskedKey: maskKey(cfg.keys[provider]),
+        model: cfg.models[provider],
+        baseUrl: provider === "openai-compatible" ? cfg.baseUrls["openai-compatible"] : undefined,
+        models: CLOUD_MODELS[provider],
+      };
+    });
+    res.json({
+      mode: "cloud",
+      activeProvider: cfg.llmProvider,
+      streamOutput: cfg.streamOutput,
+      logOutput: cfg.logOutput,
+      providers,
+    });
+  }),
+);
+
+const CloudPatchSchema = z.object({
+  provider: StoredCloudProviderSchema,
+  model: z.string().min(1).max(200).optional(),
+  apiKey: z.string().nullable().optional(),
+  baseUrl: z.string().url().nullable().optional(),
+  enable: z.boolean().optional(),
+  streamOutput: z.boolean().optional(),
+  logOutput: z.boolean().optional(),
+});
+
+adminRouter.patch(
+  "/cloud-providers",
+  asyncHandler(async (req, res) => {
+    const parsed = CloudPatchSchema.safeParse(req.body ?? {});
+    if (!parsed.success) throw ApiError.badRequest("Invalid cloud provider payload", parsed.error.issues);
+    const cfg = await updateCloudConfig(parsed.data);
+    res.json({
+      success: true,
+      activeProvider: cfg.llmProvider,
+      streamOutput: cfg.streamOutput,
+      logOutput: cfg.logOutput,
+      providers: CLOUD_PROVIDERS.filter((p) => p !== "mock").map((p) => {
+        const provider = p as Exclude<CloudProviderName, "mock">;
+        return {
+          provider,
+          hasKey: cfg.keys[provider].length > 0,
+          maskedKey: maskKey(cfg.keys[provider]),
+          model: cfg.models[provider],
+          baseUrl: provider === "openai-compatible" ? cfg.baseUrls["openai-compatible"] : undefined,
+          models: CLOUD_MODELS[provider],
+        };
+      }),
+    });
+  }),
+);
+
+const CloudTestSchema = z.object({
+  provider: StoredCloudProviderSchema,
+  model: z.string().min(1).max(200).optional(),
+  apiKey: z.string().optional(),
+  baseUrl: z.string().url().optional(),
+});
+
+adminRouter.post(
+  "/cloud-providers/test",
+  asyncHandler(async (req, res) => {
+    const parsed = CloudTestSchema.safeParse(req.body ?? {});
+    if (!parsed.success) throw ApiError.badRequest("Invalid cloud test payload", parsed.error.issues);
+    const status = await testCloudProvider(parsed.data);
+    res.json({ ok: status.status === "available" || status.status === "unknown", status });
   }),
 );
 

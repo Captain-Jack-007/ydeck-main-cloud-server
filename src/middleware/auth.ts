@@ -74,14 +74,14 @@ export async function requireDevice(
   next: NextFunction
 ): Promise<void> {
   const token = req.header('x-device-token');
-  if (!token) return next(ApiError.unauthorized('Missing device token'));
+  if (!token) return next(new ApiError(401, 'MISSING_DEVICE_TOKEN', 'Missing device token'));
   try {
     const device = await DeviceModel.findOne({ tokenHash: sha256Hex(token) });
-    if (!device) return next(ApiError.unauthorized('Invalid device token'));
+    if (!device) return next(new ApiError(401, 'INVALID_DEVICE_TOKEN', 'Invalid device token'));
     if (device.status !== 'active')
-      return next(ApiError.forbidden('Device not active'));
+      return next(new ApiError(403, 'DEVICE_NOT_ACTIVE', 'Device not active'));
     if (device.expiresAt < new Date())
-      return next(ApiError.unauthorized('Device token expired'));
+      return next(new ApiError(401, 'DEVICE_TOKEN_EXPIRED', 'Device token expired'));
 
     req.device = {
       deviceId: device.id,

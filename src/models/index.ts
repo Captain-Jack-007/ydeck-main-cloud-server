@@ -17,3 +17,4 @@ export * from "./PluginPack";
 export * from "./InstalledPack";
 export * from "./SocialAccount";
 export * from "./AuditLog";
+export * from "./CloudConfig";

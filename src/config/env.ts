@@ -17,6 +17,12 @@ function num(name: string, fallback: number): number {
   return n;
 }
 
+function bool(name: string, fallback: boolean): boolean {
+  const raw = process.env[name];
+  if (raw === undefined || raw === '') return fallback;
+  return !['false', '0', 'no', 'off'].includes(raw.toLowerCase());
+}
+
 function oneOf<T extends string>(name: string, value: string, allowed: readonly T[]): T {
   if ((allowed as readonly string[]).includes(value)) return value as T;
   throw new Error(`Env var ${name} must be one of: ${allowed.join(', ')}`);
@@ -24,13 +30,13 @@ function oneOf<T extends string>(name: string, value: string, allowed: readonly 
 
 const llmProvider = oneOf(
   'LLM_PROVIDER',
-  process.env.LLM_PROVIDER ?? process.env.CLOUD_LLM_PROVIDER ?? 'mock',
+  process.env.LLM_PROVIDER ?? process.env.CLOUD_LLM_PROVIDER ?? 'deepseek',
   ['mock', 'openai', 'gemini', 'deepseek', 'openai-compatible'] as const
 );
 
 export const env = {
   nodeEnv: process.env.NODE_ENV ?? 'development',
-  port: num('PORT', 3000),
+  port: num('PORT', 2026),
   databaseUrl: required('DATABASE_URL', 'mongodb://localhost:27017/ydeck'),
 
   jwtAccessSecret: required('JWT_ACCESS_SECRET', 'dev-access-secret-change-me'),
@@ -54,15 +60,39 @@ export const env = {
   agentLoopMaxTools: num('AGENT_LOOP_MAX_TOOLS', 8),
 
   llmProvider,
-  openaiApiKey: process.env.OPENAI_API_KEY ?? '',
-  openaiModel: process.env.OPENAI_MODEL ?? 'gpt-4.1-mini',
-  geminiApiKey: process.env.GEMINI_API_KEY ?? '',
-  geminiModel: process.env.GEMINI_MODEL ?? 'gemini-2.5-flash',
-  deepseekApiKey: process.env.DEEPSEEK_API_KEY ?? '',
-  deepseekModel: process.env.DEEPSEEK_MODEL ?? 'deepseek-v4-flash',
+  openaiApiKey: process.env.OPENAI_API_KEY ?? process.env.CLOUD_OPENAI_API_KEY ?? '',
+  openaiModel: process.env.OPENAI_MODEL ?? process.env.CLOUD_OPENAI_MODEL ?? 'gpt-4.1-mini',
+  geminiApiKey: process.env.GEMINI_API_KEY ?? process.env.CLOUD_GEMINI_API_KEY ?? '',
+  geminiModel: process.env.GEMINI_MODEL ?? process.env.CLOUD_GEMINI_MODEL ?? 'gemini-2.5-flash',
+  deepseekApiKey:
+    process.env.DEEPSEEK_API_KEY ??
+    process.env.CLOUD_DEEPSEEK_API_KEY ??
+    (llmProvider === 'deepseek' ? process.env.CLOUD_LLM_API_KEY : undefined) ??
+    '',
+  deepseekModel:
+    process.env.DEEPSEEK_MODEL ??
+    process.env.CLOUD_DEEPSEEK_MODEL ??
+    (llmProvider === 'deepseek' ? process.env.CLOUD_LLM_MODEL : undefined) ??
+    'deepseek-chat',
   llmBaseUrl: process.env.LLM_BASE_URL ?? process.env.CLOUD_LLM_BASE_URL ?? '',
   llmModel: process.env.LLM_MODEL ?? process.env.CLOUD_LLM_MODEL ?? 'ydeck-cloud-agent',
   llmApiKey: process.env.LLM_API_KEY ?? process.env.CLOUD_LLM_API_KEY ?? '',
+  llmStreamOutput: bool('LLM_STREAM_OUTPUT', true),
+  llmLogOutput: bool('LLM_LOG_OUTPUT', true),
+  llmMaxTokens: num('LLM_MAX_TOKENS', 8192),
+  agentFlowLogOutput: bool('AGENT_FLOW_LOG_OUTPUT', process.env.NODE_ENV !== 'production'),
+
+  pexelsApiKey:
+    process.env.PEXELS_IMAGE_SEARCH_API ??
+    process.env.PEXELS_API_KEY ??
+    process.env.PEXELS_API ??
+    process.env.CLOUD_PEXELS_API_KEY ??
+    '',
+  tavilyApiKey:
+    process.env.TAVILY_WEB_SEARCH_API ??
+    process.env.TAVILY_API_KEY ??
+    process.env.CLOUD_TAVILY_API_KEY ??
+    '',
 };
 
 export const isProd = env.nodeEnv === 'production';

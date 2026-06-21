@@ -157,16 +157,17 @@ export async function getMe(userId: string) {
 
 export async function updateMe(
   userId: string,
-  input: { displayName?: string | null; avatarUrl?: string | null; locale?: string | null },
+  input: { name?: string | null; displayName?: string | null; avatarUrl?: string | null; locale?: string | null },
 ) {
   const updates: Partial<Pick<UserDoc, "displayName" | "avatarUrl" | "locale">> = {};
+  if ("name" in input) updates.displayName = input.name ?? null;
   if ("displayName" in input) updates.displayName = input.displayName ?? null;
   if ("avatarUrl" in input) updates.avatarUrl = input.avatarUrl ?? null;
   if ("locale" in input) updates.locale = input.locale ?? null;
 
   const user = await UserModel.findByIdAndUpdate(userId, { $set: updates }, { new: true });
   if (!user) throw ApiError.notFound("User not found");
-  return { user: publicUser(user) };
+  return { success: true, user: webUser(user) };
 }
 
 function publicUser(u: UserDoc) {
@@ -180,4 +181,23 @@ function publicUser(u: UserDoc) {
     emailVerified: !!u.emailVerifiedAt,
     createdAt: (u as unknown as { createdAt: Date }).createdAt,
   };
+}
+
+function webUser(u: UserDoc) {
+  const name = u.displayName ?? "";
+  return {
+    ...publicUser(u),
+    authenticated: true,
+    userId: u.id,
+    name,
+    initials: initialsFor(name || u.email),
+    role: u.isAdmin ? "admin" : "user",
+  };
+}
+
+function initialsFor(value: string): string {
+  const source = value.includes("@") ? value.split("@")[0] : value;
+  const parts = source.trim().split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  return source.slice(0, 2).toUpperCase();
 }

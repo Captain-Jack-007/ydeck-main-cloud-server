@@ -3,6 +3,7 @@ import { env } from './config/env';
 import { logger } from './lib/logger';
 import { startJobWorker } from './modules/decks/jobs.worker';
 import { connectDB, disconnectDB } from './lib/db';
+import { attachRealtimeServer } from './modules/realtime/socket';
 
 async function main(): Promise<void> {
   await connectDB();
@@ -14,6 +15,7 @@ async function main(): Promise<void> {
       'YDeck main server started'
     );
   });
+  attachRealtimeServer(server);
 
   // background worker for advancing deck jobs (in-memory MVP)
   const stopWorker = startJobWorker();
