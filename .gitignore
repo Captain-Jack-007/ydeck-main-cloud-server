@@ -2,6 +2,7 @@ node_modules
 dist
 .env
 .env.local
+.secrets
 .mongo-data
 .mongo-log
 *.log

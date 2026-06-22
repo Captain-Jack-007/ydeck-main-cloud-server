@@ -132,8 +132,7 @@ workspaceRouter.get(
   requireWorkspaceRole("viewer"),
   asyncHandler(async (req, res) => {
     const branding = await WorkspaceBrandingModel.findOne({ workspaceId: req.params.workspaceId });
-    const workspace = await WorkspaceModel.findById(req.params.workspaceId);
-    res.json(branding ? branding.toJSON() : defaultBranding(req.params.workspaceId, workspace?.name ?? "YDeck"));
+    res.json(branding ? branding.toJSON() : defaultBranding(req.params.workspaceId));
   }),
 );
 
@@ -256,11 +255,11 @@ workspaceRouter.delete(
   }),
 );
 
-function defaultBranding(workspaceId: string, workspaceName: string) {
+function defaultBranding(workspaceId: string, workspaceName?: string) {
   return {
     workspaceId,
-    companyName: workspaceName,
-    productName: "YDeck",
+    companyName: null,
+    productName: workspaceName ?? null,
     logoUrl: null,
     primaryColor: "#6d28d9",
     accentColor: "#2563eb",

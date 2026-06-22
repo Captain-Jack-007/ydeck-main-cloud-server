@@ -32,6 +32,9 @@ export interface ToolDefinition<TArgs = unknown> {
   name: string;
   description: string;
   risk: ToolRisk;
+  group?: string;
+  agents?: string[];
+  maturity?: "implemented" | "adapter" | "placeholder";
   schema?: z.ZodType<TArgs>;
   parameters?: Record<string, unknown>;
   execute?: (args: TArgs, ctx: ToolContext) => Promise<ToolResult>;

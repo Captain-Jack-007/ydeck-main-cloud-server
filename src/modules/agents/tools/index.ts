@@ -1,3 +1,4 @@
+import { registerAdvancedSystemTools } from "./advancedSystem.tools";
 import { registerCloudDeckTools } from "./cloudDeck.tools";
 import { registerChatTools } from "./chat.tools";
 import { registerDeckDocumentTools } from "./deckDocument.tools";
@@ -18,6 +19,7 @@ export function bootstrapTools(): void {
   registerChatTools();
   registerMemoryTools();
   registerWebTools();
+  registerAdvancedSystemTools();
   booted = true;
 }
 
@@ -26,4 +28,11 @@ export function resetBootstrapForTests(): void {
 }
 
 export { executeRegisteredTool, getTool, listTools };
+export {
+  advancedAgentRoleForCloudAgent,
+  listAdvancedToolSpecs,
+  toolsForAdvancedAgent,
+  toolsForCloudProductionAgent,
+  allAdvancedToolNames,
+} from "./advancedSystem.tools";
 export type { ToolBlock, ToolContext, ToolDefinition, ToolResult } from "./types";

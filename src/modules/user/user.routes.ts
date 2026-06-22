@@ -110,8 +110,8 @@ async function buildSettingsResponse(workspaceId: string) {
     defaultDesignStyle: preferences?.defaultStyle ?? "modern",
     defaultSlideCount: preferences?.defaultSlideCount ?? 10,
     branding: {
-      companyName: branding?.companyName ?? workspace.name,
-      productName: branding?.productName ?? "YDeck",
+      companyName: branding?.companyName ?? null,
+      productName: branding?.productName ?? null,
       logoPath: null,
       logoUrl: branding?.logoUrl ?? null,
       primaryColor: branding?.primaryColor ?? "#111827",

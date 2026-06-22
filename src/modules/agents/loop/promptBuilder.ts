@@ -7,6 +7,7 @@ export interface BuildPromptInput {
   guideOnly?: boolean;
   extraSystem?: string;
   alwaysInclude?: string[];
+  allowedTools?: string[];
 }
 
 export interface BuiltPrompt {
@@ -37,6 +38,7 @@ export function buildAgentSystemPrompt(input: BuildPromptInput): BuiltPrompt {
     query: input.query,
     k: input.k ?? 8,
     alwaysInclude: input.alwaysInclude,
+    allowedTools: input.allowedTools,
   });
   const blocks: string[] = [HEADER];
   if (input.guideOnly) blocks.push(GUIDE_ONLY_NOTE);

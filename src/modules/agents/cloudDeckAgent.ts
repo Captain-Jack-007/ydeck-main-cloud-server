@@ -5,7 +5,7 @@ import { jobBus } from "../decks/jobs.events";
 import { effectiveCloudConfig, getCloudLlmProvider } from "./cloudLlm";
 import { runAgentLoop, type AgentEvent, type AgentFlowTraceEvent, type AgentMessage, type ToolAuditEvent } from "./loop/runAgentLoop";
 import { buildEffectiveToolPolicy } from "./loop/toolPolicy";
-import { bootstrapTools, executeRegisteredTool } from "./tools";
+import { bootstrapTools, executeRegisteredTool, toolsForAdvancedAgent } from "./tools";
 import type { ToolContext } from "./tools/types";
 
 export async function runCloudDeckAgentJob(job: DeckJobDoc): Promise<void> {
@@ -124,7 +124,37 @@ export async function runCloudDeckAgentJob(job: DeckJobDoc): Promise<void> {
     policy,
     maxRounds: env.agentLoopMaxRounds,
     k: env.agentLoopMaxTools,
-    alwaysInclude: ["inspect_project", "read_workspace_context", "list_packs", "design_deck", "create_deck", "update_deck"],
+    alwaysInclude: [
+      "inspect_project",
+      "read_workspace_context",
+      "read_brand_kit",
+      "create_deck_brief",
+      "create_deck_plan",
+      "create_outline",
+      "write_slide_content",
+      "choose_layouts",
+      "design_deck_html",
+      "save_deck_artifact",
+      "design_deck",
+      "create_deck",
+      "update_deck",
+    ],
+    allowedTools: [
+      ...new Set([
+        ...toolsForAdvancedAgent("orchestrator"),
+        ...toolsForAdvancedAgent("context"),
+        ...toolsForAdvancedAgent("outline"),
+        ...toolsForAdvancedAgent("content"),
+        ...toolsForAdvancedAgent("design"),
+        ...toolsForAdvancedAgent("visual_asset"),
+        ...toolsForAdvancedAgent("qa"),
+        ...toolsForAdvancedAgent("export"),
+        "list_packs",
+        "design_deck",
+        "create_deck",
+        "update_deck",
+      ]),
+    ],
     onEvent,
     onToolEvent,
     onTrace: (event) => logAgentTrace(job.id, event),

@@ -142,20 +142,50 @@ export function normalizeResearchMode(value: unknown): ResearchMode {
 function buildResearchQueryPlan(input: RunResearchInput): ResearchQuery[] {
   const base = compactQuery(input.prompt);
   const deckType = input.deckType.replace(/[_-]+/g, " ");
-  const queries: ResearchQuery[] = [
-    {
-      query: `${base} market size statistics trends`,
-      purpose: "Find market size, trend, or statistical context.",
-    },
-    {
-      query: `${base} competitors companies examples`,
-      purpose: "Find competitor, company, or example context.",
-    },
-    {
-      query: `${deckType} ${input.audience} recent data 2026`,
-      purpose: "Find recent supporting data for the target audience.",
-    },
-  ];
+  const queries: ResearchQuery[] = educationOrHistoryTopic(input)
+    ? [
+        {
+          query: `${base} historical timeline key dynasties events`,
+          purpose: "Find accurate historical chronology and major events.",
+        },
+        {
+          query: `${base} culture society inventions primary themes`,
+          purpose: "Find cultural, social, and invention context.",
+        },
+        {
+          query: `${base} educational overview reliable sources`,
+          purpose: "Find reliable educational background for a history presentation.",
+        },
+      ]
+    : businessResearchTopic(input)
+      ? [
+          {
+            query: `${base} market size statistics trends`,
+            purpose: "Find market size, trend, or statistical context.",
+          },
+          {
+            query: `${base} competitors companies examples`,
+            purpose: "Find competitor, company, or example context.",
+          },
+          {
+            query: `${deckType} ${input.audience} recent data 2026`,
+            purpose: "Find recent supporting data for the target audience.",
+          },
+        ]
+      : [
+          {
+            query: `${base} overview key facts background`,
+            purpose: "Find reliable background and key facts.",
+          },
+          {
+            query: `${base} examples themes timeline`,
+            purpose: "Find examples, themes, or timeline context.",
+          },
+          {
+            query: `${base} educational presentation reliable sources`,
+            purpose: "Find reliable supporting context for the presentation.",
+          },
+        ];
   if (input.fileSummary) {
     queries.unshift({
       query: `${compactQuery(input.fileSummary)} external validation data`,
@@ -271,7 +301,18 @@ function confidenceForClaim(claim: string): number {
 }
 
 function researchKeywords(prompt: string): boolean {
-  return /\b(market size|competitor|competitors|recent|latest|trend|trends|statistics|stats|data|news|country|policy|government|financial|business facts|investor|industry|CAGR|forecast)\b/i.test(prompt);
+  return /\b(research|sources?|recent|latest|statistics|stats|data|news|policy|government|historical facts?|timeline|primary sources?)\b/i.test(prompt)
+    || businessResearchTopic({ prompt, deckType: "", audience: "" });
+}
+
+function educationOrHistoryTopic(input: Pick<RunResearchInput, "prompt" | "deckType" | "audience">): boolean {
+  const text = `${input.prompt} ${input.deckType} ${input.audience}`;
+  return /\b(history|historical|dynasty|dynasties|ancient|civilization|empire|revolution|war|culture|cultural|lesson|education|teacher|student|class|school|china|chinese history)\b/i.test(text);
+}
+
+function businessResearchTopic(input: Pick<RunResearchInput, "prompt" | "deckType" | "audience">): boolean {
+  const text = `${input.prompt} ${input.deckType} ${input.audience}`;
+  return /\b(market size|market|competitor|competitors|companies|company examples|trend|trends|financial|business facts|investor|industry|CAGR|forecast|revenue|customers|sales|startup|pitch)\b/i.test(text);
 }
 
 function compactQuery(value: string): string {

@@ -39,6 +39,7 @@ export interface RunAgentLoopOptions {
   maxRounds?: number;
   k?: number;
   alwaysInclude?: string[];
+  allowedTools?: string[];
   onEvent?: (event: AgentEvent) => void;
   onToolEvent?: (event: ToolAuditEvent) => void;
   onTrace?: (event: AgentFlowTraceEvent) => void;
@@ -135,7 +136,13 @@ export async function runAgentLoop(opts: RunAgentLoopOptions): Promise<AgentLoop
   const history: AgentMessage[] = [...opts.messages];
   const userText = lastUserText(history);
   const guideOnly = detectGuideOnlyTurn(userText);
-  const built = buildAgentSystemPrompt({ query: userText, k: opts.k, guideOnly: !!guideOnly, alwaysInclude: opts.alwaysInclude });
+  const built = buildAgentSystemPrompt({
+    query: userText,
+    k: opts.k,
+    guideOnly: !!guideOnly,
+    alwaysInclude: opts.alwaysInclude,
+    allowedTools: opts.allowedTools,
+  });
   emit({ type: "plan", data: { tools: built.tools, reasons: built.reasons } });
 
   const toolCalls: AgentLoopResult["toolCalls"] = [];

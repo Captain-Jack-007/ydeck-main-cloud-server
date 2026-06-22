@@ -134,15 +134,48 @@ Then replace slide previews incrementally as new slide.preview events arrive.
 Keep the old deck visible until replacement previews are ready.
 ```
 
-The current MVP design loop is deterministic. It checks layout, density,
-readability risk, unsafe HTML, missing canvas sizing, excessive bullets, long
-titles, and other structural issues. Browser screenshots and vision critique are
-planned next, but the frontend contract is already shaped for that future.
+The current design loop includes deterministic QA and a connected Playwright
+render service. It checks layout, density, readability risk, unsafe HTML,
+missing canvas sizing, excessive bullets, long titles, and other structural
+issues, then can render browser screenshots and send them to Vision QA for
+structured critique. Vision QA uses OpenAI vision first and Tencent Hunyuan as a
+fallback when the Tencent account has Hunyuan activated.
 
 ## Agent Tools
 
 These tools are backend-internal. The frontend does not call them directly.
 They appear in `agent:loop` logs so the UI may show progress/debug information.
+
+The advanced backend registry now includes the full design-side tool surface:
+`choose_design_pack`, `choose_layouts`, `design_slide_html`,
+`design_deck_html`, `apply_brand_style`, `normalize_slide_html`,
+`layout_fallback`, `detect_visual_needs`, `search_images`, `create_chart`,
+`create_table_visual`, `create_diagram`, `create_icon_visual`,
+`run_design_qa`, `repair_slide_design`, and `final_deck_review`.
+
+For frontend preview behavior, the important result is still the same:
+`slide.preview` events arrive incrementally and the final
+`job.resultMeta.deckArtifact` is canonical. OCR is connected through
+`ocr_image` for uploaded image text extraction, using Google Vision first and
+Tencent OCR fallback when configured. Screenshot rendering is connected through
+Playwright Chromium via `render_slide_screenshot` and
+`render_deck_screenshots`. Vision QA is connected through `vision_review_slide`
+and `vision_review_deck`, so the UI should show scores, approval state,
+problems, and repair instructions when those events arrive.
+
+`slide.preview` payloads may include `toolUsage`. Show the count on the current
+design step when present:
+
+```json
+{
+  "toolUsage": {
+    "stage": "designing",
+    "toolsUsed": 4,
+    "uniqueToolsUsed": 2,
+    "toolNames": ["design_deck_html", "design_slide_html"]
+  }
+}
+```
 
 | Tool | Purpose | Frontend meaning |
 | --- | --- | --- |

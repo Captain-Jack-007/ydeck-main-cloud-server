@@ -20,6 +20,8 @@ async function advanceOne(): Promise<void> {
     .sort({ updatedAt: 1 });
   if (!job) return;
 
+  if (await cancelStaleDevJob(job)) return;
+
   const input = (job.inputParams ?? {}) as Record<string, unknown>;
   const pipeline = input.pipeline ?? "agentic";
   if (env.agentLoopEnabled && pipeline === "agentic" && ["generate", "refine"].includes(job.type)) {
@@ -56,6 +58,47 @@ async function advanceOne(): Promise<void> {
   });
 }
 
+async function cancelStaleDevJob(job: Awaited<ReturnType<typeof DeckJobModel.findOne>>): Promise<boolean> {
+  if (!job || env.nodeEnv === "production") return false;
+  const maxAgeMs = Math.max(1, env.devJobResumeMaxAgeMinutes) * 60 * 1000;
+  const createdAt = (job as unknown as { createdAt?: Date }).createdAt;
+  const updatedAt = (job as unknown as { updatedAt?: Date }).updatedAt;
+  const reference = job.status === "queued" ? createdAt ?? updatedAt : updatedAt ?? createdAt;
+  if (!reference || Date.now() - reference.getTime() <= maxAgeMs) return false;
+
+  const resultMeta = isRecord(job.resultMeta) ? job.resultMeta : {};
+  const input = isRecord(job.inputParams) ? job.inputParams : {};
+  const explicitlyContinued = resultMeta.retryType === "continue" || input.retryType === "continue" || input.continuedFromJobId || resultMeta.continuedFromJobId;
+  if (explicitlyContinued) return false;
+
+  job.status = "canceled";
+  job.errorMessage = `Dev worker skipped stale job older than ${env.devJobResumeMaxAgeMinutes} minutes.`;
+  job.finishedAt = new Date();
+  job.resultMeta = {
+    ...resultMeta,
+    stoppedBy: "system",
+    staleCanceledAt: new Date().toISOString(),
+    staleCancelReason: "dev_worker_stale_job_guard",
+    canContinue: true,
+  };
+  await job.save();
+  logger.info({ jobId: job.id, updatedAt: reference }, "job_worker.dev_stale_job_canceled");
+  jobBus.emitJob({
+    jobId: job.id,
+    status: job.status,
+    progress: job.progress,
+    errorMessage: job.errorMessage,
+    channel: "deck.canceled",
+    payload: {
+      reason: "dev_worker_stale_job_guard",
+      canContinue: true,
+      maxAgeMinutes: env.devJobResumeMaxAgeMinutes,
+    },
+    at: new Date().toISOString(),
+  });
+  return true;
+}
+
 async function failJob(jobId: string, message: string): Promise<void> {
   const job = await DeckJobModel.findById(jobId);
   if (!job) return;
@@ -86,6 +129,10 @@ async function finishJob(jobId: string, status: JobStatus, progress: number): Pr
     progress: job.progress,
     at: new Date().toISOString(),
   });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 export function startJobWorker(): () => void {

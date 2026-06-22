@@ -150,6 +150,7 @@ result fetching. `deckId` is currently the job id for compatibility.
 Other cloud deck endpoints:
 
 ```http
+GET  /v1/cloud/agent/tools
 GET  /v1/cloud/decks/:projectId
 GET  /v1/cloud/decks/:projectId/versions
 POST /v1/cloud/decks/:projectId/export
@@ -159,11 +160,57 @@ POST /v1/cloud/jobs/:jobId/continue
 POST /v1/cloud/jobs/:jobId/retry
 ```
 
+Development server note: in `NODE_ENV !== "production"`, the worker will not
+auto-resume stale non-terminal jobs older than `DEV_JOB_RESUME_MAX_AGE_MINUTES`
+(default `10`). It marks them `canceled` with `canContinue: true` so the
+frontend can show a Continue action instead of unexpectedly regenerating a deck
+after a server restart.
+
 Export request:
 
 ```json
 {
   "format": "html"
+}
+```
+
+Tool discovery endpoint:
+
+```http
+GET /v1/cloud/agent/tools
+GET /v1/cloud/agent/tools?agent=html_designer
+GET /v1/cloud/agent/tools?role=design
+```
+
+This endpoint is for debug/admin/frontend timeline configuration. It returns the
+registered internal tool metadata grouped by category. The frontend should not
+execute these tools directly.
+
+Example response shape:
+
+```json
+{
+  "success": true,
+  "mode": "cloud",
+  "totalAdvancedTools": 80,
+  "returnedTools": 15,
+  "filter": {
+    "agent": "html_designer",
+    "mappedRole": "design"
+  },
+  "groups": {
+    "Design and Layout": 8,
+    "Image and Visual Asset": 2
+  },
+  "tools": [
+    {
+      "name": "design_slide_html",
+      "risk": "read",
+      "group": "Design and Layout",
+      "agents": ["design"],
+      "maturity": "adapter"
+    }
+  ]
 }
 ```
 
@@ -295,6 +342,105 @@ no-save LLM response should not leave the frontend without an artifact.
 
 These tools are backend-internal. They may appear in `agent:loop` events and in
 `job.resultMeta.agent.toolCalls`.
+
+The backend now registers the full advanced YDeck tool surface: **80 internal
+tools across 10 groups**. Specialist agents do not see all tools at once. The
+orchestrator selects a small permissioned set per role, such as Research Agent
+tools, Design Agent tools, QA tools, or Export tools.
+
+Tool groups:
+
+| Group | Examples |
+| --- | --- |
+| Project and workspace | `inspect_project`, `read_workspace_context`, `read_brand_kit`, `read_deck_history` |
+| File and document | `list_files`, `read_file`, `extract_pdf`, `extract_docx`, `ocr_image`, `summarize_file` |
+| Research and source | `web_search`, `web_fetch`, `trigger_research`, `verify_sources`, `create_citation_list` |
+| Deck planning | `create_deck_brief`, `create_deck_plan`, `create_outline`, `validate_outline` |
+| Content writing | `write_slide_content`, `rewrite_slide`, `translate_deck`, `check_content_quality` |
+| Design and layout | `choose_design_pack`, `choose_layouts`, `design_slide_html`, `design_deck_html` |
+| Image and visual asset | `detect_visual_needs`, `search_images`, `create_chart`, `create_diagram` |
+| QA and repair | `run_design_qa`, `vision_review_slide`, `repair_slide_design`, `final_deck_review` |
+| Export and delivery | `save_deck_artifact`, `export_pptx`, `export_pdf`, `create_share_link` |
+| Memory and analytics | `search_workspace_memory`, `list_skills`, `save_user_feedback`, `admin_audit_log` |
+
+Some advanced tools are adapters around current production services. OCR is
+connected through the backend `ocr_image` tool using Google Vision first and
+Tencent OCR as fallback when configured. Browser screenshot rendering is
+connected through Playwright Chromium with `render_slide_screenshot` and
+`render_deck_screenshots`. Vision review is connected through
+`vision_review_slide` and `vision_review_deck` with OpenAI vision as primary and
+Tencent Hunyuan as fallback when the cloud account has Hunyuan activated. The
+frontend should treat tool calls as progress/debug information, not as the
+canonical deck state.
+
+Runtime tool prompts are permissioned by role. For example, an HTML Designer
+prompt receives Design Agent tools, while a Research Agent prompt receives
+Research Agent tools. The legacy loop also receives a bounded prompt-to-deck
+tool set instead of the full registry.
+
+Every production-stage event should expose tool usage for that stage:
+
+```json
+{
+  "toolUsage": {
+    "stage": "designing",
+    "toolsUsed": 7,
+    "uniqueToolsUsed": 2,
+    "toolNames": ["design_deck_html", "design_slide_html"]
+  }
+}
+```
+
+The frontend should show `toolsUsed` on each visible agent step when present.
+
+When OCR runs, the backend may emit:
+
+```json
+{
+  "type": "agent.tool.ocr",
+  "tool": "ocr_image",
+  "provider": "tencent_ocr",
+  "fallbackFrom": "google_vision",
+  "textLength": 1840,
+  "blockCount": 12,
+  "source": {
+    "type": "file",
+    "fileId": "6a...",
+    "mimeType": "image/png",
+    "bytes": 424000
+  }
+}
+```
+
+The frontend can render this as a file-processing step such as “Extracted text
+from image.” Do not display service account paths or credential details.
+
+When screenshots render, the backend may emit:
+
+```json
+{
+  "type": "agent.tool.render",
+  "tool": "render_slide_screenshot",
+  "slideNumber": 5,
+  "screenshotUrl": "/v1/cloud/exports/6a.../download",
+  "width": 1920,
+  "height": 1080,
+  "format": "png",
+  "bytes": 418220,
+  "renderedAt": "2026-06-22T10:00:00.000Z",
+  "metadata": {
+    "renderer": "playwright_chromium",
+    "deviceScaleFactor": 1,
+    "selector": ".ydeck-slide"
+  }
+}
+```
+
+If `screenshotUrl` is a `/v1/cloud/exports/.../download` URL, request it with
+the normal auth session. In local smoke tests without workspace context, the URL
+may be a `data:image/png;base64,...` URL.
+Use `toolNames` for expandable debug detail. The final `run.summary` and job
+`resultMeta.productionFlow.toolUsage` include total usage and `byStage` counts.
 
 | Tool | Category | What it does | What frontend gets |
 | --- | --- | --- | --- |
@@ -696,7 +842,11 @@ Use this for visible design QA and auto-fix messaging.
   "type": "deck.qa",
   "jobId": "6660...",
   "data": {
+    "source": "vision_qa",
+    "provider": "openai_vision",
     "averageScore": 94,
+    "approved": true,
+    "deckSummary": "The deck is polished and visually consistent.",
     "acceptedSlides": 10,
     "repairedSlides": 2,
     "slideCount": 10,

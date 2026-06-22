@@ -61,7 +61,7 @@ export async function registerUser(
 
   // Auto-create personal workspace + owner membership + subscription.
   const workspace = await WorkspaceModel.create({
-    name: `${user.displayName ?? user.email}'s workspace`,
+    name: user.displayName ? `${user.displayName}'s workspace` : "My workspace",
     ownerId: user.id,
     isPersonal: true,
     plan: "free",
@@ -80,7 +80,7 @@ export async function registerUser(
   await WorkspacePreferenceModel.create({ workspaceId: workspace.id });
   await WorkspaceBrandingModel.create({
     workspaceId: workspace.id,
-    companyName: workspace.name,
+    companyName: user.displayName ? workspace.name : null,
     productName: "YDeck",
     primaryColor: "#6d28d9",
     accentColor: "#2563eb",
