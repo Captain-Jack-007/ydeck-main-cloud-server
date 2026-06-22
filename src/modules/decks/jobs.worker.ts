@@ -3,6 +3,7 @@ import { logger } from "../../lib/logger";
 import { jobBus } from "./jobs.events";
 import { env } from "../../config/env";
 import { runCloudDeckAgentJob } from "../agents/cloudDeckAgent";
+import { runExportJob } from "../render/exportJob";
 
 const POLL_MS = 1000;
 
@@ -27,6 +28,18 @@ async function advanceOne(): Promise<void> {
       await runCloudDeckAgentJob(job);
     } catch (err) {
       logger.warn({ err, jobId: job.id }, "job_worker.agentic_failed");
+      await failJob(job.id, (err as Error).message);
+    }
+    return;
+  }
+
+  // Real PPTX rendering for export jobs (the mock pipeline below only advances
+  // statuses and never produces a file).
+  if (job.type === "export" && pipeline !== "mock") {
+    try {
+      await runExportJob(job);
+    } catch (err) {
+      logger.warn({ err, jobId: job.id }, "job_worker.export_failed");
       await failJob(job.id, (err as Error).message);
     }
     return;

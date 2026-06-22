@@ -10,6 +10,7 @@ import { authRouter } from "./modules/auth/auth.routes";
 import { workspaceRouter } from "./modules/workspaces/workspace.routes";
 import { deviceRouter } from "./modules/devices/device.routes";
 import { decksRouter } from "./modules/decks/decks.routes";
+import { filesRouter } from "./modules/files/files.routes";
 import { packsRouter } from "./modules/packs/packs.routes";
 import { billingRouter } from "./modules/billing/billing.routes";
 import { integrationsRouter } from "./modules/integrations/integrations.routes";
@@ -49,6 +50,7 @@ export function createApp(): Express {
   app.use("/v1/workspaces", workspaceRouter);
   app.use("/v1/devices", deviceRouter);
   app.use("/v1", decksRouter);          // /workspaces/:wsId/projects ... etc
+  app.use("/v1/files", filesRouter);    // /files/:fileId/download
   app.use("/v1", packsRouter);          // /templates, /plugins, /workspaces/:wsId/installed-packs
   app.use("/v1/billing", billingRouter);
   app.use("/v1/integrations", integrationsRouter);
