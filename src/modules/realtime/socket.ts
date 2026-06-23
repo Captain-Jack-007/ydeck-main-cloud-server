@@ -5,6 +5,7 @@ import { env } from "../../config/env";
 import { verifyAccessToken } from "../../lib/jwt";
 import { DeckJobModel, WorkspaceMemberModel, type DeckJobDoc } from "../../models";
 import { jobBus, type JobEvent } from "../decks/jobs.events";
+import { listClientJobEvents } from "../decks/jobEventLog.service";
 
 interface AuthedSocket extends Socket {
   user?: {
@@ -42,7 +43,7 @@ export function attachRealtimeServer(httpServer: HttpServer): Server {
   });
 
   io.on("connection", (socket: AuthedSocket) => {
-    socket.on("deck:subscribe", async (payload: { jobId?: string }, ack?: (response: unknown) => void) => {
+    socket.on("deck:subscribe", async (payload: { jobId?: string; afterSeq?: number }, ack?: (response: unknown) => void) => {
       try {
         if (!socket.user) throw new Error("Unauthenticated socket");
         const jobId = payload?.jobId;
@@ -54,7 +55,22 @@ export function attachRealtimeServer(httpServer: HttpServer): Server {
 
         const snapshot = jobToStatus(job);
         socket.emit("deck:status", snapshot);
-        ack?.({ ok: true, job: snapshot });
+        const afterSeq =
+          typeof payload.afterSeq === "number" && Number.isFinite(payload.afterSeq)
+            ? Math.max(0, Math.floor(payload.afterSeq))
+            : null;
+        let replayed = 0;
+        let nextSeq = afterSeq ?? 0;
+        if (afterSeq !== null) {
+          const events = await listClientJobEvents(job.id, { afterSeq, limit: 500 });
+          for (const event of events) {
+            socket.emit(event.eventName, event);
+            socket.emit("deck:event", event);
+            replayed += 1;
+            nextSeq = event.seq;
+          }
+        }
+        ack?.({ ok: true, job: snapshot, replayed, nextSeq });
       } catch (err) {
         const message = err instanceof Error ? err.message : "Failed to subscribe";
         ack?.({ ok: false, error: message });
@@ -135,6 +151,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: "deck:artifact",
       payload: {
+        seq: event.seq,
         type: "deck.artifact",
         jobId: event.jobId,
         data: event.payload,
@@ -147,6 +164,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: "agent:loop",
       payload: {
+        seq: event.seq,
         type: "agent.loop",
         jobId: event.jobId,
         data: event.payload,
@@ -159,6 +177,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: "deck:done",
       payload: {
+        seq: event.seq,
         type: "run.summary",
         jobId: event.jobId,
         status: event.status,
@@ -174,6 +193,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: namedDeckEvent,
       payload: {
+        seq: event.seq,
         type: event.channel,
         jobId: event.jobId,
         status: event.status,
@@ -188,6 +208,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: event.channel,
       payload: {
+        seq: event.seq,
         type: event.channel,
         jobId: event.jobId,
         status: event.status,
@@ -202,6 +223,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
     return {
       name: event.status === "done" ? "deck:done" : event.status === "canceled" ? "deck:canceled" : "deck:error",
       payload: {
+        seq: event.seq,
         type: "job.status",
         jobId: event.jobId,
         status: event.status,
@@ -215,6 +237,7 @@ function mapJobEvent(event: JobEvent): { name: string; payload: unknown } {
   return {
     name: "deck:status",
     payload: {
+      seq: event.seq,
       type: "job.status",
       jobId: event.jobId,
       status: event.status,

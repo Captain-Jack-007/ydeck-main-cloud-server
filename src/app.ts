@@ -55,6 +55,7 @@ export function createApp(): Express {
   app.use('/api', apiCompatRouter);
 
   app.use('/v1/auth', authRouter);
+  app.use('/v1/assets', publicAssetRouter);
   app.use('/v1/user', userRouter);
   app.use('/v1/workspaces', workspaceRouter);
   app.use('/v1/devices', deviceRouter);
@@ -64,7 +65,6 @@ export function createApp(): Express {
   app.use('/v1/integrations', integrationsRouter);
   app.use('/v1/admin', adminRouter);
   app.use('/v1/cloud', cloudRouter);
-  app.use('/v1/assets', publicAssetRouter);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

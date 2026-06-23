@@ -100,7 +100,7 @@ integrationsRouter.post(
                 meta: { username: msg.from.username, firstName: msg.from.first_name },
               },
             },
-            { upsert: true, new: true, setDefaultsOnInsert: true },
+            { upsert: true, returnDocument: "after", setDefaultsOnInsert: true },
           );
           logger.info({ userId: linkCode.userId, tgId: msg.from.id }, "telegram.linked");
         }

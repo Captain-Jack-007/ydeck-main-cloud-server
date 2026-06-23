@@ -7,6 +7,11 @@ YDeck is currently **cloud-first**. The web frontend should integrate with cloud
 jobs, cloud realtime events, cloud previews, and cloud artifacts. Local/private
 runtime behavior is future scope and should not shape the web contract today.
 
+For the backend slide-generation rules YDeck keeps from Open Design, see
+[Open Design Slide Generation Principles](./open-design-slide-generation-principles.md).
+For the frontend design-system picker and payload contract, see
+[Frontend Design System Selection](./frontend-design-system-selection.md).
+
 The frontend does not call agent tools directly. The frontend starts a job,
 subscribes to realtime events, renders backend previews, and fetches the final
 artifact.
@@ -487,6 +492,8 @@ on prompt, config, and future capabilities.
 
 ## Realtime Socket Contract
 
+Canonical replay/resume contract: `docs/frontend-job-event-replay.md`.
+
 Connect:
 
 ```ts
@@ -506,6 +513,58 @@ socket.emit("deck:subscribe", { jobId }, (ack) => {
 ```
 
 The socket token must belong to a user who is a member of the job workspace.
+Live event payloads include `seq` once they have been written to the durable job
+event log. Store the highest `seq` seen per `jobId`, and ignore any replayed or
+live event whose `seq` is less than or equal to the stored value.
+
+To replay missed events after a tab refresh, network reconnect, or process
+restart:
+
+```ts
+socket.emit("deck:subscribe", { jobId, afterSeq: lastSeenSeq }, (ack) => {
+  if (!ack?.ok) {
+    showError(ack?.error ?? "Realtime subscription failed");
+    return;
+  }
+  saveLastSeenSeq(jobId, ack.nextSeq ?? lastSeenSeq);
+});
+```
+
+The server first sends a current `deck:status` snapshot, then replays stored
+events with `seq > afterSeq` through both their named event and the normalized
+`deck:event` catch-all. If the frontend prefers HTTP for recovery, call:
+
+```http
+GET /v1/jobs/:jobId/event-log?afterSeq=:lastSeenSeq&limit=200
+```
+
+Response:
+
+```json
+{
+  "jobId": "6660...",
+  "projectId": "665f...",
+  "workspaceId": "665e...",
+  "afterSeq": 42,
+  "events": [
+    {
+      "seq": 43,
+      "eventName": "deck:repair",
+      "type": "deck.repair",
+      "jobId": "6660...",
+      "status": "llm",
+      "progress": 86,
+      "data": { "action": "slide_started", "slideNumber": 2 },
+      "at": "2026-06-23T12:00:00.000Z"
+    }
+  ],
+  "nextSeq": 43,
+  "hasMore": false
+}
+```
+
+Use the event log for exact live UI replay. Use `GET /v1/jobs/:jobId` and
+`resultMeta.deckArtifact` as the canonical final deck state.
 
 ## Events The Frontend Receives
 
@@ -648,6 +707,48 @@ same shape.
   }
 }
 ```
+
+### `deck:content`
+
+Use this for slide-writing and layout-selection progress. The backend writes
+content one slide at a time, then chooses layouts one slide at a time; it does
+not ask the LLM to produce the whole deck content or all layouts in one response.
+
+Slide content written:
+
+```json
+{
+  "type": "deck.content",
+  "jobId": "6660...",
+  "data": {
+    "stage": "content_writing",
+    "action": "slide_completed",
+    "slideNumber": 3,
+    "slideTitle": "Practice: Choose Am, Is, or Are",
+    "writtenSlides": 3,
+    "slideCount": 6
+  }
+}
+```
+
+Slide layout selected:
+
+```json
+{
+  "type": "deck.content",
+  "jobId": "6660...",
+  "data": {
+    "stage": "layouting",
+    "action": "slide_layout_selected",
+    "slideNumber": 3,
+    "layoutId": "exercise_cards",
+    "laidOutSlides": 3,
+    "slideCount": 6
+  }
+}
+```
+
+The frontend can show these as progress rows before `slide.preview` events begin.
 
 ### `deck:status`
 
@@ -861,6 +962,65 @@ Use this for visible design QA and auto-fix messaging.
   }
 }
 ```
+
+### `deck:repair`
+
+Use this to show repair progress after QA finds weak or blocking slides. The
+backend repairs one problem slide at a time and emits progress through the same
+event name with an `action` field.
+
+Started:
+
+```json
+{
+  "type": "deck.repair",
+  "jobId": "6660...",
+  "data": {
+    "action": "started",
+    "message": "Repairing 1 slide after QA.",
+    "totalSlides": 1,
+    "repairedSlides": 0,
+    "slides": [
+      {
+        "slideNumber": 2,
+        "issueCount": 1,
+        "issues": [
+          {
+            "slideNumber": 2,
+            "severity": "error",
+            "problem": "Unsafe or remote HTML detected.",
+            "repairInstruction": "Remove scripts, iframes, and remote URLs."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+Per-slide progress:
+
+```json
+{
+  "type": "deck.repair",
+  "jobId": "6660...",
+  "data": {
+    "action": "slide_started",
+    "message": "Repairing slide 2.",
+    "slideNumber": 2,
+    "slideTitle": "Present Forms: Am, Is, Are",
+    "repairIndex": 1,
+    "totalSlides": 1,
+    "repairedSlides": 0,
+    "issues": []
+  }
+}
+```
+
+The backend emits `action: "slide_completed"` after each repaired slide and
+`action: "completed"` after all targeted slides are merged. The frontend should
+show these as transient progress, then keep rendering updated `slide.preview`
+events and use the final `deck:done`/job artifact as the source of truth.
 
 ### `deck:asset`
 
@@ -1247,15 +1407,17 @@ project's `meta.deckArtifact` points at the newest version.
 
 ## Reconnect And Refresh
 
-Socket rooms are in-memory. If the socket reconnects:
+Socket rooms are in-memory, but workflow events are durable. If the socket
+reconnects:
 
 ```ts
-socket.emit("deck:subscribe", { jobId });
+socket.emit("deck:subscribe", { jobId, afterSeq: lastSeenSeq });
 const job = await api.getJob(jobId);
 ```
 
 If `job.status === "done"`, render `job.resultMeta.deckArtifact` immediately.
-If the job is still running, keep listening for events.
+If the job is still running, replay events after `lastSeenSeq` and keep
+listening for live events.
 
 ## What The Frontend Should Not Do
 

@@ -41,6 +41,7 @@ const generateCloudDeckSchema = z.object({
   prompt: z.string().min(1).max(10_000),
   fileId: z.string().optional(),
   deckType: z.string().min(1).max(80).optional(),
+  templateId: z.string().min(1).max(160).optional(),
   designStyle: z.string().min(1).max(120).optional(),
   language: z.string().min(1).max(20).optional(),
   slideCount: z.number().int().min(1).max(100).optional(),
@@ -55,6 +56,7 @@ const cloudAgentMessageSchema = z.object({
   workspaceId: z.string().optional(),
   projectId: z.string().optional(),
   deckType: z.string().min(1).max(80).optional(),
+  templateId: z.string().min(1).max(160).optional(),
   designStyle: z.string().min(1).max(120).optional(),
   language: z.string().min(1).max(20).optional(),
   slideCount: z.number().int().min(1).max(100).optional(),
@@ -210,10 +212,15 @@ cloudRouter.post(
             parsed.data.deckType ??
             'general',
           designStyle:
+            parsed.data.designStyle ??
             artifact?.designStyle ??
             meta.designStyle ??
-            parsed.data.designStyle ??
             'modern',
+          templateId:
+            parsed.data.templateId ??
+            existingProject.templateId ??
+            meta.templateId ??
+            null,
           language:
             artifact?.language ?? meta.language ?? parsed.data.language ?? 'en',
           slideCount: Array.isArray(artifact?.slides)
@@ -262,10 +269,11 @@ cloudRouter.post(
         ownerId: req.auth!.userId,
         title,
         description: parsed.data.message,
-        templateId: null,
+        templateId: parsed.data.templateId ?? null,
         meta: {
           mode: 'cloud',
           source: 'cloud_agent_message',
+          templateId: parsed.data.templateId ?? null,
           messageIntent: intent,
         },
       }));
@@ -278,6 +286,7 @@ cloudRouter.post(
       inputParams: {
         prompt: parsed.data.message,
         deckType: parsed.data.deckType ?? 'general',
+        templateId: parsed.data.templateId ?? project.templateId ?? null,
         designStyle: parsed.data.designStyle ?? 'modern',
         language: parsed.data.language ?? intent.inferredLanguage ?? 'en',
         ...(parsed.data.slideCount ?? intent.inferredSlideCount
@@ -333,8 +342,12 @@ cloudRouter.post(
       ownerId: req.auth!.userId,
       title,
       description: parsed.data.prompt,
-      templateId: null,
-      meta: { mode: 'cloud', source: 'cloud_generate' },
+      templateId: parsed.data.templateId ?? null,
+      meta: {
+        mode: 'cloud',
+        source: 'cloud_generate',
+        templateId: parsed.data.templateId ?? null,
+      },
     });
     const job = await DeckJobModel.create({
       projectId: project.id,
@@ -346,6 +359,7 @@ cloudRouter.post(
         prompt: parsed.data.prompt,
         fileId: parsed.data.fileId,
         deckType: parsed.data.deckType ?? 'general',
+        templateId: parsed.data.templateId ?? null,
         designStyle: parsed.data.designStyle ?? 'modern',
         language: parsed.data.language ?? 'en',
         slideCount: parsed.data.slideCount ?? 10,

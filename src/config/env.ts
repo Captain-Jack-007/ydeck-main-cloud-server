@@ -61,7 +61,6 @@ export const env = {
   publicBaseUrl: (
     process.env.PUBLIC_BASE_URL ??
     process.env.SERVER_PUBLIC_URL ??
-    process.env.APP_PUBLIC_URL ??
     ''
   ).replace(/\/+$/, ''),
 

@@ -65,14 +65,14 @@ userRouter.patch(
         ? WorkspacePreferenceModel.findOneAndUpdate(
             { workspaceId },
             { $set: preferencePatch },
-            { new: true, upsert: true, setDefaultsOnInsert: true },
+            { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
           )
         : Promise.resolve(null),
       brandingPatch && Object.keys(brandingPatch).length
         ? WorkspaceBrandingModel.findOneAndUpdate(
             { workspaceId },
             { $set: brandingPatch },
-            { new: true, upsert: true, setDefaultsOnInsert: true },
+            { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
           )
         : Promise.resolve(null),
     ]);

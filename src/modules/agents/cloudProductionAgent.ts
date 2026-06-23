@@ -20,6 +20,14 @@ import {
 } from '../assets/imageAsset.service';
 import { renderDeckScreenshots } from '../render/render.service';
 import {
+  selectDesignSystems,
+  type DesignSystemContext,
+} from '../designSystems/designSystemCatalog.service';
+import {
+  selectDesignTemplates,
+  type DesignTemplateContext,
+} from '../designTemplates/designTemplateCatalog.service';
+import {
   normalizeResearchMode,
   runLiveResearch,
   shouldResearch,
@@ -46,9 +54,10 @@ import type {
   CloudProductionStatus,
 } from './cloudWorkflow.contract';
 import {
-  contentArtifactSchema,
+  contentSlideSchema,
   deckBriefSchema,
   exportArtifactSchema,
+  layoutDecisionSchema,
   layoutArtifactSchema,
   outlineArtifactSchema,
   planArtifactSchema,
@@ -59,7 +68,8 @@ import { emitCloudEvent, selectCloudWorkflow } from './cloudOrchestrator';
 type DeckBrief = typeof deckBriefSchema._output;
 type PlanArtifact = typeof planArtifactSchema._output;
 type OutlineArtifact = typeof outlineArtifactSchema._output;
-type ContentArtifact = typeof contentArtifactSchema._output;
+type ContentSlide = typeof contentSlideSchema._output;
+type ContentArtifact = { slides: ContentSlide[] };
 type LayoutArtifact = typeof layoutArtifactSchema._output;
 type QaArtifact = typeof qaArtifactSchema._output;
 type ExportArtifact = typeof exportArtifactSchema._output;
@@ -103,7 +113,9 @@ interface ContextArtifact {
   branding: unknown;
   installedPacks: unknown[];
   templatePacks: unknown[];
+  designTemplates: DesignTemplateContext[];
   pluginPacks: unknown[];
+  designSystems: DesignSystemContext[];
   previousDeckVersion: unknown;
 }
 
@@ -461,6 +473,8 @@ async function contextAgent(ctx: RunContext): Promise<ContextArtifact> {
   recordToolUsage(ctx, 'read_workspace_context', 'db', 'context');
   recordToolUsage(ctx, 'read_brand_kit', 'db', 'context');
   recordToolUsage(ctx, 'list_design_packs', 'db', 'context');
+  recordToolUsage(ctx, 'read_design_templates', 'deterministic', 'context');
+  recordToolUsage(ctx, 'read_design_systems', 'deterministic', 'context');
   recordToolUsage(ctx, 'read_deck_history', 'db', 'context');
   const [preferences, branding, installedPacks, templatePacks, pluginPacks] =
     await Promise.all([
@@ -485,6 +499,20 @@ async function contextAgent(ctx: RunContext): Promise<ContextArtifact> {
         .limit(50)
         .lean(),
     ]);
+  const designSystems = await selectDesignSystems({
+    designStyle: ctx.input.designStyle,
+    deckType: ctx.input.deckType,
+    templateId: ctx.project.templateId,
+    branding,
+    preferences,
+  });
+  const designTemplates = await selectDesignTemplates({
+    templateId: ctx.input.templateId ?? ctx.project.templateId,
+    deckType: ctx.input.deckType,
+    designStyle: ctx.input.designStyle,
+    prompt:
+      ctx.input.prompt ?? ctx.input.userPrompt ?? ctx.project.description,
+  });
   const previousDeck = isRecord(ctx.project.meta.deckArtifact)
     ? ctx.project.meta.deckArtifact
     : null;
@@ -494,7 +522,9 @@ async function contextAgent(ctx: RunContext): Promise<ContextArtifact> {
     branding: branding ?? null,
     installedPacks: installedPacks ?? [],
     templatePacks: templatePacks ?? [],
+    designTemplates,
     pluginPacks: pluginPacks ?? [],
+    designSystems,
     previousDeckVersion: isRecord(previousDeck?.version)
       ? previousDeck.version
       : null,
@@ -629,22 +659,56 @@ async function contentAgent(
   research: ResearchArtifact | null
 ): Promise<ContentArtifact> {
   const refinementPlan = designRefinementPlan(ctx);
-  const prompt = jsonPrompt(
-    'Content Agent',
-    {
-      brief,
-      outline,
-      context: summarizeContext(context),
-      files,
-      research,
-      refinementPlan,
-    },
-    'Return JSON with slides. Each slide has slideNumber, title, optional subtitle, bullets, speakerNotes, visualSuggestion. Do not include HTML. If this is a design refinement, preserve the existing story/content unless the user explicitly asks for copy changes. If you include numbers, statistics, market size, competitor claims, recent facts, policy facts, or financial/business facts, they must come from the ResearchArtifact or uploaded files. If no source exists, remove the claim or mark it as an assumption.'
-  );
-  return callJsonAgent(ctx, 'content_writer', prompt, contentArtifactSchema, {
-    temperature: 0.45,
-    maxTokens: 3000,
-  });
+  const slides: ContentArtifact['slides'] = [];
+  for (const outlineSlide of outline.slides) {
+    const prompt = jsonPrompt(
+      `Content Agent - Slide ${outlineSlide.slideNumber}`,
+      {
+        brief,
+        deck: {
+          deckTitle: outline.deckTitle,
+          slideCount: outline.slides.length,
+        },
+        currentOutlineSlide: outlineSlide,
+        surroundingOutline: outline.slides.map((slide) => ({
+          slideNumber: slide.slideNumber,
+          slideType: slide.slideType,
+          title: slide.title,
+          purpose: slide.purpose,
+        })),
+        previousSlides: slides.map((slide) => ({
+          slideNumber: slide.slideNumber,
+          title: slide.title,
+          bullets: slide.bullets,
+        })),
+        context: summarizeContext(context),
+        files,
+        research,
+        refinementPlan,
+      },
+      `Return JSON for exactly slide ${outlineSlide.slideNumber}, not the full deck. Include slideNumber, title, optional subtitle, bullets, speakerNotes, and visualSuggestion. Do not include HTML. If this is a design refinement, preserve the existing story/content unless the user explicitly asks for copy changes. If you include numbers, statistics, market size, competitor claims, recent facts, policy facts, or financial/business facts, they must come from the ResearchArtifact or uploaded files. If no source exists, remove the claim or mark it as an assumption.`
+    );
+    const slide = await callJsonAgent(
+      ctx,
+      'content_writer',
+      prompt,
+      contentSlideSchema,
+      {
+        temperature: 0.45,
+        maxTokens: 1200,
+      }
+    );
+    slides.push(slide);
+    emitProductionEvent(ctx, 'deck.content', {
+      stage: 'content_writing',
+      action: 'slide_completed',
+      slideNumber: slide.slideNumber,
+      slideTitle: slide.title,
+      writtenSlides: slides.length,
+      slideCount: outline.slides.length,
+    });
+  }
+  return { slides };
 }
 
 async function layoutAgent(
@@ -652,18 +716,43 @@ async function layoutAgent(
   content: ContentArtifact
 ): Promise<LayoutArtifact> {
   const refinementPlan = designRefinementPlan(ctx);
-  const prompt = jsonPrompt(
-    'Layout Agent',
-    {
-      content,
-      refinementPlan,
-    },
-    'Return JSON with layouts array. Each item has slideNumber, layoutId, reason. Choose a short descriptive layoutId that fits the slide (examples: title_hero, problem_cards, metric_focus, timeline_process, comparison_split, card_grid, quote_statement, closing_cta). The layoutId is only a semantic hint; the html_designer will compose the slide freely.'
-  );
-  return callJsonAgent(ctx, 'layout_selector', prompt, layoutArtifactSchema, {
-    temperature: 0.15,
-    maxTokens: 1400,
-  });
+  const layouts: LayoutArtifact['layouts'] = [];
+  for (const slide of content.slides) {
+    const prompt = jsonPrompt(
+      `Layout Agent - Slide ${slide.slideNumber}`,
+      {
+        currentSlide: slide,
+        surroundingSlides: content.slides.map((item) => ({
+          slideNumber: item.slideNumber,
+          title: item.title,
+          visualSuggestion: item.visualSuggestion,
+        })),
+        previousLayouts: layouts,
+        refinementPlan,
+      },
+      'Return JSON for exactly one slide, not the full deck. Include slideNumber, layoutId, and reason. Choose a short descriptive layoutId that fits the slide (examples: title_hero, problem_cards, metric_focus, timeline_process, comparison_split, card_grid, quote_statement, closing_cta). The layoutId is only a semantic hint; the html_designer will compose the slide freely.'
+    );
+    const layout = await callJsonAgent(
+      ctx,
+      'layout_selector',
+      prompt,
+      layoutDecisionSchema,
+      {
+        temperature: 0.15,
+        maxTokens: 500,
+      }
+    );
+    layouts.push(layout);
+    emitProductionEvent(ctx, 'deck.content', {
+      stage: 'layouting',
+      action: 'slide_layout_selected',
+      slideNumber: layout.slideNumber,
+      layoutId: layout.layoutId,
+      laidOutSlides: layouts.length,
+      slideCount: content.slides.length,
+    });
+  }
+  return layoutArtifactSchema.parse({ layouts });
 }
 
 async function htmlDesignerAgent(
@@ -773,6 +862,8 @@ async function designSingleSlideWithLlm(
         layoutId: item.layoutId,
       })),
       availableImageAsset: imageHint,
+      designTemplates: designTemplatesForPrompt(ctx),
+      designSystems: designSystemsForPrompt(ctx),
       rules: htmlDesignRules(),
     },
     `Return JSON for exactly one slide, not a full deck. Include slideNumber, slideType, title, subtitle, bullets, speakerNotes, layoutId, visual, and html. The html field is REQUIRED and must be a single complete self-contained <section class="ydeck-slide" style="width:1920px;height:1080px;position:relative;overflow:hidden;..."> element. Design this slide as a unique, fully laid-out 1920x1080 composition: use inline CSS for typography, color, spacing, grid/flex layout, cards, charts, timelines, diagrams, and inline SVG icons as the slide content needs. Vary the composition meaningfully across slides so no two slides look the same. ${
@@ -839,8 +930,6 @@ function substituteImageTokens(
 }
 
 function imageAssetPublicUrl(asset: ImageAsset): string {
-  if (asset.storedUrl && /^https?:\/\//i.test(asset.storedUrl))
-    return asset.storedUrl;
   const path = `/v1/assets/images/${asset.id}`;
   return env.publicBaseUrl ? `${env.publicBaseUrl}${path}` : path;
 }
@@ -1041,7 +1130,6 @@ async function repairAgent(
   qa: QaArtifact
 ): Promise<CloudDeckArtifact> {
   recordToolUsage(ctx, 'repair_deck_design', 'llm', 'repair');
-  const schema = deckArtifactForAgentSchema();
   const assetBySlide = new Map<number, ImageAsset>();
   for (const slide of deck.slides) {
     const asset = (slide.visual as { imageAsset?: ImageAsset } | undefined)
@@ -1054,29 +1142,130 @@ async function repairAgent(
     assetBySlide.has(slideNumber)
       ? `{{YDECK_IMAGE_SLIDE_${slideNumber}}}`
       : null;
-  const prompt = jsonPrompt(
-    'Repair Agent',
-    {
-      qa,
-      deck: compactDeckForRepair(deck, qa, tokenFor),
-      rules: htmlDesignRules(),
-    },
-    'Return a repaired JSON deck artifact. Preserve the slide count and the original story; rewrite only the slides flagged in QA. Each slide must include an html field with a complete self-contained <section class="ydeck-slide"> at 1920x1080 designed freely. When an availableImageAsset is provided for a slide, reference its image only via the given srcToken (e.g. <img src="{{YDECK_IMAGE_SLIDE_1}}">); never inline base64 or external URLs. Never use scripts, iframes, or remote URLs.'
-  );
-  const repaired = await callJsonAgent(ctx, 'repair', prompt, schema, {
-    temperature: 0.25,
-    maxTokens: Math.min(env.llmMaxTokens, 8000),
+  const issuesBySlide = issuesGroupedBySlide(qa);
+  if (!issuesBySlide.size) return deck;
+
+  const totalSlides = issuesBySlide.size;
+  emitProductionEvent(ctx, 'deck.repair', {
+    action: 'started',
+    message: `Repairing ${totalSlides} slide${totalSlides === 1 ? '' : 's'} after QA.`,
+    totalSlides,
+    repairedSlides: 0,
+    slides: Array.from(issuesBySlide, ([slideNumber, issues]) => ({
+      slideNumber,
+      issueCount: issues.length,
+      issues,
+    })),
   });
-  const finalized = finalizeLlmDeck(repaired);
-  return {
-    ...finalized,
-    slides: finalized.slides.map((slide) => {
-      const slideNumber = slide.slideNumber ?? 0;
-      const asset = assetBySlide.get(slideNumber);
-      const token = tokenFor(slideNumber);
-      return asset ? substituteImageTokens(slide, asset, token) : slide;
+
+  const repairedBySlide = new Map<number, CloudDeckSlide>();
+  let repairIndex = 0;
+  for (const [slideNumber, issues] of issuesBySlide) {
+    const originalSlide = deck.slides.find(
+      (slide, index) => (slide.slideNumber ?? index + 1) === slideNumber
+    );
+    if (!originalSlide) continue;
+
+    repairIndex += 1;
+    const asset = assetBySlide.get(slideNumber);
+    const imageToken = tokenFor(slideNumber);
+    emitProductionEvent(ctx, 'deck.repair', {
+      action: 'slide_started',
+      message: `Repairing slide ${slideNumber}.`,
+      slideNumber,
+      slideTitle: originalSlide.title,
+      repairIndex,
+      totalSlides,
+      repairedSlides: repairedBySlide.size,
+      issues,
+    });
+
+    const prompt = jsonPrompt(
+      `Repair Agent - Slide ${slideNumber}`,
+      {
+        deck: {
+          deckTitle: deck.deckTitle,
+          deckType: deck.deckType,
+          designStyle: deck.designStyle,
+          language: deck.language,
+          slideCount: deck.slides.length,
+        },
+        slide: compactSlideForRepair(originalSlide, imageToken),
+        issues,
+        surroundingSlides: deck.slides.map((slide, index) => ({
+          slideNumber: slide.slideNumber ?? index + 1,
+          title: slide.title,
+          layoutId: slide.layoutId,
+        })),
+        designTemplates: designTemplatesForPrompt(ctx),
+        designSystems: designSystemsForPrompt(ctx),
+        rules: htmlDesignRules(),
+      },
+      `Return JSON for exactly slide ${slideNumber}, not a full deck. Include slideNumber, slideType, title, subtitle, bullets, speakerNotes, layoutId, visual, and html. The html field is REQUIRED and must be a complete self-contained <section class="ydeck-slide"> at 1920x1080. Repair only the listed issues while preserving the slide's story and role in the deck. ${
+        imageToken
+          ? `If you reference the provided image asset in an <img> tag, set src exactly to "${imageToken}" (this placeholder will be replaced server-side with the real URL); never inline base64 or external URLs.`
+          : 'Do not include any <img> tags; no image asset is available for this slide.'
+      } Never use scripts, iframes, remote URLs, or remote fonts.`
+    );
+    const repaired = await callJsonAgent(
+      ctx,
+      'repair',
+      prompt,
+      slideForAgentSchema(originalSlide),
+      {
+        temperature: 0.25,
+        maxTokens: Math.min(env.llmMaxTokens, 5000),
+      }
+    );
+    repairedBySlide.set(
+      slideNumber,
+      substituteImageTokens(repaired, asset, imageToken)
+    );
+    emitProductionEvent(ctx, 'deck.repair', {
+      action: 'slide_completed',
+      message: `Repaired slide ${slideNumber}.`,
+      slideNumber,
+      slideTitle: repaired.title,
+      repairIndex,
+      totalSlides,
+      repairedSlides: repairedBySlide.size,
+    });
+  }
+
+  const merged = finalizeLlmDeck({
+    ...deck,
+    slides: deck.slides.map((slide, index) => {
+      const slideNumber = slide.slideNumber ?? index + 1;
+      return repairedBySlide.get(slideNumber) ?? slide;
     }),
-  };
+  });
+  const deterministicAfterRepair = deterministicQa(merged);
+  if (
+    deterministicAfterRepair.issues.some(
+      (issue) =>
+        issue.severity === 'error' && repairedBySlide.has(issue.slideNumber)
+    )
+  ) {
+    throw new Error(
+      `repair left blocking issues: ${deterministicAfterRepair.issues
+        .filter(
+          (issue) =>
+            issue.severity === 'error' && repairedBySlide.has(issue.slideNumber)
+        )
+        .map((issue) => `slide ${issue.slideNumber}: ${issue.problem}`)
+        .join('; ')}`
+    );
+  }
+  emitProductionEvent(ctx, 'deck.repair', {
+    action: 'completed',
+    message: `Repair completed for ${repairedBySlide.size} slide${
+      repairedBySlide.size === 1 ? '' : 's'
+    }.`,
+    totalSlides,
+    repairedSlides: repairedBySlide.size,
+    slideNumbers: Array.from(repairedBySlide.keys()),
+  });
+  return merged;
 }
 
 async function exportAgent(
@@ -1617,7 +1806,8 @@ function deterministicQa(deck: CloudDeckArtifact): QaArtifact {
         repairInstruction: 'Use fixed export canvas dimensions.',
       });
     }
-    if (/<script|<iframe|https?:\/\//i.test(html)) {
+    const htmlWithoutAllowedAssets = stripAllowedAssetUrls(html);
+    if (/<script|<iframe|javascript:|https?:\/\//i.test(htmlWithoutAllowedAssets)) {
       score -= 25;
       issues.push({
         slideNumber: slide.slideNumber ?? 1,
@@ -1650,39 +1840,51 @@ function deterministicQa(deck: CloudDeckArtifact): QaArtifact {
   });
 }
 
-function compactDeckForRepair(
-  deck: CloudDeckArtifact,
-  qa: QaArtifact,
-  tokenFor: (slideNumber: number) => string | null = () => null
-): CloudDeckArtifact {
-  const issueSlides = new Set(qa.issues.map((issue) => issue.slideNumber));
+function stripAllowedAssetUrls(html: string): string {
+  let clean = html.replace(
+    /data:image\/[a-z0-9+.-]+;base64,[A-Za-z0-9+/=]+/gi,
+    ''
+  );
+  clean = clean.replace(
+    /https?:\/\/[^"')\s]+\/v1\/assets\/images\/[a-f0-9]{24}\b/gi,
+    ''
+  );
+  clean = clean.replace(/\/v1\/assets\/images\/[a-f0-9]{24}\b/gi, '');
+  if (env.publicBaseUrl) {
+    const escaped = escapeRegExp(env.publicBaseUrl.replace(/\/+$/, ''));
+    clean = clean.replace(
+      new RegExp(`${escaped}/v1/assets/images/[a-f0-9]{24}\\b`, 'gi'),
+      ''
+    );
+  }
+  return clean;
+}
+
+function issuesGroupedBySlide(qa: QaArtifact): Map<number, QaArtifact['issues']> {
+  const groups = new Map<number, QaArtifact['issues']>();
+  for (const issue of qa.issues) {
+    const slideNumber = Math.max(1, Math.round(Number(issue.slideNumber) || 1));
+    groups.set(slideNumber, [...(groups.get(slideNumber) ?? []), issue]);
+  }
+  return groups;
+}
+
+function compactSlideForRepair(
+  slide: CloudDeckSlide,
+  srcToken: string | null
+): CloudDeckSlide {
   return {
-    ...deck,
-    slides: deck.slides.map((slide) => {
-      const slideNumber = slide.slideNumber ?? 0;
-      const slimVisual = slimVisualForPrompt(
-        slide.visual,
-        tokenFor(slideNumber)
-      );
-      if (!issueSlides.has(slideNumber)) {
-        return { ...slide, visual: slimVisual };
-      }
-      return {
-        ...slide,
-        title: compactText(slide.title, 76),
-        subtitle: slide.subtitle
-          ? compactText(slide.subtitle, 130)
-          : slide.subtitle,
-        body: slide.body ? compactText(slide.body, 220) : slide.body,
-        bullets: (slide.bullets ?? [])
-          .slice(0, 4)
-          .map((bullet) => compactText(bullet, 118)),
-        visual: slimVisual,
-        html: undefined,
-        previewHtml: undefined,
-        preview: undefined,
-      };
-    }),
+    ...slide,
+    title: compactText(slide.title, 96),
+    subtitle: slide.subtitle ? compactText(slide.subtitle, 160) : slide.subtitle,
+    body: slide.body ? compactText(slide.body, 260) : slide.body,
+    bullets: (slide.bullets ?? [])
+      .slice(0, 5)
+      .map((bullet) => compactText(bullet, 130)),
+    visual: slimVisualForPrompt(slide.visual, srcToken),
+    html: summarizeHtml(slide.html),
+    previewHtml: undefined,
+    preview: undefined,
   };
 }
 
@@ -1718,7 +1920,46 @@ function htmlDesignRules(): string[] {
     'Use stored image assets from the provided imageAssets only when present; never reference Pexels, Unsplash, or any remote URL directly.',
     'Keep text content concise and faithful to the planned title, subtitle, bullets, and speakerNotes. Do not invent new facts, numbers, or quotes.',
     'Pick a coherent color palette per deck (background, surface, accent, text) and reuse it across slides while still varying the layout. Honor the requested designStyle when given.',
+    'When designTemplates are provided, follow their SKILL/checklist/layout guidance as the primary deck recipe. Preserve the template identity while adapting content to the current slide.',
+    'When designSystems are provided, follow their DESIGN.md rules and token values as the primary visual constraints. Use workspace branding colors only where they do not conflict with the selected design system.',
   ];
+}
+
+function designTemplatesForPrompt(ctx: RunContext): Record<string, unknown>[] {
+  const context = ctx.artifacts.context;
+  if (!isRecord(context) || !Array.isArray(context.designTemplates)) return [];
+  return context.designTemplates
+    .filter(isRecord)
+    .slice(0, 2)
+    .map((template) => ({
+      id: template.id,
+      name: template.name,
+      scenario: template.scenario,
+      description: template.description,
+      skillExcerpt: compactText(String(template.skillExcerpt ?? ''), 2600),
+      checklistExcerpt: compactText(
+        String(template.checklistExcerpt ?? ''),
+        1400
+      ),
+      layoutsExcerpt: compactText(String(template.layoutsExcerpt ?? ''), 1800),
+      templateJson: template.templateJson ?? null,
+    }));
+}
+
+function designSystemsForPrompt(ctx: RunContext): Record<string, unknown>[] {
+  const context = ctx.artifacts.context;
+  if (!isRecord(context) || !Array.isArray(context.designSystems)) return [];
+  return context.designSystems
+    .filter(isRecord)
+    .slice(0, 3)
+    .map((system) => ({
+      id: system.id,
+      name: system.name,
+      category: system.category,
+      description: system.description,
+      designExcerpt: compactText(String(system.designExcerpt ?? ''), 2400),
+      tokensExcerpt: compactText(String(system.tokensExcerpt ?? ''), 1400),
+    }));
 }
 
 function summarizeContext(context: ContextArtifact) {
@@ -1728,7 +1969,19 @@ function summarizeContext(context: ContextArtifact) {
     branding: context.branding,
     installedPackCount: context.installedPacks.length,
     templatePackCount: context.templatePacks.length,
+    designTemplates: context.designTemplates.map((template) => ({
+      id: template.id,
+      name: template.name,
+      scenario: template.scenario,
+      description: template.description,
+    })),
     pluginPackCount: context.pluginPacks.length,
+    designSystems: context.designSystems.map((system) => ({
+      id: system.id,
+      name: system.name,
+      category: system.category,
+      description: system.description,
+    })),
     previousDeckVersion: context.previousDeckVersion,
   };
 }
@@ -2051,6 +2304,10 @@ function compactText(value: string, maxChars: number): string {
   return clean.length <= maxChars
     ? clean
     : `${clean.slice(0, maxChars - 1).trim()}...`;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function clampInt(value: number, min: number, max: number): number {

@@ -52,7 +52,7 @@ async function runManageMemory(args: z.infer<typeof ManageMemoryArgsSchema>, wor
   const pref = await WorkspacePreferenceModel.findOneAndUpdate(
     { workspaceId },
     { $setOnInsert: { workspaceId } },
-    { upsert: true, new: true, setDefaultsOnInsert: true },
+    { upsert: true, returnDocument: "after", setDefaultsOnInsert: true },
   );
   const meta = record(pref.get("meta"));
   const memories = Array.isArray(meta.agentMemories) ? (meta.agentMemories as Array<Record<string, unknown>>) : [];
