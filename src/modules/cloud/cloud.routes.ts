@@ -6,6 +6,7 @@ import { ApiError } from '../../lib/errors';
 import { randomToken, sha256Hex } from '../../lib/crypto';
 import { requireUser } from '../../middleware/auth';
 import { renderDeckArtifactToPptx } from '../render/htmlPptx';
+import { renderDeckArtifactToPdf } from '../render/pdf';
 import {
   DeckJobModel,
   DeckProjectModel,
@@ -74,7 +75,7 @@ const editCloudDeckSchema = z.object({
 });
 
 const exportCloudDeckSchema = z.object({
-  format: z.enum(['html', 'pptx']).default('html'),
+  format: z.enum(['html', 'pptx', 'pdf']).default('html'),
 });
 
 cloudRouter.use(requireUser);
@@ -660,7 +661,18 @@ cloudRouter.post(
               >[0]
             ),
           }
-        : buildHtmlExport(project.title, artifact);
+        : parsed.data.format === 'pdf'
+          ? {
+              // Pixel-perfect PDF: slide screenshots assembled into 16:9 pages.
+              filename: `${safeFileName(project.title)}-${randomToken(4)}.pdf`,
+              mimeType: 'application/pdf',
+              buffer: await renderDeckArtifactToPdf(
+                artifact as unknown as Parameters<
+                  typeof renderDeckArtifactToPdf
+                >[0]
+              ),
+            }
+          : buildHtmlExport(project.title, artifact);
     const file = await FileModel.create({
       workspaceId: project.workspaceId,
       projectId: project.id,

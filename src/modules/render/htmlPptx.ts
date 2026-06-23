@@ -160,11 +160,35 @@ function rgbToHex(rgb: string | null): { hex: string; alpha: number } {
   const hex = [r, g, b].map((n) => Math.round(n).toString(16).padStart(2, "0")).join("").toUpperCase();
   return { hex, alpha: a };
 }
+// Map CSS generic families to real fonts PowerPoint can resolve. The agent
+// often emits `font-family: sans-serif`, which PowerPoint can't render — left
+// as-is the text would silently fall back and shift.
+const GENERIC_FONTS: Record<string, string> = {
+  "sans-serif": "Arial",
+  serif: "Times New Roman",
+  monospace: "Courier New",
+  "system-ui": "Arial",
+  "-apple-system": "Arial",
+  "ui-sans-serif": "Arial",
+  "ui-serif": "Times New Roman",
+  "ui-monospace": "Courier New",
+};
 function firstFontFace(stack: string): string {
-  return (stack.split(",")[0]?.trim() ?? "Arial").replace(/['"]/g, "");
+  const first = (stack.split(",")[0]?.trim() ?? "Arial").replace(/['"]/g, "");
+  return GENERIC_FONTS[first.toLowerCase()] ?? first;
 }
 type Align = "left" | "center" | "right";
 const toAlign = (a: string): Align => (a === "center" ? "center" : a === "right" ? "right" : "left");
+
+// A single native, editable text box at its measured position/size/style.
+function emitText(slide: PptxGenJS.Slide, t: ExText): void {
+  slide.addText(t.uppercase ? t.text.toUpperCase() : t.text, {
+    x: inFromPx(t.box.x), y: inFromPx(t.box.y), w: inFromPx(t.box.w), h: inFromPx(t.box.h) + 0.04,
+    fontFace: firstFontFace(t.fontFamily), fontSize: ptFromPx(t.fontSizePx), color: rgbToHex(t.color).hex,
+    bold: t.weight >= 600, italic: t.italic, align: toAlign(t.align), valign: "top",
+    charSpacing: t.letterSpacingPx ? ptFromPx(t.letterSpacingPx) : undefined, margin: 0, isTextBox: true,
+  });
+}
 
 function emitSlide(slide: PptxGenJS.Slide, data: ExSlide, speakerNotes?: string): void {
   slide.background = { color: rgbToHex(data.bg).hex };
@@ -181,14 +205,7 @@ function emitSlide(slide: PptxGenJS.Slide, data: ExSlide, speakerNotes?: string)
     });
   }
 
-  for (const t of data.texts) {
-    slide.addText(t.uppercase ? t.text.toUpperCase() : t.text, {
-      x: inFromPx(t.box.x), y: inFromPx(t.box.y), w: inFromPx(t.box.w), h: inFromPx(t.box.h) + 0.04,
-      fontFace: firstFontFace(t.fontFamily), fontSize: ptFromPx(t.fontSizePx), color: rgbToHex(t.color).hex,
-      bold: t.weight >= 600, italic: t.italic, align: toAlign(t.align), valign: "top",
-      charSpacing: t.letterSpacingPx ? ptFromPx(t.letterSpacingPx) : undefined, margin: 0, isTextBox: true,
-    });
-  }
+  for (const t of data.texts) emitText(slide, t);
 
   for (const tbl of data.tables) {
     const headerFill = tbl.headers[0] ? rgbToHex(tbl.headers[0].fill) : null;
@@ -230,22 +247,56 @@ async function launchChromium() {
   }
 }
 
+// Makes glyphs invisible (so the screenshot captures everything BUT text) while
+// keeping every box, fill, border and image. Also flattens the slide's own
+// rounded corners / shadow so the full-bleed image has no transparent edges.
+const HIDE_TEXT_CSS =
+  "*{color:transparent !important;text-shadow:none !important;-webkit-text-fill-color:transparent !important}" +
+  ".ydeck-slide{border-radius:0 !important;box-shadow:none !important}";
+
+export type PptxRenderMode = "hybrid" | "editable";
+
 /**
- * Render a deck artifact to an editable .pptx and return it as a Buffer.
+ * Render a deck artifact to a .pptx Buffer.
+ *
+ * - "hybrid" (default): each slide is a pixel-perfect screenshot with the text
+ *   hidden, placed full-bleed as the background, plus native editable text boxes
+ *   laid on top at their measured positions. Looks like the preview AND the text
+ *   stays editable. (Non-text visuals live in the image, so they aren't
+ *   individually editable.)
+ * - "editable": pure native objects (text + shapes + tables) — fully editable
+ *   but an approximation of the free-form HTML.
+ *
  * A browser is launched per export — simple and leak-free for this workload.
  */
-export async function renderDeckArtifactToPptx(deck: CloudDeckArtifact): Promise<Buffer> {
+export async function renderDeckArtifactToPptx(
+  deck: CloudDeckArtifact,
+  mode: PptxRenderMode = "hybrid"
+): Promise<Buffer> {
   const html = buildDeckHtml(deck, getTheme(deck.designStyle));
 
   const browser = await launchChromium();
   let slidesData: ExSlide[];
+  const backgrounds: (string | null)[] = [];
   try {
-    const page = await browser.newPage({ viewport: { width: 1920, height: 1120 }, deviceScaleFactor: 1 });
+    // deviceScaleFactor 2 → crisp 2x screenshots; measurement stays in CSS px.
+    const page = await browser.newPage({ viewport: { width: 1920, height: 1120 }, deviceScaleFactor: 2 });
     page.setDefaultTimeout(PAGE_TIMEOUT_MS);
     await page.setContent(html, { waitUntil: "networkidle", timeout: PAGE_TIMEOUT_MS });
     await page.evaluate("document.fonts && document.fonts.ready ? document.fonts.ready : null");
     await page.evaluate("globalThis.__name = globalThis.__name || ((f) => f);");
+    // Measure first, while text is still visible.
     slidesData = (await page.evaluate(extractAllSlides)) as ExSlide[];
+
+    if (mode === "hybrid") {
+      // Hide text, then screenshot each slide → a text-free visual background.
+      await page.addStyleTag({ content: HIDE_TEXT_CSS });
+      const handles = await page.locator(".ydeck-slide").elementHandles();
+      for (const h of handles) {
+        const png = await h.screenshot({ type: "png" });
+        backgrounds.push(png.toString("base64"));
+      }
+    }
   } finally {
     await browser.close();
   }
@@ -257,7 +308,17 @@ export async function renderDeckArtifactToPptx(deck: CloudDeckArtifact): Promise
   pptx.company = "YDeck";
 
   slidesData.forEach((data, i) => {
-    emitSlide(pptx.addSlide(), data, deck.slides[i]?.speakerNotes);
+    const slide = pptx.addSlide();
+    const notes = deck.slides[i]?.speakerNotes;
+    const bg = backgrounds[i];
+    if (mode === "hybrid" && bg) {
+      slide.background = { color: rgbToHex(data.bg).hex };
+      slide.addImage({ data: `data:image/png;base64,${bg}`, x: 0, y: 0, w: 13.333, h: 7.5 });
+      for (const t of data.texts) emitText(slide, t);
+      if (notes) slide.addNotes(notes);
+    } else {
+      emitSlide(slide, data, notes);
+    }
   });
 
   return (await pptx.write({ outputType: "nodebuffer" })) as Buffer;

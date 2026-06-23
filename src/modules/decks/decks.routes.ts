@@ -423,7 +423,13 @@ async function loadProjectWithAccess(
   minRole: 'viewer' | 'editor' | 'admin' = 'viewer'
 ): Promise<DeckProjectDoc> {
   if (!isObjectId(projectId)) throw ApiError.notFound('Project not found');
-  const project = await DeckProjectModel.findById(projectId);
+  let project = await DeckProjectModel.findById(projectId);
+  if (!project) {
+    // The client sometimes passes a deck JOB id instead of the project id;
+    // resolve it to its owning project so project lookups stay consistent.
+    const job = await DeckJobModel.findById(projectId).catch(() => null);
+    if (job) project = await DeckProjectModel.findById(job.projectId);
+  }
   if (!project) throw ApiError.notFound('Project not found');
   await assertMembership(String(project.workspaceId), userId, minRole);
   return project;

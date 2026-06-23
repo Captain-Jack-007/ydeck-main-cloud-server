@@ -723,7 +723,14 @@ async function loadProject(
   userId: string
 ): Promise<DeckProjectDoc> {
   if (!isObjectId(projectId)) throw ApiError.notFound('Deck not found');
-  const project = await DeckProjectModel.findById(projectId);
+  let project = await DeckProjectModel.findById(projectId);
+  if (!project) {
+    // The client sometimes passes a deck JOB id instead of the project id
+    // (e.g. straight after generation). Resolve the job to its owning project
+    // so deck metadata / export load consistently.
+    const job = await DeckJobModel.findById(projectId).catch(() => null);
+    if (job) project = await DeckProjectModel.findById(job.projectId);
+  }
   if (!project) throw ApiError.notFound('Deck not found');
   await assertWorkspace(project.workspaceId.toString(), userId);
   return project;
