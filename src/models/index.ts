@@ -11,6 +11,7 @@ export * from './Subscription';
 export * from './UsageRecord';
 export * from './DeckProject';
 export * from './DeckJob';
+export * from './DeckJobEvent';
 export * from './File';
 export * from './TemplatePack';
 export * from './PluginPack';

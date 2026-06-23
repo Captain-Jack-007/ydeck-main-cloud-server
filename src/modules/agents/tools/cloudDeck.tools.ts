@@ -10,6 +10,11 @@ import {
 } from '../../../models';
 import { registerTool } from './registry';
 import { env } from '../../../config/env';
+import {
+  listDesignSystems,
+  selectDesignSystems,
+} from '../../designSystems/designSystemCatalog.service';
+import { listDesignTemplates } from '../../designTemplates/designTemplateCatalog.service';
 
 const slideSchema = z.object({
   slideNumber: z.number().int().positive().optional(),
@@ -144,10 +149,24 @@ export function registerCloudDeckTools(): void {
         }).lean(),
         WorkspaceBrandingModel.findOne({ workspaceId: ctx.workspaceId }).lean(),
       ]);
+      const designSystems = await selectDesignSystems({
+        designStyle: preferences?.defaultStyle,
+        branding,
+        preferences,
+      });
       return {
         ok: true,
         content: JSON.stringify(
-          { preferences: preferences ?? null, branding: branding ?? null },
+          {
+            preferences: preferences ?? null,
+            branding: branding ?? null,
+            designSystems: designSystems.map((system) => ({
+              id: system.id,
+              name: system.name,
+              category: system.category,
+              description: system.description,
+            })),
+          },
           null,
           2
         ),
@@ -167,23 +186,30 @@ export function registerCloudDeckTools(): void {
           error: 'NO_WORKSPACE',
           content: 'No workspaceId in tool context.',
         };
-      const [installed, templates, plugins] = await Promise.all([
-        InstalledPackModel.find({
-          workspaceId: ctx.workspaceId,
-          enabled: true,
-        }).lean(),
-        TemplatePackModel.find()
-          .select('slug name description version manifest')
-          .limit(50)
-          .lean(),
-        PluginPackModel.find()
-          .select('slug name description version manifest')
-          .limit(50)
-          .lean(),
-      ]);
+      const [installed, templates, plugins, designSystems, designTemplates] =
+        await Promise.all([
+          InstalledPackModel.find({
+            workspaceId: ctx.workspaceId,
+            enabled: true,
+          }).lean(),
+          TemplatePackModel.find()
+            .select('slug name description version manifest')
+            .limit(50)
+            .lean(),
+          PluginPackModel.find()
+            .select('slug name description version manifest')
+            .limit(50)
+            .lean(),
+          listDesignSystems(),
+          listDesignTemplates(),
+        ]);
       return {
         ok: true,
-        content: JSON.stringify({ installed, templates, plugins }, null, 2),
+        content: JSON.stringify(
+          { installed, templates, plugins, designSystems, designTemplates },
+          null,
+          2
+        ),
       };
     },
   });
@@ -1114,10 +1140,7 @@ function scoreSlideDesign(
     problems.push('Slide does not declare the required 1920x1080 canvas.');
     fixes.push('Use a fixed 1920px by 1080px slide canvas.');
   }
-  const htmlWithoutStoredImages = html.replace(
-    /data:image\/[a-z0-9+.-]+;base64,[A-Za-z0-9+/=]+/gi,
-    ''
-  );
+  const htmlWithoutStoredImages = stripAllowedAssetUrls(html);
   if (
     /<script|<iframe|javascript:|https?:\/\//i.test(htmlWithoutStoredImages)
   ) {
@@ -1179,6 +1202,26 @@ function scoreSlideDesign(
   }
 
   return { score: Math.max(0, Math.min(100, score)), problems, fixes };
+}
+
+function stripAllowedAssetUrls(html: string): string {
+  let clean = html.replace(
+    /data:image\/[a-z0-9+.-]+;base64,[A-Za-z0-9+/=]+/gi,
+    ''
+  );
+  clean = clean.replace(
+    /https?:\/\/[^"')\s]+\/v1\/assets\/images\/[a-f0-9]{24}\b/gi,
+    ''
+  );
+  clean = clean.replace(/\/v1\/assets\/images\/[a-f0-9]{24}\b/gi, '');
+  if (env.publicBaseUrl) {
+    const escaped = escapeRegExp(env.publicBaseUrl.replace(/\/+$/, ''));
+    clean = clean.replace(
+      new RegExp(`${escaped}/v1/assets/images/[a-f0-9]{24}\\b`, 'gi'),
+      ''
+    );
+  }
+  return clean;
 }
 
 function repairSlideContent(
@@ -1279,6 +1322,10 @@ function compactText(value: string, maxChars: number): string {
   return `${clipped
     .slice(0, boundary > maxChars * 0.55 ? boundary : maxChars - 1)
     .trim()}...`;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function labelize(value: string): string {

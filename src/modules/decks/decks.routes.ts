@@ -8,6 +8,7 @@ import { requireWorkspaceRole } from '../../middleware/workspace';
 import { ApiError } from '../../lib/errors';
 import { isObjectId } from '../../lib/ids';
 import { jobBus, type JobEvent } from './jobs.events';
+import { listClientJobEvents } from './jobEventLog.service';
 import { recordUsage } from '../usage/usage.service';
 import { effectiveCloudConfig } from '../agents/cloudLlm';
 import {
@@ -56,40 +57,7 @@ decksRouter.use(requireUser);
 decksRouter.get(
   '/projects',
   asyncHandler(async (req, res) => {
-    const parsed = listProjectsQuerySchema.safeParse(req.query);
-    if (!parsed.success)
-      throw ApiError.badRequest('Invalid projects query', parsed.error.issues);
-
-    const workspaceIds = await listReadableWorkspaceIds(
-      req.auth!.userId,
-      parsed.data.workspaceId
-    );
-    const query: Record<string, unknown> = {
-      workspaceId: { $in: workspaceIds },
-      ...(parsed.data.includeShared ? {} : { ownerId: req.auth!.userId }),
-    };
-    if (parsed.data.cursor) {
-      const cursorDate = new Date(parsed.data.cursor);
-      if (!Number.isNaN(cursorDate.getTime()))
-        query.updatedAt = { $lt: cursorDate };
-    }
-
-    const projects = await DeckProjectModel.find(query)
-      .sort({ updatedAt: -1, _id: -1 })
-      .limit(parsed.data.limit + 1);
-    const page = projects.slice(0, parsed.data.limit);
-    const summaries = await Promise.all(
-      page.map((project) => projectSummary(project))
-    );
-    const next =
-      projects.length > parsed.data.limit ? projects[parsed.data.limit] : null;
-
-    res.json({
-      projects: summaries,
-      nextCursor: next
-        ? (next as unknown as { updatedAt: Date }).updatedAt.toISOString()
-        : null,
-    });
+    res.json(await listProjectPage(req.auth!.userId, req.query));
   })
 );
 
@@ -111,42 +79,17 @@ decksRouter.get(
 // Web frontend compatibility aliases. Some clients group deck-history routes
 // under /v1/decks/*, while the canonical API lists projects at /v1/projects.
 decksRouter.get(
+  '/decks',
+  asyncHandler(async (req, res) => {
+    const page = await listProjectPage(req.auth!.userId, req.query);
+    res.json({ ...page, decks: page.projects });
+  })
+);
+
+decksRouter.get(
   '/decks/projects',
   asyncHandler(async (req, res) => {
-    const parsed = listProjectsQuerySchema.safeParse(req.query);
-    if (!parsed.success)
-      throw ApiError.badRequest('Invalid projects query', parsed.error.issues);
-
-    const workspaceIds = await listReadableWorkspaceIds(
-      req.auth!.userId,
-      parsed.data.workspaceId
-    );
-    const query: Record<string, unknown> = {
-      workspaceId: { $in: workspaceIds },
-      ...(parsed.data.includeShared ? {} : { ownerId: req.auth!.userId }),
-    };
-    if (parsed.data.cursor) {
-      const cursorDate = new Date(parsed.data.cursor);
-      if (!Number.isNaN(cursorDate.getTime()))
-        query.updatedAt = { $lt: cursorDate };
-    }
-
-    const projects = await DeckProjectModel.find(query)
-      .sort({ updatedAt: -1, _id: -1 })
-      .limit(parsed.data.limit + 1);
-    const page = projects.slice(0, parsed.data.limit);
-    const summaries = await Promise.all(
-      page.map((project) => projectSummary(project))
-    );
-    const next =
-      projects.length > parsed.data.limit ? projects[parsed.data.limit] : null;
-
-    res.json({
-      projects: summaries,
-      nextCursor: next
-        ? (next as unknown as { updatedAt: Date }).updatedAt.toISOString()
-        : null,
-    });
+    res.json(await listProjectPage(req.auth!.userId, req.query));
   })
 );
 
@@ -357,6 +300,25 @@ decksRouter.post(
   })
 );
 
+decksRouter.get(
+  '/jobs/:jobId/event-log',
+  asyncHandler(async (req, res) => {
+    const job = await loadJobWithAccess(req.params.jobId, req.auth!.userId);
+    const afterSeq = parsePositiveInt(req.query.afterSeq, 0);
+    const limit = parsePositiveInt(req.query.limit, 200);
+    const events = await listClientJobEvents(job.id, { afterSeq, limit });
+    res.json({
+      jobId: job.id,
+      projectId: String(job.projectId),
+      workspaceId: String(job.workspaceId),
+      afterSeq,
+      events,
+      nextSeq: events.length ? events[events.length - 1].seq : afterSeq,
+      hasMore: events.length >= Math.max(1, Math.min(500, limit)),
+    });
+  })
+);
+
 // ----- SSE event stream -----
 decksRouter.get(
   '/jobs/:jobId/events',
@@ -474,6 +436,43 @@ async function listReadableWorkspaceIds(
   return memberships.map((m) => String(m.workspaceId));
 }
 
+async function listProjectPage(userId: string, rawQuery: unknown) {
+  const parsed = listProjectsQuerySchema.safeParse(rawQuery);
+  if (!parsed.success)
+    throw ApiError.badRequest('Invalid projects query', parsed.error.issues);
+
+  const workspaceIds = await listReadableWorkspaceIds(
+    userId,
+    parsed.data.workspaceId
+  );
+  const query: Record<string, unknown> = {
+    workspaceId: { $in: workspaceIds },
+    ...(parsed.data.includeShared ? {} : { ownerId: userId }),
+  };
+  if (parsed.data.cursor) {
+    const cursorDate = new Date(parsed.data.cursor);
+    if (!Number.isNaN(cursorDate.getTime()))
+      query.updatedAt = { $lt: cursorDate };
+  }
+
+  const projects = await DeckProjectModel.find(query)
+    .sort({ updatedAt: -1, _id: -1 })
+    .limit(parsed.data.limit + 1);
+  const page = projects.slice(0, parsed.data.limit);
+  const summaries = await Promise.all(
+    page.map((project) => projectSummary(project))
+  );
+  const next =
+    projects.length > parsed.data.limit ? projects[parsed.data.limit] : null;
+
+  return {
+    projects: summaries,
+    nextCursor: next
+      ? (next as unknown as { updatedAt: Date }).updatedAt.toISOString()
+      : null,
+  };
+}
+
 async function projectSummary(project: DeckProjectDoc) {
   const latestJob = await DeckJobModel.findOne({ projectId: project.id })
     .sort({ createdAt: -1 })
@@ -483,18 +482,33 @@ async function projectSummary(project: DeckProjectDoc) {
     .lean();
   const meta = projectMeta(project);
   const artifact = deckArtifact(meta, latestJob?.resultMeta);
+  const enrichedMeta = enrichProjectMeta(
+    meta,
+    artifact,
+    latestJob?.inputParams,
+    latestJob?.resultMeta
+  );
+  const lastJobId = latestJob ? String(latestJob._id) : stringOrNull(meta.lastJobId);
+  const status = latestJob?.status ?? (artifact ? 'done' : 'draft');
+  const progress = latestJob?.progress ?? (artifact ? 100 : 0);
 
   return {
     ...project.toJSON(),
-    status: latestJob?.status ?? (artifact ? 'done' : 'draft'),
-    progress: latestJob?.progress ?? (artifact ? 100 : 0),
-    lastJobId: latestJob ? String(latestJob._id) : meta.lastJobId ?? null,
-    meta: enrichProjectMeta(
-      meta,
-      artifact,
-      latestJob?.inputParams,
-      latestJob?.resultMeta
-    ),
+    deckId: project.id,
+    projectId: project.id,
+    jobId: lastJobId,
+    lastJobId,
+    deckTitle: stringOrNull(artifact?.deckTitle) ?? project.title,
+    status,
+    progress,
+    slideCount: enrichedMeta.slideCount,
+    deckType: enrichedMeta.deckType,
+    designStyle: enrichedMeta.designStyle,
+    language: enrichedMeta.language,
+    hasDeckArtifact: Boolean(artifact),
+    thumbnailUrl: thumbnailUrlForArtifact(artifact),
+    previewHtml: firstSlideHtml(artifact),
+    meta: enrichedMeta,
   };
 }
 
@@ -554,6 +568,54 @@ function enrichProjectMeta(
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function parsePositiveInt(value: unknown, fallback: number): number {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const numberValue =
+    typeof raw === 'string' || typeof raw === 'number' ? Number(raw) : NaN;
+  if (!Number.isFinite(numberValue) || numberValue < 0) return fallback;
+  return Math.floor(numberValue);
+}
+
+function stringOrNull(value: unknown): string | null {
+  return typeof value === 'string' && value ? value : null;
+}
+
+function thumbnailUrlForArtifact(
+  artifact: Record<string, unknown> | null
+): string | null {
+  if (!artifact) return null;
+  const direct = stringOrNull(artifact.thumbnailUrl);
+  if (direct) return direct;
+
+  const slides = Array.isArray(artifact.slides)
+    ? artifact.slides.filter(isRecord)
+    : [];
+  for (const slide of slides) {
+    const preview = isRecord(slide.preview) ? slide.preview : {};
+    const image = isRecord(slide.image) ? slide.image : {};
+    const candidate =
+      stringOrNull(preview.thumbnailUrl) ??
+      stringOrNull(preview.imageUrl) ??
+      stringOrNull(slide.thumbnailUrl) ??
+      stringOrNull(slide.imageUrl) ??
+      stringOrNull(image.url);
+    if (candidate) return candidate;
+  }
+  return null;
+}
+
+function firstSlideHtml(artifact: Record<string, unknown> | null): string | null {
+  if (!artifact || !Array.isArray(artifact.slides)) return null;
+  const firstSlide = artifact.slides.find(isRecord);
+  if (!firstSlide) return null;
+  const preview = isRecord(firstSlide.preview) ? firstSlide.preview : {};
+  return (
+    stringOrNull(preview.html) ??
+    stringOrNull(firstSlide.previewHtml) ??
+    stringOrNull(firstSlide.html)
+  );
 }
 
 function normalizeDeckArtifactForResponse(

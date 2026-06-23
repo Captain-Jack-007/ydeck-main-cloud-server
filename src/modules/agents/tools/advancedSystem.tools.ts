@@ -1115,7 +1115,7 @@ async function runSkill(args: Record<string, unknown>, ctx: ToolContext): Promis
 
 async function saveUserFeedback(args: Record<string, unknown>, ctx: ToolContext): Promise<ToolResult> {
   if (!ctx.workspaceId) return badArgs("workspaceId required");
-  const pref = await WorkspacePreferenceModel.findOneAndUpdate({ workspaceId: ctx.workspaceId }, { $setOnInsert: { workspaceId: ctx.workspaceId } }, { upsert: true, new: true });
+  const pref = await WorkspacePreferenceModel.findOneAndUpdate({ workspaceId: ctx.workspaceId }, { $setOnInsert: { workspaceId: ctx.workspaceId } }, { upsert: true, returnDocument: "after" });
   const meta = record(pref.get("meta"));
   const feedback = Array.isArray(meta.agentFeedback) ? meta.agentFeedback as unknown[] : [];
   const item = { id: `fb_${Date.now().toString(36)}`, rating: args.rating ?? null, text: args.text ?? args.feedback ?? "", jobId: ctx.jobId ?? null, createdAt: new Date().toISOString() };

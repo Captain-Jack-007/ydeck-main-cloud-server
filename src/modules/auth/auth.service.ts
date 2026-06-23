@@ -165,7 +165,7 @@ export async function updateMe(
   if ("avatarUrl" in input) updates.avatarUrl = input.avatarUrl ?? null;
   if ("locale" in input) updates.locale = input.locale ?? null;
 
-  const user = await UserModel.findByIdAndUpdate(userId, { $set: updates }, { new: true });
+  const user = await UserModel.findByIdAndUpdate(userId, { $set: updates }, { returnDocument: "after" });
   if (!user) throw ApiError.notFound("User not found");
   return { success: true, user: webUser(user) };
 }

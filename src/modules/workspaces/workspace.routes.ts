@@ -144,7 +144,7 @@ workspaceRouter.patch(
     const branding = await WorkspaceBrandingModel.findOneAndUpdate(
       { workspaceId: req.params.workspaceId },
       { $set: req.body },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
+      { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
     );
     res.json(branding.toJSON());
   }),
@@ -167,7 +167,7 @@ workspaceRouter.patch(
     const preferences = await WorkspacePreferenceModel.findOneAndUpdate(
       { workspaceId: req.params.workspaceId },
       { $set: req.body },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
+      { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
     );
     res.json(preferences.toJSON());
   }),
@@ -231,7 +231,7 @@ workspaceRouter.patch(
     const member = await WorkspaceMemberModel.findOneAndUpdate(
       { workspaceId: req.params.workspaceId, userId: req.params.userId },
       { $set: { role: req.body.role as MemberRole } },
-      { new: true },
+      { returnDocument: "after" },
     );
     if (!member) throw ApiError.notFound("Member not found");
     res.json(member.toJSON());

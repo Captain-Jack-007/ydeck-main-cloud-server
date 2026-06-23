@@ -416,6 +416,9 @@ The cloud variant additionally includes `"mode": "cloud"`. Do not assert on
 
 ## 9. Jobs And Realtime
 
+Canonical exact replay/resume contract:
+`docs/frontend-job-event-replay.md`.
+
 Load one job:
 
 ```http
@@ -425,7 +428,33 @@ GET /v1/jobs/:jobId
 Subscribe to realtime with Socket.IO:
 
 ```txt
-socket.emit("deck:subscribe", { jobId })
+socket.emit("deck:subscribe", { jobId, afterSeq: lastSeenSeq })
+```
+
+Live workflow events are durably recorded with a per-job `seq`. Store the
+highest `seq` seen for each `jobId`; after refresh or reconnect, pass it as
+`afterSeq` so the server replays the events the frontend missed. Ignore any
+event whose `seq` is less than or equal to the stored value for that job.
+
+HTTP replay is also available:
+
+```http
+GET /v1/jobs/:jobId/event-log?afterSeq=:lastSeenSeq&limit=200
+```
+
+Response events use the same frontend shape as Socket.IO:
+
+```json
+{
+  "seq": 43,
+  "eventName": "deck:repair",
+  "type": "deck.repair",
+  "jobId": "6a...",
+  "status": "llm",
+  "progress": 86,
+  "data": { "action": "slide_started", "slideNumber": 2 },
+  "at": "2026-06-23T12:00:00.000Z"
+}
 ```
 
 Important events:
@@ -460,6 +489,7 @@ history is represented by:
 
 - `DeckProject` records
 - `DeckJob` records
+- `DeckJobEvent` rows for exact ordered workflow replay
 - project `description`
 - job `inputParams.prompt`
 - job `resultMeta`

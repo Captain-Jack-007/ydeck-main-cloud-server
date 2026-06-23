@@ -5,6 +5,8 @@ slide design agent. The important frontend idea is:
 
 For the whole agentic job lifecycle, tool list, and frontend state contract, see
 [Frontend Agentic Flow Contract](./frontend-agentic-flow.md).
+For backend slide-generation principles copied from Open Design, see
+[Open Design Slide Generation Principles](./open-design-slide-generation-principles.md).
 
 ```txt
 The frontend does not design slides locally.
@@ -55,7 +57,8 @@ Recommended order:
    Create the visible user plan.
 
 3. Context Agent
-   Load workspace, project, brand, preferences, packs, and previous versions.
+   Load workspace, project, brand, preferences, deck templates, selected
+   design systems, and previous versions.
 
 4. File Extraction Agent, only when files exist
    Extract summaries, facts, and suggested slides.
@@ -90,6 +93,8 @@ slide purpose
 approved layout id
 written content
 brand/theme context
+selected design-system rules from DESIGN.md
+selected design-system tokens from tokens.css
 research facts, if any
 stored image assets, if any
 speaker notes

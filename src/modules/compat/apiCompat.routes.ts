@@ -164,14 +164,14 @@ apiCompatRouter.patch(
         ? WorkspacePreferenceModel.findOneAndUpdate(
             { workspaceId },
             { $set: prefPatch },
-            { new: true, upsert: true, setDefaultsOnInsert: true }
+            { returnDocument: "after", upsert: true, setDefaultsOnInsert: true }
           )
         : Promise.resolve(null),
       branding && Object.keys(branding).length
         ? WorkspaceBrandingModel.findOneAndUpdate(
             { workspaceId },
             { $set: branding },
-            { new: true, upsert: true, setDefaultsOnInsert: true }
+            { returnDocument: "after", upsert: true, setDefaultsOnInsert: true }
           )
         : Promise.resolve(null),
     ]);

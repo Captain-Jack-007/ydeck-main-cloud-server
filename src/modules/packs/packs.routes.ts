@@ -15,6 +15,14 @@ import {
   type PackType,
   type WorkspacePlan,
 } from "../../models";
+import {
+  listDesignSystems,
+  readDesignSystemPreview,
+} from "../designSystems/designSystemCatalog.service";
+import {
+  listDesignTemplates,
+  readDesignTemplatePreview,
+} from "../designTemplates/designTemplateCatalog.service";
 
 export const packsRouter: Router = Router();
 
@@ -46,6 +54,50 @@ packsRouter.get(
     const item = await TemplatePackModel.findOne({ slug: req.params.slug });
     if (!item) throw ApiError.notFound("Template not found");
     res.json(item.toJSON());
+  }),
+);
+
+packsRouter.get(
+  "/design-templates",
+  asyncHandler(async (_req, res) => {
+    res.json(await listDesignTemplates());
+  }),
+);
+
+packsRouter.get(
+  "/design-templates/:id/preview/:page?",
+  asyncHandler(async (req, res) => {
+    const preview = await readDesignTemplatePreview(req.params.id, req.params.page ?? "example");
+    if (!preview) throw ApiError.notFound("Design template preview not found");
+
+    res.removeHeader("X-Frame-Options");
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors *",
+    );
+    res.type(preview.contentType).send(preview.html);
+  }),
+);
+
+packsRouter.get(
+  "/design-systems",
+  asyncHandler(async (_req, res) => {
+    res.json(await listDesignSystems());
+  }),
+);
+
+packsRouter.get(
+  "/design-systems/:id/preview/:page?",
+  asyncHandler(async (req, res) => {
+    const preview = await readDesignSystemPreview(req.params.id, req.params.page ?? "components");
+    if (!preview) throw ApiError.notFound("Design system preview not found");
+
+    res.removeHeader("X-Frame-Options");
+    res.setHeader(
+      "Content-Security-Policy",
+      "default-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors *",
+    );
+    res.type(preview.contentType).send(preview.html);
   }),
 );
 
@@ -102,7 +154,7 @@ packsRouter.post(
     const installed = await InstalledPackModel.findOneAndUpdate(
       { workspaceId: workspace.id, packType, packSlug: pack.slug },
       { $set: { packVersion: pack.version, enabled: true } },
-      { new: true, upsert: true, setDefaultsOnInsert: true },
+      { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
     );
 
     res.status(201).json(installed!.toJSON());

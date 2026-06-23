@@ -83,7 +83,7 @@ deviceRouter.post(
     const pairing = await PairingCodeModel.findOneAndUpdate(
       { codeHash, usedAt: null, expiresAt: { $gt: new Date() } },
       { $set: { usedAt: new Date() } },
-      { new: true },
+      { returnDocument: "after" },
     );
     if (!pairing) {
       await auditDeviceEvent({
