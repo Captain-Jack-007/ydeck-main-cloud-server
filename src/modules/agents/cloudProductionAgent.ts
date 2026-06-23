@@ -841,7 +841,8 @@ function substituteImageTokens(
 function imageAssetPublicUrl(asset: ImageAsset): string {
   if (asset.storedUrl && /^https?:\/\//i.test(asset.storedUrl))
     return asset.storedUrl;
-  return `/v1/assets/images/${asset.id}`;
+  const path = `/v1/assets/images/${asset.id}`;
+  return env.publicBaseUrl ? `${env.publicBaseUrl}${path}` : path;
 }
 
 function leanImageAsset(asset: ImageAsset, publicUrl: string): ImageAsset {

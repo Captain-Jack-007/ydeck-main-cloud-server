@@ -58,6 +58,12 @@ export const env = {
   telegramWebhookSecret: process.env.TELEGRAM_WEBHOOK_SECRET ?? '',
 
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
+  publicBaseUrl: (
+    process.env.PUBLIC_BASE_URL ??
+    process.env.SERVER_PUBLIC_URL ??
+    process.env.APP_PUBLIC_URL ??
+    ''
+  ).replace(/\/+$/, ''),
 
   agentLoopEnabled: (process.env.AGENT_LOOP_ENABLED ?? 'true') !== 'false',
   agentLoopMaxRounds: num('AGENT_LOOP_MAX_ROUNDS', 4),

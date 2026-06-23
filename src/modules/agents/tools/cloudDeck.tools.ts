@@ -9,6 +9,7 @@ import {
   WorkspacePreferenceModel,
 } from '../../../models';
 import { registerTool } from './registry';
+import { env } from '../../../config/env';
 
 const slideSchema = z.object({
   slideNumber: z.number().int().positive().optional(),
@@ -1230,6 +1231,7 @@ function slideSectionFromHtml(value?: string): string | null {
 }
 
 function sanitizeSlideHtml(value: string): string {
+  const allowedPrefix = env.publicBaseUrl;
   return value
     .replace(/<script\b[\s\S]*?<\/script>/gi, '')
     .replace(/<iframe\b[\s\S]*?<\/iframe>/gi, '')
@@ -1238,7 +1240,9 @@ function sanitizeSlideHtml(value: string): string {
     .replace(/<link\b[\s\S]*?>/gi, '')
     .replace(/\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '')
     .replace(/javascript:/gi, '')
-    .replace(/https?:\/\/[^"')\s]+/gi, '');
+    .replace(/https?:\/\/[^"')\s]+/gi, (match) =>
+      allowedPrefix && match.startsWith(allowedPrefix) ? match : ''
+    );
 }
 
 function pickAccent(style: string, slideNumber: number): string {

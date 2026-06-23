@@ -32,6 +32,7 @@ import {
 import type { AdvancedToolAgent } from '../agents/tools/advancedSystem.tools';
 import { recordUsage } from '../usage/usage.service';
 import { cascadeDeleteDeckProject } from '../decks/deckCleanup';
+import { buildAgentSession } from '../decks/agentSession';
 
 export const cloudRouter: Router = Router();
 
@@ -564,6 +565,22 @@ cloudRouter.get(
       latestJob,
       deckArtifact: meta.deckArtifact ?? null,
     });
+  })
+);
+
+cloudRouter.get(
+  '/decks/:projectId/agent-session',
+  asyncHandler(async (req, res) => {
+    const project = await loadCloudProjectForUser(
+      req.params.projectId,
+      req.auth!.userId
+    );
+    const includeArtifacts = String(req.query.include ?? '')
+      .split(',')
+      .map((s) => s.trim())
+      .includes('artifacts');
+    const session = await buildAgentSession(project, { includeArtifacts });
+    res.json({ success: true, mode: 'cloud', ...session });
   })
 );
 
