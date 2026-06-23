@@ -5,6 +5,7 @@ import { asyncHandler } from '../../lib/asyncHandler';
 import { ApiError } from '../../lib/errors';
 import { randomToken, sha256Hex } from '../../lib/crypto';
 import { requireUser } from '../../middleware/auth';
+import { renderDeckArtifactToPptx } from '../render/htmlPptx';
 import {
   DeckJobModel,
   DeckProjectModel,
@@ -630,7 +631,18 @@ cloudRouter.post(
 
     const exportFile =
       parsed.data.format === 'pptx'
-        ? buildPptxExport(project.title, artifact)
+        ? {
+            // Measured HTML -> native, editable PPTX (matches the preview),
+            // replacing the hand-rolled OOXML builder.
+            filename: `${safeFileName(project.title)}-${randomToken(4)}.pptx`,
+            mimeType:
+              'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            buffer: await renderDeckArtifactToPptx(
+              artifact as unknown as Parameters<
+                typeof renderDeckArtifactToPptx
+              >[0]
+            ),
+          }
         : buildHtmlExport(project.title, artifact);
     const file = await FileModel.create({
       workspaceId: project.workspaceId,
@@ -750,7 +762,13 @@ async function loadCloudProjectForUser(
   userId: string,
   minRole: 'viewer' | 'editor' = 'viewer'
 ) {
-  const project = await DeckProjectModel.findById(projectId);
+  let project = await DeckProjectModel.findById(projectId).catch(() => null);
+  if (!project) {
+    // The client sometimes passes a deck JOB id instead of the project id
+    // (the preview tolerates this). Resolve the job to its owning project.
+    const job = await DeckJobModel.findById(projectId).catch(() => null);
+    if (job) project = await DeckProjectModel.findById(job.projectId);
+  }
   if (!project) throw ApiError.notFound('Deck project not found');
   const membership = await WorkspaceMemberModel.findOne({
     userId,
