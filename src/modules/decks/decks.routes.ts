@@ -23,6 +23,7 @@ import {
   type JobType,
 } from '../../models';
 import { cascadeDeleteDeckProject } from './deckCleanup';
+import { buildAgentSession } from './agentSession';
 
 export const decksRouter: Router = Router();
 
@@ -215,6 +216,22 @@ decksRouter.get(
     const artifact = normalizeDeckArtifactForResponse(meta.deckArtifact);
     if (!artifact) throw ApiError.notFound('Deck artifact not found');
     res.json(artifact);
+  })
+);
+
+decksRouter.get(
+  '/decks/:deckId/agent-session',
+  asyncHandler(async (req, res) => {
+    const project = await loadProjectWithAccess(
+      req.params.deckId,
+      req.auth!.userId
+    );
+    const includeArtifacts = String(req.query.include ?? '')
+      .split(',')
+      .map((s) => s.trim())
+      .includes('artifacts');
+    const session = await buildAgentSession(project, { includeArtifacts });
+    res.json(session);
   })
 );
 

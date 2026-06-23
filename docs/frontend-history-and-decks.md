@@ -7,6 +7,8 @@ This document explains how the web frontend should load:
 - all deck projects
 - a single deck
 - deck versions
+- agent session timeline for a deck thread
+- deleting a deck/chat thread
 - job status and realtime events
 
 All requests require:
@@ -271,7 +273,148 @@ Response:
 
 Use this for version history and “restore previous version” UI.
 
-## 7. Jobs And Realtime
+## 7. Agent Session (Per-Thread Agent Timeline)
+
+For a sessions-history view that shows what the agent did on a given deck/chat
+thread, use:
+
+```http
+GET /v1/decks/:deckId/agent-session
+GET /v1/cloud/decks/:projectId/agent-session
+```
+
+Both accept an optional `include` query param to opt into heavy stage
+artifacts (plan, outline, content, layout, design, qa):
+
+```http
+GET /v1/decks/:deckId/agent-session?include=artifacts
+```
+
+Without `include=artifacts` the response is lean enough to load for a list of
+sessions. The cloud variant wraps the body with `{ success: true, mode: "cloud", ... }`.
+
+Response shape:
+
+```json
+{
+  "projectId": "6a...",
+  "title": "create a slide about uzbekistan with 2 pages",
+  "description": "...",
+  "createdAt": "2026-06-22T10:00:00.000Z",
+  "jobCount": 1,
+  "jobs": [
+    {
+      "jobId": "6a...",
+      "type": "generate",
+      "status": "done",
+      "progress": 100,
+      "pipeline": "agentic",
+      "createdAt": "...",
+      "startedAt": "...",
+      "finishedAt": "...",
+      "errorMessage": null,
+      "input": {
+        "prompt": "create a slide about uzbekistan with 2 pages",
+        "deckType": "general",
+        "designStyle": "modern",
+        "language": "en",
+        "slideCount": 2,
+        "cloudProvider": "deepseek",
+        "cloudModel": "deepseek-chat"
+      },
+      "agents": [
+        {
+          "agent": "planner",
+          "status": "completed",
+          "startedAt": "...",
+          "completedAt": "...",
+          "durationMs": 842,
+          "promptChars": 1240,
+          "responseChars": 620,
+          "error": null,
+          "events": [
+            {
+              "at": "...",
+              "phase": "started",
+              "meta": { "promptChars": 1240 }
+            },
+            {
+              "at": "...",
+              "phase": "completed",
+              "meta": { "responseChars": 620 }
+            }
+          ]
+        },
+        {
+          "agent": "content_writer",
+          "status": "completed",
+          "durationMs": 1820
+        },
+        {
+          "agent": "html_designer",
+          "status": "errored",
+          "error": "schema validation failed"
+        }
+      ],
+      "toolUsage": [
+        {
+          "stage": "context_loading",
+          "agent": "context",
+          "name": "read_workspace_context",
+          "kind": "db",
+          "ok": true,
+          "at": "..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+Field notes:
+
+- `jobs[]` is ordered oldest → newest. A thread may have multiple jobs
+  (initial generate, retries, edits).
+- `agents[]` is reconstructed from audit logs of LLM-agent calls (`planner`,
+  `outliner`, `content_writer`, `html_designer`, `vision_qa`, `repair`, etc.).
+  `status` reflects the latest terminal phase (`completed` or `errored`).
+- `toolUsage[]` is a flat list of every tool call made during the job
+  (DB reads, file extraction, web search, image search, exports, etc.).
+- `artifacts` is omitted unless `?include=artifacts` is set. When present, it
+  contains the raw per-stage outputs of the production pipeline.
+
+Caveat: decks generated before per-agent audit logging shipped will return
+empty `agents[]` (toolUsage still appears because it's persisted on the job
+itself).
+
+## 8. Deleting A Thread
+
+Three equivalent endpoints, all cascading (project + its jobs + project-scoped
+asset/export files):
+
+```http
+DELETE /v1/projects/:projectId
+DELETE /v1/decks/:deckId
+DELETE /v1/cloud/decks/:projectId
+```
+
+All require `editor` role in the owning workspace. Response is `200` with a
+JSON body (not `204`):
+
+```json
+{
+  "success": true,
+  "projectId": "6a...",
+  "projectDeleted": true,
+  "jobsDeleted": 2,
+  "filesDeleted": 5
+}
+```
+
+The cloud variant additionally includes `"mode": "cloud"`. Do not assert on
+`status === 204`; check `res.ok` instead.
+
+## 9. Jobs And Realtime
 
 Load one job:
 
@@ -310,7 +453,7 @@ GET /v1/cloud/decks/:projectId
 
 The final artifact is canonical.
 
-## 8. Chat History
+## 10. Chat History
 
 YDeck does not currently have a separate `Conversation` collection. Chat/deck
 history is represented by:
@@ -340,7 +483,7 @@ If the frontend needs true message-by-message chat history later, backend should
 add a `ConversationMessage` model. Do not fake message history from local state
 only, because it disappears after refresh.
 
-## 9. Common Frontend Pitfalls
+## 11. Common Frontend Pitfalls
 
 Do not use stale tokens after switching profiles. On profile switch:
 
