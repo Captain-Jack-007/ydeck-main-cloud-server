@@ -1116,55 +1116,63 @@ async function callJsonAgent<T>(
     prompt,
   });
   await auditAgent(ctx, agent, 'started', { promptChars: prompt.length });
-  let text: string;
-  try {
-    text = await ctx.provider.generate(prompt, options);
-  } catch (err) {
-    logger.warn(
-      { err, agent, jobId: ctx.job.id },
-      'cloud_production_agent.failed'
-    );
-    await auditAgent(ctx, agent, 'errored', {
-      reason: 'provider_error',
-      detail: (err as Error).message,
+  // Up to two attempts: if the model returns non-JSON or JSON that fails the
+  // schema, re-prompt once with the exact error so it can self-correct. Many
+  // agent prompts don't enumerate every allowed value (e.g. a step status), so
+  // a single strict failure should not kill the whole job.
+  const maxAttempts = 2;
+  let activePrompt = prompt;
+  let lastError = 'unknown error';
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let text: string;
+    try {
+      text = await ctx.provider.generate(activePrompt, options);
+    } catch (err) {
+      logger.warn(
+        { err, agent, jobId: ctx.job.id },
+        'cloud_production_agent.failed'
+      );
+      await auditAgent(ctx, agent, 'errored', {
+        reason: 'provider_error',
+        detail: (err as Error).message,
+      });
+      // A provider/transport error won't be fixed by re-prompting.
+      throw new Error(`${agent} LLM call failed: ${(err as Error).message}`);
+    }
+    logAgentFlow(ctx.job.id, `${agent}.receive`, {
+      chars: text.length,
+      text,
+      attempt,
     });
-    throw new Error(`${agent} LLM call failed: ${(err as Error).message}`);
-  }
-  logAgentFlow(ctx.job.id, `${agent}.receive`, { chars: text.length, text });
-  let parsedJson: unknown;
-  try {
-    parsedJson = extractJson(text);
-  } catch (err) {
+    try {
+      const parsed = schema.safeParse(extractJson(text));
+      if (parsed.success) {
+        await auditAgent(ctx, agent, 'completed', {
+          responseChars: text.length,
+          attempts: attempt,
+        });
+        return parsed.data;
+      }
+      lastError = `JSON failed schema validation: ${String(parsed.error)}`;
+    } catch (err) {
+      lastError = `response was not valid JSON: ${(err as Error).message}`;
+    }
     logger.warn(
-      { err, agent, jobId: ctx.job.id },
+      { agent, jobId: ctx.job.id, attempt, detail: lastError },
       'cloud_production_agent.invalid_json'
     );
-    await auditAgent(ctx, agent, 'errored', {
-      reason: 'invalid_json',
-      detail: (err as Error).message,
-    });
-    throw new Error(
-      `${agent} returned non-JSON response: ${(err as Error).message}`
-    );
+    if (attempt < maxAttempts) {
+      activePrompt = `${prompt}\n\nYour previous response was rejected:\n${lastError}\n\nReturn ONLY corrected JSON that matches the required structure and uses exactly the allowed field values. No markdown, no comments, no extra text.`;
+      logAgentFlow(ctx.job.id, `${agent}.retry`, { detail: lastError });
+    }
   }
-  const parsed = schema.safeParse(parsedJson);
-  if (!parsed.success) {
-    logger.warn(
-      { agent, jobId: ctx.job.id, error: parsed.error },
-      'cloud_production_agent.invalid_json'
-    );
-    await auditAgent(ctx, agent, 'errored', {
-      reason: 'invalid_json',
-      detail: String(parsed.error),
-    });
-    throw new Error(
-      `${agent} returned JSON that failed schema validation: ${String(
-        parsed.error
-      )}`
-    );
-  }
-  await auditAgent(ctx, agent, 'completed', { responseChars: text.length });
-  return parsed.data;
+  await auditAgent(ctx, agent, 'errored', {
+    reason: 'invalid_json',
+    detail: lastError,
+  });
+  throw new Error(
+    `${agent} returned invalid JSON after ${maxAttempts} attempts: ${lastError}`
+  );
 }
 
 function agentToolName(agent: CloudAgentName): string | null {
