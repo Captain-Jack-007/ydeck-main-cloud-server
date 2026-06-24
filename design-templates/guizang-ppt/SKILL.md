@@ -1,5 +1,5 @@
 ---
-name: magazine-web-ppt
+name: "magazine-web-ppt"
 description: Generates an "editorial magazine × electronic ink" style horizontal-swipe web deck (a single HTML file), with a WebGL fluid background, serif headlines + sans-serif body, act dividers, big-number data pages, image grids, and more templates. Use when the user wants to make a talk / share / launch-style web deck, or mentions "magazine-style PPT", "horizontal swipe deck", "editorial magazine", or "e-ink presentation".
 triggers:
   - "ppt"
@@ -17,13 +17,13 @@ triggers:
   - "launch event"
   - "talk deck"
 od:
-  mode: deck
-  scenario: marketing
+  mode: "deck"
+  scenario: "marketing"
   default_for: deck
   upstream: "https://github.com/op7418/guizang-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "assets/example-slides.html"
   design_system:
     requires: false
   example_prompt: "Make me a magazine-style deck about 'One-person company · the organization folded by AI', a 25-minute talk for an audience of designers and founders. First recommend one direction (Monocle / WIRED / Kinfolk / Domus / Lab) for me to choose from."

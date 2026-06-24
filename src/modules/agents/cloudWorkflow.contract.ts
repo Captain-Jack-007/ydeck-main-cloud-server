@@ -40,6 +40,7 @@ export type CloudWorkflowName = (typeof cloudWorkflowNames)[number];
 export const cloudEventChannels = [
   'deck.plan',
   'deck.context',
+  'deck.skill',
   'deck.file',
   'deck.research',
   'deck.outline',
@@ -169,6 +170,7 @@ export const qaArtifactSchema = z.object({
 
 export const exportArtifactSchema = z.object({
   formats: z.array(z.enum(['pptx', 'pdf', 'png', 'html'])).min(1),
+  skillQualityGates: z.array(z.string().max(500)).default([]),
   files: z
     .array(
       z.object({
@@ -213,7 +215,7 @@ export const cloudAgentRegistry: Record<CloudAgentName, CloudAgentDefinition> =
     context: {
       name: 'context',
       stage: 'context_loading',
-      emits: ['deck.context'],
+      emits: ['deck.context', 'deck.skill'],
       description:
         'Loads workspace, brand, project, user preferences, packs, and previous deck versions.',
     },

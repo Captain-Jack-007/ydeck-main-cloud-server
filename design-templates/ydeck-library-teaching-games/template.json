@@ -1,0 +1,367 @@
+{
+  "slug": "ydeck-library-teaching-games",
+  "name": "YDeck Teaching + Games",
+  "category": "ydeck-library",
+  "scenario": "teaching-games",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 8,
+  "tagline": "A bright classroom game show system for teaching games, kids lesson, language game, quiz game, interactive classroom.",
+  "tone": "bright classroom game show",
+  "scheme": "light",
+  "palette": {
+    "background": "#FFF7ED",
+    "text": "#1F2937",
+    "accent": "#E11D48",
+    "secondary": "#7C3AED",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "teaching games",
+    "kids lesson",
+    "language game",
+    "quiz game",
+    "interactive classroom"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_teaching_games_game_title",
+      "name": "Game title",
+      "role": "Game title",
+      "slideOption": 1,
+      "description": "Use this layout for game title content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_lesson_objectives",
+      "name": "Lesson objectives",
+      "role": "Lesson objectives",
+      "slideOption": 2,
+      "description": "Use this layout for lesson objectives content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_team_setup",
+      "name": "Team setup",
+      "role": "Team setup",
+      "slideOption": 3,
+      "description": "Use this layout for team setup content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_rules_slide",
+      "name": "Rules slide",
+      "role": "Rules slide",
+      "slideOption": 4,
+      "description": "Use this layout for rules slide content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_warm_up_round",
+      "name": "Warm-up round",
+      "role": "Warm-up round",
+      "slideOption": 5,
+      "description": "Use this layout for warm-up round content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_vocabulary_cards",
+      "name": "Vocabulary cards",
+      "role": "Vocabulary cards",
+      "slideOption": 6,
+      "description": "Use this layout for vocabulary cards content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_picture_guessing_game",
+      "name": "Picture guessing game",
+      "role": "Picture guessing game",
+      "slideOption": 7,
+      "description": "Use this layout for picture guessing game content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_matching_game",
+      "name": "Matching game",
+      "role": "Matching game",
+      "slideOption": 8,
+      "description": "Use this layout for matching game content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_fill_in_the_blank_game",
+      "name": "Fill-in-the-blank game",
+      "role": "Fill-in-the-blank game",
+      "slideOption": 9,
+      "description": "Use this layout for fill-in-the-blank game content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_speed_round",
+      "name": "Speed round",
+      "role": "Speed round",
+      "slideOption": 10,
+      "description": "Use this layout for speed round content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_team_challenge",
+      "name": "Team challenge",
+      "role": "Team challenge",
+      "slideOption": 11,
+      "description": "Use this layout for team challenge content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_mini_quiz",
+      "name": "Mini quiz",
+      "role": "Mini quiz",
+      "slideOption": 12,
+      "description": "Use this layout for mini quiz content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_choice_wheel",
+      "name": "Choice wheel",
+      "role": "Choice wheel",
+      "slideOption": 13,
+      "description": "Use this layout for choice wheel content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_role_play_task",
+      "name": "Role-play task",
+      "role": "Role-play task",
+      "slideOption": 14,
+      "description": "Use this layout for role-play task content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_find_the_error",
+      "name": "Find the error",
+      "role": "Find the error",
+      "slideOption": 15,
+      "description": "Use this layout for find the error content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_word_race",
+      "name": "Word race",
+      "role": "Word race",
+      "slideOption": 16,
+      "description": "Use this layout for word race content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_memory_check",
+      "name": "Memory check",
+      "role": "Memory check",
+      "slideOption": 17,
+      "description": "Use this layout for memory check content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_bonus_round",
+      "name": "Bonus round",
+      "role": "Bonus round",
+      "slideOption": 18,
+      "description": "Use this layout for bonus round content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_scoreboard",
+      "name": "Scoreboard",
+      "role": "Scoreboard",
+      "slideOption": 19,
+      "description": "Use this layout for scoreboard content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_answer_reveal",
+      "name": "Answer reveal",
+      "role": "Answer reveal",
+      "slideOption": 20,
+      "description": "Use this layout for answer reveal content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_teacher_instruction",
+      "name": "Teacher instruction",
+      "role": "Teacher instruction",
+      "slideOption": 21,
+      "description": "Use this layout for teacher instruction content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_reflection_prompt",
+      "name": "Reflection prompt",
+      "role": "Reflection prompt",
+      "slideOption": 22,
+      "description": "Use this layout for reflection prompt content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_rewards_slide",
+      "name": "Rewards slide",
+      "role": "Rewards slide",
+      "slideOption": 23,
+      "description": "Use this layout for rewards slide content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_homework_mission",
+      "name": "Homework mission",
+      "role": "Homework mission",
+      "slideOption": 24,
+      "description": "Use this layout for homework mission content in a teaching games deck."
+    },
+    {
+      "id": "yl_teaching_games_closing_slide",
+      "name": "Closing slide",
+      "role": "Closing slide",
+      "slideOption": 25,
+      "description": "Use this layout for closing slide content in a teaching games deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "teaching_games_standard",
+      "name": "Teaching + Games Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_teaching_games_game_title",
+        "yl_teaching_games_lesson_objectives",
+        "yl_teaching_games_team_setup",
+        "yl_teaching_games_rules_slide",
+        "yl_teaching_games_warm_up_round",
+        "yl_teaching_games_vocabulary_cards",
+        "yl_teaching_games_picture_guessing_game",
+        "yl_teaching_games_matching_game",
+        "yl_teaching_games_fill_in_the_blank_game",
+        "yl_teaching_games_speed_round",
+        "yl_teaching_games_team_challenge",
+        "yl_teaching_games_mini_quiz",
+        "yl_teaching_games_choice_wheel",
+        "yl_teaching_games_role_play_task",
+        "yl_teaching_games_find_the_error"
+      ]
+    },
+    {
+      "id": "teaching_games_short",
+      "name": "Teaching + Games Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_teaching_games_game_title",
+        "yl_teaching_games_lesson_objectives",
+        "yl_teaching_games_team_setup",
+        "yl_teaching_games_rules_slide",
+        "yl_teaching_games_picture_guessing_game",
+        "yl_teaching_games_fill_in_the_blank_game",
+        "yl_teaching_games_choice_wheel",
+        "yl_teaching_games_teacher_instruction",
+        "yl_teaching_games_closing_slide"
+      ]
+    },
+    {
+      "id": "teaching_games_deep_dive",
+      "name": "Teaching + Games Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_teaching_games_game_title",
+        "yl_teaching_games_lesson_objectives",
+        "yl_teaching_games_rules_slide",
+        "yl_teaching_games_warm_up_round",
+        "yl_teaching_games_vocabulary_cards",
+        "yl_teaching_games_picture_guessing_game",
+        "yl_teaching_games_matching_game",
+        "yl_teaching_games_fill_in_the_blank_game",
+        "yl_teaching_games_speed_round",
+        "yl_teaching_games_choice_wheel",
+        "yl_teaching_games_role_play_task",
+        "yl_teaching_games_find_the_error",
+        "yl_teaching_games_word_race",
+        "yl_teaching_games_memory_check",
+        "yl_teaching_games_bonus_round",
+        "yl_teaching_games_scoreboard",
+        "yl_teaching_games_answer_reveal",
+        "yl_teaching_games_teacher_instruction",
+        "yl_teaching_games_rewards_slide",
+        "yl_teaching_games_homework_mission",
+        "yl_teaching_games_closing_slide"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": [
+      "yl_teaching_games_scoreboard"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "duotone",
+      "light",
+      "thin"
+    ]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "A bright classroom game show system for teaching games, kids lesson, language game, quiz game, interactive classroom.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": false,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": true,
+    "supportsFinancialSlides": false,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 94,
+    "chartReadiness": 45,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "teaching games",
+    "kids lesson",
+    "language game",
+    "quiz game",
+    "interactive classroom"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

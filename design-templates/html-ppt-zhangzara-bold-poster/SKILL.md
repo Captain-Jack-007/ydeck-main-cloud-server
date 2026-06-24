@@ -1,5 +1,5 @@
 ---
-name: html-ppt-zhangzara-bold-poster
+name: "Bold Poster"
 description: |
   Bold Poster — Editorial poster aesthetic with massive Shrikhand display and a single fire-engine red accent. Anything that should land like a magazine cover: brand manifestos, founder vision decks, editorial / cultural pitches, creative reviews.
 triggers:
@@ -16,13 +16,13 @@ triggers:
   - "html slides"
   - "zhangzara"
 od:
-  mode: deck
-  scenario: marketing
+  mode: "deck"
+  scenario: "marketing"
   upstream: "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/bold-poster"
   upstream_license: MIT
   preview:
     type: html
-    entry: example.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: false

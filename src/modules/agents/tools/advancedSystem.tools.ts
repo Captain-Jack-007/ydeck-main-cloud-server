@@ -12,6 +12,11 @@ import {
 } from "../../../models";
 import { isGoogleVisionOcrConfigured, isTencentOcrConfigured, runGoogleVisionOcr, runTencentOcr, type OcrResult } from "../../ocr/googleVisionOcr.service";
 import { renderDeckScreenshots, renderSlideScreenshot } from "../../render/render.service";
+import {
+  renderStaticChart,
+  type StaticChartDatum,
+} from "../../visuals/chartVisual.service";
+import { renderIconVisual } from "../../visuals/iconVisual.service";
 import { reviewDeckWithVision, reviewSlideWithVision } from "../../visionQa/visionQa.service";
 import { saveCloudDeckArtifact, type CloudDeckArtifact } from "./cloudDeck.tools";
 import { executeRegisteredTool, getTool, normalizeToolName, registerTool } from "./registry";
@@ -735,12 +740,24 @@ async function detectVisualNeeds(args: Record<string, unknown>): Promise<ToolRes
 }
 
 async function createChart(args: Record<string, unknown>): Promise<ToolResult> {
-  const data = arrayOfRecords(args.data);
-  const labels = data.map((d, i) => String(d.label ?? d.name ?? `Item ${i + 1}`));
-  const values = data.map((d) => Number(d.value ?? 0));
-  const max = Math.max(1, ...values);
-  const bars = values.map((v, i) => `<rect x="${80 + i * 120}" y="${320 - (v / max) * 220}" width="70" height="${(v / max) * 220}" rx="10" fill="#4f46e5"/><text x="${115 + i * 120}" y="360" text-anchor="middle" font-size="22">${escapeHtml(labels[i])}</text>`).join("");
-  return okJson("Chart visual created.", { type: args.type ?? "bar", svg: `<svg viewBox="0 0 720 420" role="img">${bars}</svg>` });
+  const data = arrayOfRecords(args.data).map(
+    (d, i): StaticChartDatum => ({
+      label: String(d.label ?? d.name ?? `Item ${i + 1}`),
+      value: Number(d.value ?? 0),
+    })
+  );
+  const chart = renderStaticChart(data, {
+    type: String(args.type ?? 'bar'),
+    title: typeof args.title === 'string' ? args.title : undefined,
+    subtitle: typeof args.subtitle === 'string' ? args.subtitle : undefined,
+    width: Number(args.width ?? 900),
+    height: Number(args.height ?? 520),
+    accent: typeof args.accent === 'string' ? args.accent : undefined,
+    secondary: typeof args.secondary === 'string' ? args.secondary : undefined,
+    background: typeof args.background === 'string' ? args.background : undefined,
+    textColor: typeof args.textColor === 'string' ? args.textColor : undefined,
+  });
+  return okJson('Chart visual created with ECharts static SVG renderer.', chart);
 }
 
 async function createTableVisual(args: Record<string, unknown>): Promise<ToolResult> {
@@ -757,8 +774,16 @@ async function createDiagram(args: Record<string, unknown>): Promise<ToolResult>
 
 async function createIconVisual(args: Record<string, unknown>): Promise<ToolResult> {
   const items = toBullets(args.items ?? args.labels ?? args.content ?? "Idea, Build, Launch").slice(0, 8);
-  const html = `<div class="ydeck-icons">${items.map((item) => `<div class="icon-item"><svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z" fill="currentColor"/></svg><span>${escapeHtml(item)}</span></div>`).join("")}</div>`;
-  return okJson("Icon visual created.", { html });
+  const visual = renderIconVisual(
+    items.map((item) => ({ label: item })),
+    {
+      accent: typeof args.accent === 'string' ? args.accent : undefined,
+      textColor: typeof args.textColor === 'string' ? args.textColor : undefined,
+      surface: typeof args.surface === 'string' ? args.surface : undefined,
+      style: typeof args.style === 'string' ? args.style : undefined,
+    }
+  );
+  return okJson('Modern icon visual created with Phosphor inline SVG.', visual);
 }
 
 async function cropOrRepositionImage(args: Record<string, unknown>): Promise<ToolResult> {

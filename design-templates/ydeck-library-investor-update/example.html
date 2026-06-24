@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YDeck Investor Update Preview</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#FFFCF4;color:#0F172A;font-family:"Avenir Next", "Helvetica Neue", Arial, sans-serif;letter-spacing:0}
+body{overflow:auto}
+.deck{--preview-scale:.625;width:100%;background:#FFFCF4}
+.slide-page{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0;background:#FFFCF4;page-break-after:always}
+.stage{width:calc(1920px * var(--preview-scale));height:calc(1080px * var(--preview-scale));overflow:hidden;background:#FFFCF4}
+.scale{width:1920px;height:1080px;transform-origin:top left;transform:scale(var(--preview-scale));overflow:hidden}
+.ydeck-slide{width:1920px;height:1080px;position:relative;overflow:hidden;letter-spacing:0}
+.topline{position:absolute;left:112px;right:112px;top:54px;display:flex;justify-content:space-between;font-size:18px;letter-spacing:.08em;text-transform:uppercase;opacity:.64}
+.eyebrow{position:absolute;left:112px;top:112px;font-size:20px;letter-spacing:.12em;text-transform:uppercase;font-weight:840}
+.title{margin:0;font-size:76px;line-height:1.03;font-weight:880}
+.copy{font-size:29px;line-height:1.34;margin:26px 0 0}
+.footer{position:absolute;left:112px;right:112px;bottom:54px;display:flex;justify-content:space-between;font-size:20px;opacity:.62}
+.num{font-size:18px;letter-spacing:.1em;text-transform:uppercase;opacity:.64;font-weight:840}
+.card{border-radius:8px;border:1px solid rgba(17,24,39,.13);background:rgba(255,255,255,.78);padding:30px}
+.dark-card{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#FFFFFF}
+.pill{border-radius:999px;padding:9px 15px;font-size:18px;font-weight:800;display:inline-block}
+svg{max-width:100%}
+@media(max-width:1308px){.deck{--preview-scale:.625}}
+@media(max-width:1200px){.deck{--preview-scale:.58}}
+@media(max-width:1120px){.deck{--preview-scale:.535}}
+@media(max-width:1040px){.deck{--preview-scale:.49}}
+@media(max-width:960px){.deck{--preview-scale:.445}}
+@media(max-width:880px){.deck{--preview-scale:.4}}
+@media(max-width:800px){.deck{--preview-scale:.35}}
+@media(max-width:680px){.deck{--preview-scale:.285}}
+@media(max-width:560px){.deck{--preview-scale:.22}}
+</style>
+</head>
+<body>
+<main class="deck">
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_title_statement" class="ydeck-slide" style="background:#0F172A;color:#FFFFFF;">
+<div class="topline"><span>YDeck Investor Update</span><span>01 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_title_statement</div>
+
+<div style="position:absolute;left:112px;top:190px;width:1040px;">
+  <div style="width:92px;height:10px;border-radius:999px;background:#1D4ED8;margin-bottom:42px;"></div>
+  <h2 class="title" style="font-size:104px;line-height:.96;color:#FFFFFF;letter-spacing:0;">Investor Update</h2>
+  <p class="copy" style="width:780px;color:rgba(255,255,255,.70);margin-top:38px;">A metric-forward investor update deck with traction, runway, milestones, risks, and asks.</p>
+</div>
+<div style="position:absolute;right:112px;top:188px;width:474px;height:610px;border-left:1px solid rgba(255,255,255,.18);padding-left:54px;">
+  <div class="num" style="color:rgba(255,255,255,.56);">Preview system</div>
+  <div style="font-size:42px;line-height:1.04;font-weight:860;margin-top:28px;color:#FFFFFF;">25 layout options, selected by deck flow.</div>
+  <div style="position:absolute;left:54px;right:0;bottom:0;display:grid;gap:14px;">
+    <div style="border-top:1px solid rgba(255,255,255,.16);padding-top:18px;"><div class="num" style="color:#1D4ED8;opacity:1;">Scenario</div><div style="font-size:25px;line-height:1.18;font-weight:820;color:#FFFFFF;margin-top:8px;">ydeck-library</div></div>
+    <div style="border-top:1px solid rgba(255,255,255,.16);padding-top:18px;"><div class="num" style="color:#0F766E;opacity:1;">Format</div><div style="font-size:25px;line-height:1.18;font-weight:820;color:#FFFFFF;margin-top:8px;">HTML-first slides</div></div>
+    <div style="border-top:1px solid rgba(255,255,255,.16);padding-top:18px;"><div class="num" style="color:#1D4ED8;opacity:1;">Canvas</div><div style="font-size:25px;line-height:1.18;font-weight:820;color:#FFFFFF;margin-top:8px;">1920 x 1080</div></div>
+  </div>
+</div>
+<div class="footer"><span>Opening thesis</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_context_map" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>02 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_context_map</div>
+
+<div style="position:absolute;left:112px;top:176px;width:610px;">
+  <h2 class="title">Context map</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A system diagram that shows components, handoffs, ownership, and the control loop.</p>
+  <div style="margin-top:40px;display:grid;gap:16px;width:560px;">
+    <div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#FFFFFF;color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M48 10l8 26 26 12-26 12-8 26-8-26-26-12 26-12Z" fill="currentColor" opacity=".9"/><circle cx="76" cy="22" r="6" fill="currentColor"/></svg><strong style="font-size:25px;">Input layer</strong></div><div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#0F172A;color:#FFFFFF;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#1D4ED8;display:block;"><path d="M24 30h20v20H24zM52 46h20v20H52zM34 50v16h18M44 40h18v6" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="72" cy="30" r="7" fill="currentColor"/></svg><strong style="font-size:25px;">Decision core</strong></div><div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#FFFFFF;color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M24 48c0-13 10-24 24-24h10M52 14l14 10-14 10M72 48c0 13-10 24-24 24H38M44 82 30 72l14-10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><strong style="font-size:25px;">Delivery loop</strong></div>
+  </div>
+</div>
+<div style="position:absolute;right:112px;top:134px;width:930px;height:650px;">
+  <svg viewBox="0 0 930 650" aria-label="System topology diagram" style="width:930px;height:650px;display:block;">
+    <rect width="930" height="650" rx="8" fill="#E7E0D3"/>
+    <g stroke="rgba(15,23,42,0.14)" stroke-width="2">
+      <path d="M116 170H820"/><path d="M116 324H820"/><path d="M116 478H820"/>
+      <path d="M300 92V560"/><path d="M558 92V560"/>
+    </g>
+    <rect x="96" y="124" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="130" cy="158" r="13" fill="#1D4ED8"/><text x="158" y="166" fill="#0F172A" font-size="24" font-weight="860">Input</text><text x="128" y="200" fill="#0F172A" opacity=".62" font-size="20">signals</text>
+    <rect x="356" y="96" width="218" height="134" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="390" cy="130" r="13" fill="#0F766E"/><text x="418" y="138" fill="#0F172A" font-size="24" font-weight="860">Core model</text><text x="388" y="200" fill="#0F172A" opacity=".62" font-size="20">logic</text>
+    <rect x="616" y="124" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="650" cy="158" r="13" fill="#1D4ED8"/><text x="678" y="166" fill="#0F172A" font-size="24" font-weight="860">Output</text><text x="648" y="200" fill="#0F172A" opacity=".62" font-size="20">result</text>
+    <rect x="166" y="300" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="200" cy="334" r="13" fill="#0F766E"/><text x="228" y="342" fill="#0F172A" font-size="24" font-weight="860">Review</text><text x="198" y="376" fill="#0F172A" opacity=".62" font-size="20">quality</text>
+    <rect x="478" y="300" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="512" cy="334" r="13" fill="#1D4ED8"/><text x="540" y="342" fill="#0F172A" font-size="24" font-weight="860">Delivery</text><text x="510" y="376" fill="#0F172A" opacity=".62" font-size="20">execution</text>
+    <rect x="296" y="472" width="338" height="106" rx="8" fill="#0F172A" stroke="#0F172A"/><circle cx="330" cy="506" r="13" fill="#1D4ED8"/><text x="358" y="514" fill="#FFFFFF" font-size="24" font-weight="860">Governance</text><text x="328" y="548" fill="#FFFFFF" opacity=".68" font-size="20">rules, ownership</text>
+    <g fill="none" stroke="#1D4ED8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M314 177H348"/><path d="M574 177H608"/><path d="M384 354H470"/><path d="M465 230V294"/><path d="M512 408V466"/>
+      <path d="M600 534C720 500 772 420 736 322"/>
+    </g>
+    <circle cx="736" cy="322" r="18" fill="#0F766E"/>
+  </svg>
+</div>
+<div class="footer"><span>Context map</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_problem_solution" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>03 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_problem_solution</div>
+
+<div style="position:absolute;left:112px;top:188px;width:610px;">
+  <h2 class="title">Problem and response</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A flexible content slide with composition variety, modern iconography, and useful density.</p>
+</div>
+<div style="position:absolute;right:112px;top:150px;width:900px;height:630px;display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:1fr 1fr;gap:22px;">
+  <div style="grid-row:span 2;border-radius:8px;background:#0F172A;color:#FFFFFF;padding:42px;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:76px;height:76px;color:#1D4ED8;display:block;"><path d="M48 10l8 26 26 12-26 12-8 26-8-26-26-12 26-12Z" fill="currentColor" opacity=".9"/><circle cx="76" cy="22" r="6" fill="currentColor"/></svg>
+    <div style="font-size:54px;line-height:1.06;font-weight:880;margin-top:64px;">Main idea with visible supporting structure.</div>
+    <p style="font-size:25px;line-height:1.34;color:rgba(255,255,255,.7);margin-top:34px;">Designed for actual slide content, not empty decorative panels.</p>
+  </div>
+  <div class="card" style="background:#FFFFFF;color:#0F172A;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:58px;height:58px;color:#1D4ED8;display:block;"><path d="M28 16h28l16 16v48H28Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M56 16v18h16M38 48h22M38 62h28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <h3 style="font-size:34px;margin:26px 0 0;">Proof</h3>
+    <p style="font-size:22px;line-height:1.32;color:rgba(15,23,42,0.66);">A compact block for real examples, data, or next steps.</p>
+  </div><div class="card" style="background:#FFFFFF;color:#0F172A;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:58px;height:58px;color:#0F766E;display:block;"><path d="M24 68 68 24M40 24h28v28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M24 24h22M24 44h16M24 64h8" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <h3 style="font-size:34px;margin:26px 0 0;">Action</h3>
+    <p style="font-size:22px;line-height:1.32;color:rgba(15,23,42,0.66);">A compact block for real examples, data, or next steps.</p>
+  </div>
+</div>
+<div class="footer"><span>Problem and response</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_audience_insight" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>04 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_audience_insight</div>
+
+<div style="position:absolute;left:112px;top:188px;width:610px;">
+  <h2 class="title">Audience insight</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A flexible content slide with composition variety, modern iconography, and useful density.</p>
+</div>
+<div style="position:absolute;right:112px;top:150px;width:900px;height:630px;display:grid;grid-template-columns:1.1fr .9fr;grid-template-rows:1fr 1fr;gap:22px;">
+  <div style="grid-row:span 2;border-radius:8px;background:#0F172A;color:#FFFFFF;padding:42px;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:76px;height:76px;color:#1D4ED8;display:block;"><path d="M48 10l8 26 26 12-26 12-8 26-8-26-26-12 26-12Z" fill="currentColor" opacity=".9"/><circle cx="76" cy="22" r="6" fill="currentColor"/></svg>
+    <div style="font-size:54px;line-height:1.06;font-weight:880;margin-top:64px;">Main idea with visible supporting structure.</div>
+    <p style="font-size:25px;line-height:1.34;color:rgba(255,255,255,.7);margin-top:34px;">Designed for actual slide content, not empty decorative panels.</p>
+  </div>
+  <div class="card" style="background:#FFFFFF;color:#0F172A;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:58px;height:58px;color:#1D4ED8;display:block;"><path d="M28 16h28l16 16v48H28Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M56 16v18h16M38 48h22M38 62h28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <h3 style="font-size:34px;margin:26px 0 0;">Proof</h3>
+    <p style="font-size:22px;line-height:1.32;color:rgba(15,23,42,0.66);">A compact block for real examples, data, or next steps.</p>
+  </div><div class="card" style="background:#FFFFFF;color:#0F172A;">
+    <svg viewBox="0 0 96 96" aria-hidden="true" style="width:58px;height:58px;color:#0F766E;display:block;"><path d="M24 68 68 24M40 24h28v28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M24 24h22M24 44h16M24 64h8" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    <h3 style="font-size:34px;margin:26px 0 0;">Action</h3>
+    <p style="font-size:22px;line-height:1.32;color:rgba(15,23,42,0.66);">A compact block for real examples, data, or next steps.</p>
+  </div>
+</div>
+<div class="footer"><span>Audience insight</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_metric_dashboard" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>05 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_metric_dashboard</div>
+
+<div style="position:absolute;left:112px;top:160px;width:660px;">
+  <h2 class="title">Metric dashboard</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A dense operating view with leading indicators, variance, and directional movement.</p>
+</div>
+<div style="position:absolute;right:112px;top:132px;width:920px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+  <div class="card" style="height:154px;background:#FFFFFF;color:#0F172A;">
+    <div class="num">Reach</div>
+    <strong style="display:block;font-size:48px;margin-top:14px;">68%</strong>
+    <span style="font-size:19px;color:#1D4ED8;font-weight:800;">+ signal</span>
+  </div><div class="card" style="height:154px;background:#FFFFFF;color:#0F172A;">
+    <div class="num">Quality</div>
+    <strong style="display:block;font-size:48px;margin-top:14px;">67%</strong>
+    <span style="font-size:19px;color:#0F766E;font-weight:800;">watch</span>
+  </div><div class="card" style="height:154px;background:#FFFFFF;color:#0F172A;">
+    <div class="num">Velocity</div>
+    <strong style="display:block;font-size:48px;margin-top:14px;">69%</strong>
+    <span style="font-size:19px;color:#1D4ED8;font-weight:800;">+ signal</span>
+  </div><div class="card" style="height:154px;background:#0F172A;color:#FFFFFF;">
+    <div class="num">Confidence</div>
+    <strong style="display:block;font-size:48px;margin-top:14px;">83%</strong>
+    <span style="font-size:19px;color:rgba(255,255,255,0.72);font-weight:800;">+ signal</span>
+  </div>
+</div>
+<div style="position:absolute;left:112px;right:112px;top:350px;height:430px;display:grid;grid-template-columns:1.2fr .8fr;gap:24px;">
+  <div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:34px 38px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:29px;font-weight:860;">Performance ribbon</div><div class="pill" style="background:#E7E0D3;color:#0F172A;">Actual vs plan</div></div>
+    <svg viewBox="0 0 900 292" aria-label="Performance ribbon chart" style="margin-top:22px;width:900px;height:292px;display:block;">
+    <g stroke="rgba(15,23,42,0.11)"><path d="M70 48H850"/><path d="M70 104H850"/><path d="M70 160H850"/><path d="M70 216H850"/><path d="M70 272H850"/></g>
+    <path d="M70 272H850" stroke="rgba(15,23,42,0.28)" stroke-width="3"/>
+    <rect x="106" y="150" width="54" height="122" rx="8" fill="#D9DEE5"/><rect x="170" y="126" width="54" height="146" rx="8" fill="#1D4ED8"/><text x="164" y="286" text-anchor="middle" fill="rgba(15,23,42,0.62)" font-size="20">Q1</text><rect x="286" y="132" width="54" height="140" rx="8" fill="#D9DEE5"/><rect x="350" y="106" width="54" height="166" rx="8" fill="#1D4ED8"/><text x="344" y="286" text-anchor="middle" fill="rgba(15,23,42,0.62)" font-size="20">Q2</text><rect x="466" y="104" width="54" height="168" rx="8" fill="#D9DEE5"/><rect x="530" y="76" width="54" height="196" rx="8" fill="#1D4ED8"/><text x="524" y="286" text-anchor="middle" fill="rgba(15,23,42,0.62)" font-size="20">Q3</text><rect x="646" y="92" width="54" height="180" rx="8" fill="#D9DEE5"/><rect x="710" y="64" width="54" height="208" rx="8" fill="#0F766E"/><text x="704" y="286" text-anchor="middle" fill="rgba(15,23,42,0.62)" font-size="20">Q4</text>
+    <path d="M132 150C224 130 282 138 376 108C480 75 548 86 656 68C724 56 762 58 816 48" fill="none" stroke="#0F172A" stroke-width="5" stroke-linecap="round" opacity=".72"/>
+  </svg>
+  </div>
+  <div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:34px;">
+    <div style="font-size:29px;font-weight:860;">Signal stack</div>
+    <div style="display:grid;gap:24px;margin-top:30px;"><div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#1D4ED8;font-weight:860;">Acquisition</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:68%;height:100%;background:#1D4ED8;border-radius:999px;"></div></div><strong style="font-size:22px;">68%</strong></div><div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#0F766E;font-weight:860;">Activation</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:67%;height:100%;background:#0F766E;border-radius:999px;"></div></div><strong style="font-size:22px;">67%</strong></div><div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#1D4ED8;font-weight:860;">Retention</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:69%;height:100%;background:#1D4ED8;border-radius:999px;"></div></div><strong style="font-size:22px;">69%</strong></div><div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#1D4ED8;font-weight:860;">Expansion</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:83%;height:100%;background:#1D4ED8;border-radius:999px;"></div></div><strong style="font-size:22px;">83%</strong></div></div>
+    <div style="margin-top:34px;padding-top:24px;border-top:1px solid rgba(15,23,42,0.12);font-size:24px;line-height:1.34;color:rgba(15,23,42,0.72);"><strong style="color:#0F172A;">Operator note:</strong> route resources to the highest-conversion lane.</div>
+  </div>
+</div>
+<div class="footer"><span>Metric dashboard</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_evidence_grid" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>06 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_evidence_grid</div>
+
+<div style="position:absolute;left:112px;top:158px;width:760px;">
+  <h2 class="title">Evidence grid</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">Evidence is handled as cited proof, not decorative text blocks.</p>
+</div>
+<div style="position:absolute;left:112px;right:112px;top:340px;height:430px;display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;">
+  <div style="border-radius:8px;background:#0F172A;color:#FFFFFF;padding:46px;">
+    <div class="num">Source read</div>
+    <div style="font-family:Georgia,serif;font-size:46px;line-height:1.15;margin-top:42px;">The claim is only as strong as the evidence chain behind it.</div>
+    <div style="margin-top:44px;width:230px;height:10px;border-radius:999px;background:#1D4ED8;"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+    <div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#1D4ED8;display:block;"><path d="M28 16h28l16 16v48H28Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M56 16v18h16M38 48h22M38 62h28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Observed pattern</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div><div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#0F766E;display:block;"><path d="M20 74h58M30 64V44M48 64V26M66 64V36" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M26 32c14 6 24 8 38-10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Measured effect</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div><div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#1D4ED8;display:block;"><circle cx="48" cy="48" r="34" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M31 49l12 12 24-28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Decision implication</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div>
+  </div>
+</div>
+<div class="footer"><span>Evidence grid</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_comparison_matrix" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>07 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_comparison_matrix</div>
+
+<div style="position:absolute;left:112px;top:178px;width:620px;">
+  <h2 class="title">Comparison matrix</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">Tradeoffs are made explicit with weighted criteria, controls, and a visible recommendation.</p>
+</div>
+<div style="position:absolute;right:112px;top:146px;width:902px;height:620px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(15,23,42,0.13);padding:38px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:30px;font-weight:860;">Strategic board</div><div class="pill" style="background:#E7E0D3;color:#0F172A;">2x2 synthesis</div></div>
+  <svg viewBox="0 0 824 466" aria-label="Strategic board" style="margin-top:24px;width:824px;height:466px;display:block;">
+      <rect x="72" y="58" width="324" height="150" rx="8" fill="#1D4ED8"/><text x="100" y="112" fill="#0F172A" font-size="26" font-weight="860">Strengths</text><text x="100" y="154" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="428" y="58" width="324" height="150" rx="8" fill="#E7E0D3"/><text x="456" y="112" fill="#0F172A" font-size="26" font-weight="860">Weaknesses</text><text x="456" y="154" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="72" y="250" width="324" height="150" rx="8" fill="#0F766E"/><text x="100" y="304" fill="#0F172A" font-size="26" font-weight="860">Opportunities</text><text x="100" y="346" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="428" y="250" width="324" height="150" rx="8" fill="#0F172A"/><text x="456" y="304" fill="#FFFFFF" font-size="26" font-weight="860">Threats</text><text x="456" y="346" fill="#FFFFFF" opacity=".68" font-size="20">2-3 concise proof points</text>
+    </svg>
+</div>
+<div style="position:absolute;left:112px;bottom:152px;width:610px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#0F766E;opacity:1;">watch items</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">2</div></div>
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#1D4ED8;opacity:1;">recommended path</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">1</div></div>
+</div>
+<div class="footer"><span>Comparison matrix</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_timeline_process" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>08 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_timeline_process</div>
+
+<div style="position:absolute;left:112px;top:170px;width:720px;">
+  <h2 class="title">Timeline process</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">Milestones are shown as a paced roadmap with owners, dependencies, and visible decision gates.</p>
+</div>
+<div style="position:absolute;right:112px;top:160px;width:840px;height:620px;border-radius:8px;background:#0F172A;padding:42px;color:#FFFFFF;">
+  <svg viewBox="0 0 756 484" aria-label="Roadmap timeline" style="width:756px;height:484px;display:block;">
+    <g stroke="rgba(255,255,255,.16)" stroke-width="2"><path d="M68 82H704"/><path d="M68 174H704"/><path d="M68 266H704"/><path d="M68 358H704"/></g>
+    <path d="M82 408H704" stroke="rgba(255,255,255,.28)" stroke-width="3"/>
+    <rect x="90" y="330" width="126" height="86" rx="8" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.14)"/><circle cx="118" cy="358" r="14" fill="#1D4ED8"/><text x="114" y="392" fill="#FFFFFF" font-size="19" font-weight="860">Frame</text><text x="114" y="416" fill="#FFFFFF" opacity=".58" font-size="16">phase 1</text><rect x="246" y="240" width="126" height="86" rx="8" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.14)"/><circle cx="274" cy="268" r="14" fill="#0F766E"/><text x="270" y="302" fill="#FFFFFF" font-size="19" font-weight="860">Prove</text><text x="270" y="326" fill="#FFFFFF" opacity=".58" font-size="16">phase 2</text><rect x="402" y="286" width="126" height="86" rx="8" fill="#FFFFFF" stroke="rgba(255,255,255,.14)"/><circle cx="430" cy="314" r="14" fill="#1D4ED8"/><text x="426" y="348" fill="#0F172A" font-size="19" font-weight="860">Commit</text><text x="426" y="372" fill="#0F172A" opacity=".58" font-size="16">phase 3</text><rect x="558" y="166" width="126" height="86" rx="8" fill="rgba(255,255,255,.09)" stroke="rgba(255,255,255,.14)"/><circle cx="586" cy="194" r="14" fill="#0F766E"/><text x="582" y="228" fill="#FFFFFF" font-size="19" font-weight="860">Move</text><text x="582" y="252" fill="#FFFFFF" opacity=".58" font-size="16">phase 4</text>
+    <path d="M92 334C198 300 268 330 350 244C432 158 538 204 666 126" fill="none" stroke="#0F766E" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="666" cy="126" r="18" fill="#0F766E"/>
+  </svg>
+</div>
+<div style="position:absolute;left:112px;bottom:148px;width:620px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#1D4ED8;opacity:1;">decision gates</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">03</div></div>
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#0F766E;opacity:1;">execution horizon</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">90d</div></div>
+</div>
+<div class="footer"><span>Timeline process</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_operating_model" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>09 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_operating_model</div>
+
+<div style="position:absolute;left:112px;top:176px;width:610px;">
+  <h2 class="title">Operating model</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A system diagram that shows components, handoffs, ownership, and the control loop.</p>
+  <div style="margin-top:40px;display:grid;gap:16px;width:560px;">
+    <div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#FFFFFF;color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M48 10l8 26 26 12-26 12-8 26-8-26-26-12 26-12Z" fill="currentColor" opacity=".9"/><circle cx="76" cy="22" r="6" fill="currentColor"/></svg><strong style="font-size:25px;">Input layer</strong></div><div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#0F172A;color:#FFFFFF;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#1D4ED8;display:block;"><path d="M24 30h20v20H24zM52 46h20v20H52zM34 50v16h18M44 40h18v6" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="72" cy="30" r="7" fill="currentColor"/></svg><strong style="font-size:25px;">Decision core</strong></div><div style="height:76px;border-radius:8px;border:1px solid rgba(15,23,42,0.12);background:#FFFFFF;color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M24 48c0-13 10-24 24-24h10M52 14l14 10-14 10M72 48c0 13-10 24-24 24H38M44 82 30 72l14-10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><strong style="font-size:25px;">Delivery loop</strong></div>
+  </div>
+</div>
+<div style="position:absolute;right:112px;top:134px;width:930px;height:650px;">
+  <svg viewBox="0 0 930 650" aria-label="System topology diagram" style="width:930px;height:650px;display:block;">
+    <rect width="930" height="650" rx="8" fill="#E7E0D3"/>
+    <g stroke="rgba(15,23,42,0.14)" stroke-width="2">
+      <path d="M116 170H820"/><path d="M116 324H820"/><path d="M116 478H820"/>
+      <path d="M300 92V560"/><path d="M558 92V560"/>
+    </g>
+    <rect x="96" y="124" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="130" cy="158" r="13" fill="#1D4ED8"/><text x="158" y="166" fill="#0F172A" font-size="24" font-weight="860">Input</text><text x="128" y="200" fill="#0F172A" opacity=".62" font-size="20">signals</text>
+    <rect x="356" y="96" width="218" height="134" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="390" cy="130" r="13" fill="#0F766E"/><text x="418" y="138" fill="#0F172A" font-size="24" font-weight="860">Core model</text><text x="388" y="200" fill="#0F172A" opacity=".62" font-size="20">logic</text>
+    <rect x="616" y="124" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="650" cy="158" r="13" fill="#1D4ED8"/><text x="678" y="166" fill="#0F172A" font-size="24" font-weight="860">Output</text><text x="648" y="200" fill="#0F172A" opacity=".62" font-size="20">result</text>
+    <rect x="166" y="300" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="200" cy="334" r="13" fill="#0F766E"/><text x="228" y="342" fill="#0F172A" font-size="24" font-weight="860">Review</text><text x="198" y="376" fill="#0F172A" opacity=".62" font-size="20">quality</text>
+    <rect x="478" y="300" width="218" height="106" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/><circle cx="512" cy="334" r="13" fill="#1D4ED8"/><text x="540" y="342" fill="#0F172A" font-size="24" font-weight="860">Delivery</text><text x="510" y="376" fill="#0F172A" opacity=".62" font-size="20">execution</text>
+    <rect x="296" y="472" width="338" height="106" rx="8" fill="#0F172A" stroke="#0F172A"/><circle cx="330" cy="506" r="13" fill="#1D4ED8"/><text x="358" y="514" fill="#FFFFFF" font-size="24" font-weight="860">Governance</text><text x="328" y="548" fill="#FFFFFF" opacity=".68" font-size="20">rules, ownership</text>
+    <g fill="none" stroke="#1D4ED8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M314 177H348"/><path d="M574 177H608"/><path d="M384 354H470"/><path d="M465 230V294"/><path d="M512 408V466"/>
+      <path d="M600 534C720 500 772 420 736 322"/>
+    </g>
+    <circle cx="736" cy="322" r="18" fill="#0F766E"/>
+  </svg>
+</div>
+<div class="footer"><span>Operating model</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_image_feature" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>10 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_image_feature</div>
+
+<div style="position:absolute;left:112px;top:174px;width:590px;">
+  <h2 class="title">Image feature</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A strong image-ready composition with annotation rails and space for generated or uploaded visuals.</p>
+  <div style="margin-top:42px;display:grid;gap:18px;"><div style="height:78px;border-radius:8px;background:#0F172A;border:1px solid rgba(15,23,42,0.13);color:#FFFFFF;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#1D4ED8;display:block;"><circle cx="48" cy="48" r="34" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M48 14 35 48l13 34M82 48H48L24 26M24 70l24-22" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><strong style="font-size:25px;">Hero visual</strong></div><div style="height:78px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(15,23,42,0.13);color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M28 14v54h54M14 28h54v54" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg><strong style="font-size:25px;">Detail crop</strong></div><div style="height:78px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(15,23,42,0.13);color:#0F172A;display:flex;align-items:center;gap:18px;padding:0 24px;"><svg viewBox="0 0 96 96" aria-hidden="true" style="width:40px;height:40px;color:#0F766E;display:block;"><path d="M48 84S72 58 72 36a24 24 0 0 0-48 0c0 22 24 48 24 48Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="48" cy="36" r="8" fill="currentColor"/></svg><strong style="font-size:25px;">Callout note</strong></div></div>
+</div>
+<div style="position:absolute;right:112px;top:126px;width:930px;height:670px;">
+  <svg viewBox="0 0 930 670" aria-label="Image feature placeholder with annotations" style="width:930px;height:670px;display:block;">
+    <rect width="930" height="670" rx="8" fill="#E7E0D3"/>
+    <rect x="54" y="54" width="600" height="562" rx="8" fill="#0F172A"/>
+    <path d="M54 520C150 416 238 462 318 330C402 190 502 230 654 106V616H54Z" fill="#1D4ED8" opacity=".24"/>
+    <circle cx="246" cy="238" r="92" fill="#0F766E" opacity=".5"/>
+    <rect x="690" y="86" width="186" height="126" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/>
+    <text x="718" y="132" fill="#0F172A" font-size="24" font-weight="860">Callout 01</text>
+    <text x="718" y="168" fill="#0F172A" opacity=".62" font-size="19">main signal</text>
+    <rect x="690" y="268" width="186" height="126" rx="8" fill="#FFFFFF" stroke="rgba(15,23,42,0.13)"/>
+    <text x="718" y="314" fill="#0F172A" font-size="24" font-weight="860">Detail 02</text>
+    <text x="718" y="350" fill="#0F172A" opacity=".62" font-size="19">proof point</text>
+    <rect x="690" y="450" width="186" height="126" rx="8" fill="#0F172A"/>
+    <text x="718" y="496" fill="#FFFFFF" font-size="24" font-weight="860">Action</text>
+    <text x="718" y="532" fill="#FFFFFF" opacity=".68" font-size="19">next move</text>
+    <g stroke="#1D4ED8" stroke-width="4" fill="none" stroke-linecap="round"><path d="M654 150H690"/><path d="M608 330H690"/><path d="M612 512H690"/></g>
+  </svg>
+</div>
+<div class="footer"><span>Image feature</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_risk_controls" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>11 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_risk_controls</div>
+
+<div style="position:absolute;left:112px;top:178px;width:620px;">
+  <h2 class="title">Risk controls</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">Tradeoffs are made explicit with weighted criteria, controls, and a visible recommendation.</p>
+</div>
+<div style="position:absolute;right:112px;top:146px;width:902px;height:620px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(15,23,42,0.13);padding:38px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:30px;font-weight:860;">Strategic board</div><div class="pill" style="background:#E7E0D3;color:#0F172A;">2x2 synthesis</div></div>
+  <svg viewBox="0 0 824 466" aria-label="Strategic board" style="margin-top:24px;width:824px;height:466px;display:block;">
+      <rect x="72" y="58" width="324" height="150" rx="8" fill="#1D4ED8"/><text x="100" y="112" fill="#0F172A" font-size="26" font-weight="860">Strengths</text><text x="100" y="154" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="428" y="58" width="324" height="150" rx="8" fill="#E7E0D3"/><text x="456" y="112" fill="#0F172A" font-size="26" font-weight="860">Weaknesses</text><text x="456" y="154" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="72" y="250" width="324" height="150" rx="8" fill="#0F766E"/><text x="100" y="304" fill="#0F172A" font-size="26" font-weight="860">Opportunities</text><text x="100" y="346" fill="#0F172A" opacity=".68" font-size="20">2-3 concise proof points</text><rect x="428" y="250" width="324" height="150" rx="8" fill="#0F172A"/><text x="456" y="304" fill="#FFFFFF" font-size="26" font-weight="860">Threats</text><text x="456" y="346" fill="#FFFFFF" opacity=".68" font-size="20">2-3 concise proof points</text>
+    </svg>
+</div>
+<div style="position:absolute;left:112px;bottom:152px;width:610px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#0F766E;opacity:1;">watch items</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">2</div></div>
+  <div style="border:1px solid rgba(31,26,23,.13);background:rgba(255,255,255,.72);border-radius:8px;padding:22px 24px;color:#0F172A;"><div class="num" style="color:#1D4ED8;opacity:1;">recommended path</div><div style="font-size:38px;font-weight:880;margin-top:10px;line-height:1;">1</div></div>
+</div>
+<div class="footer"><span>Risk controls</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_financial_logic" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>12 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_financial_logic</div>
+
+<h2 class="title" style="position:absolute;left:112px;top:172px;width:790px;">Financial logic</h2>
+<div style="position:absolute;left:112px;top:356px;width:530px;height:362px;background:#0F172A;color:#FFFFFF;border-radius:8px;padding:46px;">
+  <div style="font-size:22px;color:rgba(255,255,255,.62);">Primary signal</div>
+  <strong style="display:block;font-size:104px;line-height:.9;margin-top:42px;">69%</strong>
+  <p style="font-size:27px;line-height:1.28;color:rgba(255,255,255,.72);">A chart-led slide with one clear readout and a meaningful supporting view.</p>
+</div>
+<div style="position:absolute;right:112px;top:230px;width:860px;height:540px;border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;color:#0F172A;padding:38px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;"><div style="font-size:30px;font-weight:860;">Scenario range</div><div class="pill" style="background:#E7E0D3;color:#0F172A;">Low / base / high</div></div>
+  <svg viewBox="0 0 780 350" aria-label="Scenario range chart" style="margin-top:26px;width:780px;height:350px;display:block;">
+      <g stroke="rgba(15,23,42,0.11)" stroke-width="2"><path d="M70 76H730"/><path d="M70 130H730"/><path d="M70 184H730"/><path d="M70 238H730"/><path d="M70 292H730"/></g>
+      <line x1="96" y1="250" x2="96" y2="126" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="96" cy="210" r="22" fill="#1D4ED8"/><line x1="202" y1="228" x2="202" y2="116" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="202" cy="192" r="22" fill="#0F766E"/><line x1="308" y1="206" x2="308" y2="106" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="308" cy="174" r="22" fill="#1D4ED8"/><line x1="414" y1="184" x2="414" y2="96" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="414" cy="156" r="22" fill="#0F766E"/><line x1="520" y1="162" x2="520" y2="86" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="520" cy="138" r="22" fill="#1D4ED8"/><line x1="626" y1="140" x2="626" y2="76" stroke="rgba(15,23,42,0.2)" stroke-width="16" stroke-linecap="round"/><circle cx="626" cy="120" r="22" fill="#0F766E"/>
+      <path d="M96 210C198 198 270 172 358 158C466 140 542 126 626 112" fill="none" stroke="#0F172A" stroke-width="5" stroke-linecap="round" opacity=".72"/>
+      <g fill="#0F172A" font-size="18" opacity=".62"><text x="88" y="324">Jan</text><text x="236" y="324">Mar</text><text x="384" y="324">May</text><text x="532" y="324">Jul</text><text x="680" y="324">Sep</text></g>
+    </svg>
+</div>
+<div class="footer"><span>Financial logic</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_teaching_exercise" class="ydeck-slide" style="background:#FFFCF4;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>13 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_teaching_exercise</div>
+
+<div style="position:absolute;left:112px;top:172px;width:610px;">
+  <h2 class="title">Exercise or working slide</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">A classroom-ready slide with prompts, response areas, and a visible check-for-understanding pattern.</p>
+</div>
+<div style="position:absolute;right:112px;top:148px;width:890px;height:620px;border-radius:8px;background:#0F172A;padding:38px;color:#FFFFFF;">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;height:100%;">
+    <div style="border-radius:8px;background:rgba(255,255,255,.08);padding:32px;">
+      <div class="num">Prompt</div>
+      <div style="font-size:48px;line-height:1.08;font-weight:880;margin-top:42px;">Choose the strongest answer.</div>
+      <div style="margin-top:42px;display:grid;gap:14px;">
+        <div style="height:68px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;padding:0 22px;font-size:25px;font-weight:820;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;margin-right:18px;">A</span>Context clue</div><div style="height:68px;border-radius:8px;background:#1D4ED8;display:flex;align-items:center;padding:0 22px;font-size:25px;font-weight:820;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;margin-right:18px;">B</span>Best evidence</div><div style="height:68px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;padding:0 22px;font-size:25px;font-weight:820;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;margin-right:18px;">C</span>Distractor</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-rows:1fr 1fr;gap:18px;">
+      <div style="border-radius:8px;background:#FFFFFF;color:#0F172A;padding:30px;">
+        <svg viewBox="0 0 96 96" aria-hidden="true" style="width:60px;height:60px;color:#0F766E;display:block;"><path d="M24 68l8-24 30-30 20 20-30 30-24 8Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M56 20l20 20" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <h3 style="font-size:34px;margin:24px 0 0;">Response space</h3>
+        <div style="margin-top:24px;display:grid;gap:16px;"><div style="height:18px;background:rgba(15,23,42,0.12);border-radius:999px;"></div><div style="height:18px;background:rgba(15,23,42,0.12);border-radius:999px;"></div><div style="height:18px;background:rgba(15,23,42,0.12);border-radius:999px;"></div></div>
+      </div>
+      <div style="border-radius:8px;background:#E7E0D3;color:#0F172A;padding:30px;">
+        <div style="font-size:26px;font-weight:860;">Teacher check</div>
+        <div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#1D4ED8;font-weight:860;">Accuracy</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:78%;height:100%;background:#1D4ED8;border-radius:999px;"></div></div><strong style="font-size:22px;">78%</strong></div>
+        <div style="display:grid;grid-template-columns:128px 1fr 64px;gap:18px;align-items:center;margin-top:18px;"><span style="font-size:20px;color:#0F766E;font-weight:860;">Confidence</span><div style="height:14px;background:rgba(15,23,42,0.1);border-radius:999px;overflow:hidden;"><div style="width:64%;height:100%;background:#0F766E;border-radius:999px;"></div></div><strong style="font-size:22px;">64%</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="footer"><span>Exercise or working slide</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_quote_evidence" class="ydeck-slide" style="background:#E7E0D3;color:#0F172A;">
+<div class="topline"><span>YDeck Investor Update</span><span>14 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_quote_evidence</div>
+
+<div style="position:absolute;left:112px;top:158px;width:760px;">
+  <h2 class="title">Quote and evidence</h2>
+  <p class="copy" style="color:rgba(15,23,42,0.68);">Evidence is handled as cited proof, not decorative text blocks.</p>
+</div>
+<div style="position:absolute;left:112px;right:112px;top:340px;height:430px;display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;">
+  <div style="border-radius:8px;background:#0F172A;color:#FFFFFF;padding:46px;">
+    <div class="num">Source read</div>
+    <div style="font-family:Georgia,serif;font-size:46px;line-height:1.15;margin-top:42px;">The claim is only as strong as the evidence chain behind it.</div>
+    <div style="margin-top:44px;width:230px;height:10px;border-radius:999px;background:#1D4ED8;"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+    <div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#1D4ED8;display:block;"><path d="M28 16h28l16 16v48H28Z" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M56 16v18h16M38 48h22M38 62h28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Observed pattern</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div><div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#0F766E;display:block;"><path d="M20 74h58M30 64V44M48 64V26M66 64V36" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M26 32c14 6 24 8 38-10" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Measured effect</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div><div style="border:1px solid rgba(15,23,42,0.13);border-radius:8px;background:#FFFFFF;padding:32px;">
+      <svg viewBox="0 0 96 96" aria-hidden="true" style="width:54px;height:54px;color:#1D4ED8;display:block;"><circle cx="48" cy="48" r="34" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M31 49l12 12 24-28" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+      <h3 style="font-size:31px;line-height:1.08;margin:30px 0 0;">Decision implication</h3>
+      <p style="font-size:21px;line-height:1.32;color:rgba(15,23,42,0.66);">Structured proof point with a citation slot and synthesis note.</p>
+    </div>
+  </div>
+</div>
+<div class="footer"><span>Quote and evidence</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_closing_decision" class="ydeck-slide" style="background:#0F172A;color:#FFFFFF;">
+<div class="topline"><span>YDeck Investor Update</span><span>15 / 15</span></div>
+<div class="eyebrow" style="color:#1D4ED8;">yl_closing_decision</div>
+
+<div style="position:absolute;left:112px;top:180px;width:900px;">
+  <h2 class="title" style="font-size:86px;color:#FFFFFF;">Closing decision</h2>
+  <p class="copy" style="width:760px;color:rgba(255,255,255,.72);">End with a decision, the reasons that support it, and a clear owner for the next step.</p>
+</div>
+<div style="position:absolute;right:112px;top:174px;width:560px;display:grid;gap:18px;">
+  <div style="height:118px;border-radius:8px;background:#1D4ED8;border:1px solid rgba(255,255,255,.12);display:grid;grid-template-columns:72px 1fr;align-items:center;padding:0 30px;">
+    <div style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-size:20px;font-weight:860;">1</div>
+    <div><div class="num" style="color:rgba(255,255,255,.7);">Decision</div><strong style="font-size:30px;">Approve path</strong></div>
+  </div><div style="height:118px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;grid-template-columns:72px 1fr;align-items:center;padding:0 30px;">
+    <div style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-size:20px;font-weight:860;">2</div>
+    <div><div class="num" style="color:rgba(255,255,255,.7);">Rationale</div><strong style="font-size:30px;">Evidence-led</strong></div>
+  </div><div style="height:118px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;grid-template-columns:72px 1fr;align-items:center;padding:0 30px;">
+    <div style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-size:20px;font-weight:860;">3</div>
+    <div><div class="num" style="color:rgba(255,255,255,.7);">Owner</div><strong style="font-size:30px;">Named team</strong></div>
+  </div><div style="height:118px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:grid;grid-template-columns:72px 1fr;align-items:center;padding:0 30px;">
+    <div style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-size:20px;font-weight:860;">4</div>
+    <div><div class="num" style="color:rgba(255,255,255,.7);">Date</div><strong style="font-size:30px;">Next cycle</strong></div>
+  </div>
+</div>
+<div style="position:absolute;left:112px;bottom:132px;width:1180px;height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;"><div style="width:74%;height:100%;background:#0F766E;border-radius:999px;"></div></div>
+<div class="footer"><span>Closing decision</span><span>ydeck-library · professional system</span></div>
+</section></div></div></section>
+</main>
+</body>
+</html>

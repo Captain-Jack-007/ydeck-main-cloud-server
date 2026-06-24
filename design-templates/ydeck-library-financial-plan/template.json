@@ -1,0 +1,224 @@
+{
+  "slug": "ydeck-library-financial-plan",
+  "name": "YDeck Financial Plan",
+  "category": "ydeck-library",
+  "scenario": "ydeck-library",
+  "version": "1.0.0",
+  "mode": "deck",
+  "tagline": "A finance planning deck with assumptions, scenarios, forecasts, risk controls, and investment decisions.",
+  "tone": "calm financial model",
+  "scheme": "light",
+  "slideCount": 15,
+  "minSlides": 15,
+  "palette": {
+    "background": "#F7F3EA",
+    "text": "#111827",
+    "accent": "#0F766E",
+    "secondary": "#B7791F",
+    "porcelain": "#FFFCF4",
+    "fog": "#E7E0D3"
+  },
+  "bestFor": [
+    "financial plans",
+    "budget reviews",
+    "forecast decks"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_title_statement",
+      "name": "Opening thesis",
+      "role": "Opening thesis",
+      "slideNumber": 1,
+      "description": "Set the strategic point of view with one confident statement."
+    },
+    {
+      "id": "yl_context_map",
+      "name": "Context map",
+      "role": "Context map",
+      "slideNumber": 2,
+      "description": "Frame the market, audience, system, or situation."
+    },
+    {
+      "id": "yl_problem_solution",
+      "name": "Problem and response",
+      "role": "Problem and response",
+      "slideNumber": 3,
+      "description": "Show the tension and the proposed answer."
+    },
+    {
+      "id": "yl_audience_insight",
+      "name": "Audience insight",
+      "role": "Audience insight",
+      "slideNumber": 4,
+      "description": "Explain who matters and what they need."
+    },
+    {
+      "id": "yl_metric_dashboard",
+      "name": "Metric dashboard",
+      "role": "Metric dashboard",
+      "slideNumber": 5,
+      "description": "Surface the leading numbers and interpretation."
+    },
+    {
+      "id": "yl_evidence_grid",
+      "name": "Evidence grid",
+      "role": "Evidence grid",
+      "slideNumber": 6,
+      "description": "Organize proof points, research, or examples."
+    },
+    {
+      "id": "yl_comparison_matrix",
+      "name": "Comparison matrix",
+      "role": "Comparison matrix",
+      "slideNumber": 7,
+      "description": "Compare options with a visible recommendation."
+    },
+    {
+      "id": "yl_timeline_process",
+      "name": "Timeline process",
+      "role": "Timeline process",
+      "slideNumber": 8,
+      "description": "Show stages, roadmap, or learning sequence."
+    },
+    {
+      "id": "yl_operating_model",
+      "name": "Operating model",
+      "role": "Operating model",
+      "slideNumber": 9,
+      "description": "Explain roles, loops, systems, or governance."
+    },
+    {
+      "id": "yl_image_feature",
+      "name": "Image feature",
+      "role": "Image feature",
+      "slideNumber": 10,
+      "description": "Use a large visual zone with annotations."
+    },
+    {
+      "id": "yl_risk_controls",
+      "name": "Risk controls",
+      "role": "Risk controls",
+      "slideNumber": 11,
+      "description": "Name risks and mitigation logic."
+    },
+    {
+      "id": "yl_financial_logic",
+      "name": "Financial logic",
+      "role": "Financial logic",
+      "slideNumber": 12,
+      "description": "Show budget, ROI, runway, or investment tradeoffs."
+    },
+    {
+      "id": "yl_teaching_exercise",
+      "name": "Exercise or working slide",
+      "role": "Exercise or working slide",
+      "slideNumber": 13,
+      "description": "Give the audience something to inspect or solve."
+    },
+    {
+      "id": "yl_quote_evidence",
+      "name": "Quote and evidence",
+      "role": "Quote and evidence",
+      "slideNumber": 14,
+      "description": "Anchor the idea in a strong voice or principle."
+    },
+    {
+      "id": "yl_closing_decision",
+      "name": "Closing decision",
+      "role": "Closing decision",
+      "slideNumber": 15,
+      "description": "End with recommendation, reasons, and action."
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, or runtime dependencies in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel"
+    ],
+    "recommendedLayouts": [
+      "yl_metric_dashboard",
+      "yl_comparison_matrix",
+      "yl_timeline_process",
+      "yl_financial_logic",
+      "yl_risk_controls",
+      "yl_operating_model"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "light",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "light",
+      "thin",
+      "duotone"
+    ]
+  },
+  "description": "A finance planning deck with assumptions, scenarios, forecasts, risk controls, and investment decisions.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "15/15",
+    "contrast": "pass",
+    "compositionVariety": 92,
+    "chartReadiness": 90,
+    "iconReadiness": 90,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "financial plans",
+    "budget reviews",
+    "forecast decks"
+  ],
+  "exposure": "frontend",
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

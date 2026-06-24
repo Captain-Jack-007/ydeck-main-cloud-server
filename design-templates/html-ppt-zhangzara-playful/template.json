@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-playful",
+  "slug": "html-ppt-zhangzara-playful",
   "name": "Playful",
   "tagline": "Sun-warm peach background with Syne display: a friendly indie launch deck.",
   "mood": [
@@ -39,5 +39,58 @@
   "avoid_for": "Contexts where institutional credibility matters more than warmth — the peach palette is intentionally informal.",
   "slide_count": 10,
   "navigation": "inline keyboard handler with on-page slide counter",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/playful"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/playful",
+  "description": "Sun-warm peach background with Syne display: a friendly indie launch deck.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts,remoteUrls,externalCss,remoteFonts",
+    "layoutCoverage": "1/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "creator portfolio",
+    "indie product launch",
+    "lifestyle brand",
+    "small-business pitch",
+    "newsletter / community"
+  ],
+  "exposure": "reference"
 }

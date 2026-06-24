@@ -1,0 +1,377 @@
+{
+  "slug": "ydeck-library-country-overview",
+  "name": "YDeck Country Overview",
+  "category": "ydeck-library",
+  "scenario": "country-overview",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 8,
+  "tagline": "A research atlas briefing system for country overview, market entry, study abroad, country research, investment climate.",
+  "tone": "research atlas briefing",
+  "scheme": "light",
+  "palette": {
+    "background": "#F3F7F8",
+    "text": "#102033",
+    "accent": "#1D4ED8",
+    "secondary": "#0F766E",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "country overview",
+    "market entry",
+    "study abroad",
+    "country research",
+    "investment climate"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_country_overview_country_title",
+      "name": "Country title",
+      "role": "Country title",
+      "slideOption": 1,
+      "description": "Use this layout for country title content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_executive_snapshot",
+      "name": "Executive snapshot",
+      "role": "Executive snapshot",
+      "slideOption": 2,
+      "description": "Use this layout for executive snapshot content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_map_location",
+      "name": "Map location",
+      "role": "Map location",
+      "slideOption": 3,
+      "description": "Use this layout for map location content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_key_facts",
+      "name": "Key facts",
+      "role": "Key facts",
+      "slideOption": 4,
+      "description": "Use this layout for key facts content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_population_profile",
+      "name": "Population profile",
+      "role": "Population profile",
+      "slideOption": 5,
+      "description": "Use this layout for population profile content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_economy_overview",
+      "name": "Economy overview",
+      "role": "Economy overview",
+      "slideOption": 6,
+      "description": "Use this layout for economy overview content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_gdp_industry_statistics",
+      "name": "GDP industry statistics",
+      "role": "GDP industry statistics",
+      "slideOption": 7,
+      "description": "Use this layout for gdp industry statistics content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_trade_overview",
+      "name": "Trade overview",
+      "role": "Trade overview",
+      "slideOption": 8,
+      "description": "Use this layout for trade overview content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_political_system",
+      "name": "Political system",
+      "role": "Political system",
+      "slideOption": 9,
+      "description": "Use this layout for political system content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_education_system",
+      "name": "Education system",
+      "role": "Education system",
+      "slideOption": 10,
+      "description": "Use this layout for education system content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_culture_lifestyle",
+      "name": "Culture lifestyle",
+      "role": "Culture lifestyle",
+      "slideOption": 11,
+      "description": "Use this layout for culture lifestyle content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_cities_overview",
+      "name": "Cities overview",
+      "role": "Cities overview",
+      "slideOption": 12,
+      "description": "Use this layout for cities overview content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_tourism_highlights",
+      "name": "Tourism highlights",
+      "role": "Tourism highlights",
+      "slideOption": 13,
+      "description": "Use this layout for tourism highlights content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_infrastructure",
+      "name": "Infrastructure",
+      "role": "Infrastructure",
+      "slideOption": 14,
+      "description": "Use this layout for infrastructure content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_investment_climate",
+      "name": "Investment climate",
+      "role": "Investment climate",
+      "slideOption": 15,
+      "description": "Use this layout for investment climate content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_opportunities",
+      "name": "Opportunities",
+      "role": "Opportunities",
+      "slideOption": 16,
+      "description": "Use this layout for opportunities content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_risks_challenges",
+      "name": "Risks challenges",
+      "role": "Risks challenges",
+      "slideOption": 17,
+      "description": "Use this layout for risks challenges content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_market_entry_strategy",
+      "name": "Market entry strategy",
+      "role": "Market entry strategy",
+      "slideOption": 18,
+      "description": "Use this layout for market entry strategy content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_country_comparison",
+      "name": "Country comparison",
+      "role": "Country comparison",
+      "slideOption": 19,
+      "description": "Use this layout for country comparison content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_history_timeline",
+      "name": "History timeline",
+      "role": "History timeline",
+      "slideOption": 20,
+      "description": "Use this layout for history timeline content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_case_study",
+      "name": "Case study",
+      "role": "Case study",
+      "slideOption": 21,
+      "description": "Use this layout for case study content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_swot_analysis",
+      "name": "SWOT analysis",
+      "role": "SWOT analysis",
+      "slideOption": 22,
+      "description": "Use this layout for swot analysis content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_recommendations",
+      "name": "Recommendations",
+      "role": "Recommendations",
+      "slideOption": 23,
+      "description": "Use this layout for recommendations content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_sources_evidence",
+      "name": "Sources evidence",
+      "role": "Sources evidence",
+      "slideOption": 24,
+      "description": "Use this layout for sources evidence content in a country overview deck."
+    },
+    {
+      "id": "yl_country_overview_closing_decision",
+      "name": "Closing decision",
+      "role": "Closing decision",
+      "slideOption": 25,
+      "description": "Use this layout for closing decision content in a country overview deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "country_overview_standard",
+      "name": "Country Overview Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_country_overview_country_title",
+        "yl_country_overview_executive_snapshot",
+        "yl_country_overview_map_location",
+        "yl_country_overview_key_facts",
+        "yl_country_overview_population_profile",
+        "yl_country_overview_economy_overview",
+        "yl_country_overview_gdp_industry_statistics",
+        "yl_country_overview_trade_overview",
+        "yl_country_overview_political_system",
+        "yl_country_overview_education_system",
+        "yl_country_overview_culture_lifestyle",
+        "yl_country_overview_cities_overview",
+        "yl_country_overview_tourism_highlights",
+        "yl_country_overview_infrastructure",
+        "yl_country_overview_investment_climate"
+      ]
+    },
+    {
+      "id": "country_overview_short",
+      "name": "Country Overview Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_country_overview_country_title",
+        "yl_country_overview_executive_snapshot",
+        "yl_country_overview_map_location",
+        "yl_country_overview_key_facts",
+        "yl_country_overview_gdp_industry_statistics",
+        "yl_country_overview_political_system",
+        "yl_country_overview_tourism_highlights",
+        "yl_country_overview_case_study",
+        "yl_country_overview_closing_decision"
+      ]
+    },
+    {
+      "id": "country_overview_deep_dive",
+      "name": "Country Overview Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_country_overview_country_title",
+        "yl_country_overview_executive_snapshot",
+        "yl_country_overview_key_facts",
+        "yl_country_overview_population_profile",
+        "yl_country_overview_economy_overview",
+        "yl_country_overview_gdp_industry_statistics",
+        "yl_country_overview_trade_overview",
+        "yl_country_overview_political_system",
+        "yl_country_overview_education_system",
+        "yl_country_overview_tourism_highlights",
+        "yl_country_overview_infrastructure",
+        "yl_country_overview_investment_climate",
+        "yl_country_overview_opportunities",
+        "yl_country_overview_risks_challenges",
+        "yl_country_overview_market_entry_strategy",
+        "yl_country_overview_country_comparison",
+        "yl_country_overview_history_timeline",
+        "yl_country_overview_case_study",
+        "yl_country_overview_recommendations",
+        "yl_country_overview_sources_evidence",
+        "yl_country_overview_closing_decision"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": [
+      "yl_country_overview_executive_snapshot",
+      "yl_country_overview_map_location",
+      "yl_country_overview_population_profile",
+      "yl_country_overview_economy_overview",
+      "yl_country_overview_gdp_industry_statistics",
+      "yl_country_overview_trade_overview",
+      "yl_country_overview_risks_challenges",
+      "yl_country_overview_market_entry_strategy",
+      "yl_country_overview_country_comparison",
+      "yl_country_overview_history_timeline",
+      "yl_country_overview_swot_analysis"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "duotone",
+      "light",
+      "thin"
+    ]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "A research atlas briefing system for country overview, market entry, study abroad, country research, investment climate.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": true,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 94,
+    "chartReadiness": 92,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "country overview",
+    "market entry",
+    "study abroad",
+    "country research",
+    "investment climate"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

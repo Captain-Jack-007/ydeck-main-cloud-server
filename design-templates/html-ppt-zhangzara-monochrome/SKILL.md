@@ -1,5 +1,5 @@
 ---
-name: html-ppt-zhangzara-monochrome
+name: "Monochrome"
 description: |
   Monochrome — Ivory ledger paper with all-black type; Lora serif headlines, Jost body, no color at all. Anything that should feel like a hand-typeset ledger: user research synthesis, white papers, longform reports, academic and policy briefs, advisory deliverables, bilingual EN/CN reports.
 triggers:
@@ -14,13 +14,13 @@ triggers:
   - "html slides"
   - "zhangzara"
 od:
-  mode: deck
-  scenario: marketing
+  mode: "deck"
+  scenario: "marketing"
   upstream: "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/monochrome"
   upstream_license: MIT
   preview:
     type: html
-    entry: example.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: false

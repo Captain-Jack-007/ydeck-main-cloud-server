@@ -53,3 +53,17 @@ Bad patterns:
 - `hero hero hero hero` — no rest
 
 If your sequence is bad, swap a few middle slides to rebalance.
+## Template Conformance QA
+
+Generated decks must be checked against the selected template, not only against generic HTML validity. Compare the generated deck against:
+
+- allowed layout ids from `references/layouts.md`
+- palette and contrast from `template.json.palette`
+- typography scale and hierarchy from the preview
+- spacing rhythm and density limits
+- composition variety across adjacent slides
+- chart and icon capability flags from `template.json.capabilities`
+- preview/generation reliability notes from `template.json.quality`
+
+If a slide fails, repair that slide only and preserve its layout role.
+

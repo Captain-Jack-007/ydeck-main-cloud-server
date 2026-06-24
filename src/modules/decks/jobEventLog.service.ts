@@ -190,6 +190,8 @@ function mapNamedDeckEvent(channel?: string): string | null {
       return "deck:plan";
     case "deck.context":
       return "deck:context";
+    case "deck.skill":
+      return "deck:skill";
     case "deck.file":
       return "deck:file";
     case "deck.research":

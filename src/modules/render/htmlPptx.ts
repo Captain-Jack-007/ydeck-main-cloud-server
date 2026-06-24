@@ -31,7 +31,8 @@ interface ExText {
 }
 interface ExTableCell { text: string; color: string; fill: string; bold: boolean }
 interface ExTable { box: Box; headers: ExTableCell[]; rows: ExTableCell[][]; fontSizePx: number; fontFamily: string; borderColor: string }
-interface ExSlide { bg: string; shapes: ExShape[]; texts: ExText[]; tables: ExTable[] }
+interface ExImage { box: Box; data: string; altText?: string }
+interface ExSlide { bg: string; shapes: ExShape[]; texts: ExText[]; tables: ExTable[]; images: ExImage[] }
 
 // In-page extractor. Annotated `any` for DOM since this Node project has no DOM
 // lib; it only ever runs inside the browser.
@@ -69,8 +70,27 @@ function extractAllSlides(): ExSlide[] {
     const shapes: ExShape[] = [];
     const texts: ExText[] = [];
     const tables: ExTable[] = [];
+    const images: ExImage[] = [];
 
     const skip = new Set<any>();
+    slide.querySelectorAll("svg").forEach((svg: any) => {
+      svg.querySelectorAll("*").forEach((d: any) => skip.add(d));
+      skip.add(svg);
+      const box = norm(svg);
+      if (box.w <= 0 || box.h <= 0) return;
+      const clone = svg.cloneNode(true) as any;
+      clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+      const xml = new XMLSerializer().serializeToString(clone);
+      images.push({
+        box,
+        data: `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(xml)))}`,
+        altText:
+          svg.getAttribute("aria-label") ||
+          svg.getAttribute("role") ||
+          "Slide graphic",
+      });
+    });
+
     slide.querySelectorAll("table").forEach((table: any) => {
       table.querySelectorAll("*").forEach((d: any) => skip.add(d));
       skip.add(table);
@@ -144,7 +164,7 @@ function extractAllSlides(): ExSlide[] {
       }
     });
 
-    return { bg: cs(slide).backgroundColor, shapes, texts, tables };
+    return { bg: cs(slide).backgroundColor, shapes, texts, tables, images };
   });
 }
 
@@ -210,6 +230,17 @@ function emitSlide(slide: PptxGenJS.Slide, data: ExSlide, speakerNotes?: string)
       x: inFromPx(tbl.box.x), y: inFromPx(tbl.box.y), w: inFromPx(tbl.box.w),
       fontFace: firstFontFace(tbl.fontFamily), fontSize: ptFromPx(tbl.fontSizePx), valign: "middle",
       border: { type: "solid", pt: 0.5, color: rgbToHex(tbl.borderColor).hex },
+    });
+  }
+
+  for (const img of data.images) {
+    slide.addImage({
+      data: img.data,
+      x: inFromPx(img.box.x),
+      y: inFromPx(img.box.y),
+      w: inFromPx(img.box.w),
+      h: inFromPx(img.box.h),
+      altText: img.altText,
     });
   }
 

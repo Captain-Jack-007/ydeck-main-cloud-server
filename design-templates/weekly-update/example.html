@@ -288,33 +288,6 @@
 
 <div class="nav" id="nav"></div>
 
-<script>
-  const deck = document.getElementById('deck');
-  const slides = deck.querySelectorAll('.slide');
-  const nav = document.getElementById('nav');
-  slides.forEach((_, i) => {
-    const d = document.createElement('span');
-    d.className = 'dot' + (i === 0 ? ' active' : '');
-    d.addEventListener('click', () => deck.scrollTo({ left: window.innerWidth * i, behavior: 'smooth' }));
-    nav.appendChild(d);
-  });
-  function activeIndex() {
-    return Math.round(deck.scrollLeft / window.innerWidth);
-  }
-  deck.addEventListener('scroll', () => {
-    const idx = activeIndex();
-    nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
-  }, { passive: true });
-  document.addEventListener('keydown', (e) => {
-    const idx = activeIndex();
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') {
-      const next = Math.min(slides.length - 1, idx + 1);
-      deck.scrollTo({ left: window.innerWidth * next, behavior: 'smooth' });
-    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
-      const prev = Math.max(0, idx - 1);
-      deck.scrollTo({ left: window.innerWidth * prev, behavior: 'smooth' });
-    }
-  });
-</script>
+
 </body>
 </html>

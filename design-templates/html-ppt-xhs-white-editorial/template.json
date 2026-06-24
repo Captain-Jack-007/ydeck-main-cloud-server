@@ -1,0 +1,108 @@
+{
+  "slug": "html-ppt-xhs-white-editorial",
+  "name": "html-ppt-xhs-white-editorial",
+  "description": "白底杂志风 deck — 纯白背景 + 顶部 10 色彩虹 bar、80-110px display 标题、紫→蓝→绿→橙→粉渐变文字、马卡龙软卡片组（粉/紫/蓝/绿/橙）、黑底白字 .focus pill、引用大块。同时适合发小红书图文 + 横版 PPT 双用。",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 8,
+  "minSlides": 8,
+  "palette": {
+    "background": "#FFFCF4",
+    "text": "#141512",
+    "accent": "#7C3AED",
+    "secondary": "#2563EB"
+  },
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_02",
+      "name": "Slide 2",
+      "role": "Template slide 2",
+      "slideNumber": 2,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_03",
+      "name": "Slide 3",
+      "role": "Template slide 3",
+      "slideNumber": 3,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_04",
+      "name": "Slide 4",
+      "role": "Template slide 4",
+      "slideNumber": 4,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_05",
+      "name": "Slide 5",
+      "role": "Template slide 5",
+      "slideNumber": 5,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_06",
+      "name": "Slide 6",
+      "role": "Template slide 6",
+      "slideNumber": 6,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_07",
+      "name": "Slide 7",
+      "role": "Template slide 7",
+      "slideNumber": 7,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_08",
+      "name": "Slide 8",
+      "role": "Template slide 8",
+      "slideNumber": 8,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:remoteUrls,remoteFonts",
+    "layoutCoverage": "8/8",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "白底杂志"
+  ],
+  "exposure": "reference"
+}

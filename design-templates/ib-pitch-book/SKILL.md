@@ -1,5 +1,5 @@
 ---
-name: ib-pitch-book
+name: "ib-pitch-book"
 description: |
   Investment-banking pitch book for strategic alternatives — trading comps,
   precedent transactions, valuation football field, DCF sensitivity,
@@ -21,12 +21,12 @@ triggers:
   - "并购材料"
   - "战略选项"
 od:
-  mode: deck
-  scenario: finance
+  mode: "deck"
+  scenario: "finance"
   upstream: "https://github.com/anthropics/financial-services/tree/main/plugins/agent-plugins/pitch-agent"
   preview:
     type: html
-    entry: example.html
+    entry: "example.html"
   design_system:
     requires: true
     sections: [color, typography, layout, components]

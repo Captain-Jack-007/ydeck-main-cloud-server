@@ -50,22 +50,55 @@ Response:
 ```json
 [
   {
-    "id": "simple-deck",
-    "name": "simple-deck",
-    "description": "Single-file horizontal-swipe HTML deck...",
-    "scenario": "product",
-    "preview": { "type": "html", "entry": "index.html" },
-    "previewUrl": "/v1/design-templates/simple-deck/preview",
+    "id": "ydeck-library-business-report",
+    "name": "YDeck Business Report",
+    "description": "An editorial operating report system for monthly report, business report, research report, company report, kpi report.",
+    "scenario": "business-report",
+    "exposure": "frontend",
+    "layoutCount": 25,
+    "recommendedFlows": [
+      {
+        "id": "business_report_standard",
+        "name": "Business Report Standard Flow",
+        "layoutIds": ["yl_business_report_report_title"]
+      }
+    ],
+    "version": "1.0.0",
+    "compatibility": {
+      "minYDeckVersion": "0.4.0",
+      "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+    },
+    "bestFitDeckTypes": ["monthly report", "business report", "research report"],
+    "preview": { "type": "html", "entry": "example.html" },
+    "previewUrl": "/v1/design-templates/ydeck-library-business-report/preview",
+    "thumbnailUrl": "/v1/design-templates/ydeck-library-business-report/thumbnail",
+    "capabilities": {
+      "supportsCharts": true,
+      "supportsIcons": true,
+      "supportsImageSlides": true,
+      "supportsTeachingSlides": false,
+      "supportsFinancialSlides": false,
+      "supportsSpeakerNotes": true
+    },
+    "quality": {
+      "previewSafety": "pass",
+      "layoutCoverage": "25/25",
+      "contrast": "pass",
+      "compositionVariety": 94,
+      "chartReadiness": 92,
+      "iconReadiness": 92,
+      "generationReliability": 88
+    },
     "previewPages": [
       {
         "role": "example",
         "title": "Example Deck",
-        "url": "/v1/design-templates/simple-deck/preview"
+        "url": "/v1/design-templates/ydeck-library-business-report/preview"
       },
       {
         "role": "template",
         "title": "Template Seed",
-        "url": "/v1/design-templates/simple-deck/preview/template"
+        "url": "/v1/design-templates/ydeck-library-business-report/preview/template"
       }
     ]
   }
@@ -75,9 +108,15 @@ Response:
 Template preview routes:
 
 ```http
+GET /v1/design-templates/:id/thumbnail
 GET /v1/design-templates/:id/preview
 GET /v1/design-templates/:id/preview/template
 ```
+
+`GET /v1/design-templates/:id/thumbnail` returns a fast card thumbnail. If the
+template ships a local `assets/preview-thumbnail.*` or `assets/preview-cover.*`
+asset, the backend serves it. Otherwise it returns a lightweight generated SVG
+thumbnail from `template.json` metadata.
 
 `GET /v1/design-templates/:id/preview` returns the best local example deck for
 the template, usually `example.html`. `/preview/template` returns the seed
@@ -88,6 +127,9 @@ dump of every skill folder. Broad authoring engines, landing-page sibling
 fixtures, web-deck runtimes with heavy scripts/WebGL, templates without
 previewable deck examples, and non-presentation packages stay off the
 user-facing picker even if they remain on disk for backend/reference use.
+This rule applies to every category, not only `ydeck-library`: the catalog only
+returns templates marked `exposure: "frontend"` with
+`quality.previewSafety: "pass"`.
 
 Load available design systems:
 
@@ -167,7 +209,7 @@ Recommended controls:
 
 ```txt
 Label: Deck template
-Default: Auto / Simple Deck
+Default: Auto / YDeck Executive Strategy
 Options: loaded from GET /v1/design-templates
 
 Label: Design system
@@ -181,7 +223,16 @@ UI behavior:
 - Group design systems by `category`.
 - Group templates by `scenario`.
 - Show visual previews for templates before the user selects one.
+- Use `thumbnailUrl` for fast template cards and open `previewUrl` only in the
+  larger preview inspector.
 - Show visual previews for design systems before the user selects one.
+- Use `capabilities` to improve fit signals for charts, icons, image-heavy
+  slides, teaching slides, financial slides, and speaker notes.
+- Templates expose server-safe typography metadata. Preview and generated slides
+  should use local stacks from
+  [server-safe-slide-fonts.md](./server-safe-slide-fonts.md), not remote font
+  imports.
+- Treat `quality` as internal ranking or badge data, not marketing copy.
 - Include `Auto` options that omit the field and let backend/settings decide.
 - Search/filter by name and description if the lists are long.
 - Keep deck templates and design systems as separate controls.
@@ -195,8 +246,7 @@ how the deck structure might feel before generation.
 Recommended flow:
 
 - The template picker lists cards grouped by `scenario`.
-- Each card shows name, scenario, description, and a small preview frame or
-  thumbnail.
+- Each card shows name, scenario, description, and `thumbnailUrl`.
 - Selecting a card opens a larger preview panel.
 - Tabs come from `template.previewPages`, usually `Example Deck` and
   `Template Seed`.
@@ -217,9 +267,33 @@ type DesignTemplateSummary = {
   name: string;
   description?: string | null;
   scenario?: string | null;
+  exposure?: 'frontend' | 'reference' | string | null;
+  layoutCount?: number | null;
+  recommendedFlows?: unknown;
+  version?: string | null;
+  compatibility?: unknown;
+  bestFitDeckTypes?: string[] | null;
   preview?: unknown;
   previewUrl?: string | null;
+  thumbnailUrl?: string | null;
   previewPages?: DesignTemplatePreviewPage[];
+  capabilities?: {
+    supportsCharts?: boolean;
+    supportsIcons?: boolean;
+    supportsImageSlides?: boolean;
+    supportsTeachingSlides?: boolean;
+    supportsFinancialSlides?: boolean;
+    supportsSpeakerNotes?: boolean;
+  };
+  quality?: {
+    previewSafety?: string;
+    layoutCoverage?: string;
+    contrast?: string;
+    compositionVariety?: number;
+    chartReadiness?: number;
+    iconReadiness?: number;
+    generationReliability?: number;
+  };
 };
 
 function TemplatePreview({
@@ -250,6 +324,17 @@ Template previews are example decks or seed decks. They are useful for judging
 structure, rhythm, density, navigation feel, and visual recipe. They are not the
 final generated deck, and the frontend should not copy preview HTML into a user
 project.
+
+The frontend does not need to hide unsafe templates itself. Reference-only
+templates are filtered out by the backend catalog, preview route, and thumbnail
+route. If a template is missing from `GET /v1/design-templates`, it should not
+be sent as `templateId` during generation.
+
+For templates with `recommendedFlows`, the frontend does not choose individual
+slide layouts. It sends `templateId`; the backend layout agent selects the best
+flow and a subset of layout ids for the actual deck. During generation, show
+`deck.content` events with `action: "template_flow_selected"` as progress such
+as "Selected Business Report Standard Flow".
 
 ## Design System Preview UI
 
@@ -334,7 +419,7 @@ Content-Type: application/json
   "prompt": "Create a pitch deck for an AI teaching tool.",
   "workspaceId": "665f...",
   "deckType": "investor_pitch",
-  "templateId": "html-ppt-pitch-deck",
+  "templateId": "ib-pitch-book",
   "designStyle": "editorial",
   "language": "en",
   "slideCount": 10
@@ -352,7 +437,7 @@ Content-Type: application/json
 {
   "message": "Make a 10 slide investor deck for our AI tutor.",
   "workspaceId": "665f...",
-  "templateId": "simple-deck",
+  "templateId": "ydeck-library-investor-update",
   "designStyle": "corporate"
 }
 ```
@@ -388,13 +473,13 @@ Example:
 
 ```json
 {
-  "templateId": "html-ppt-pitch-deck",
+  "templateId": "ib-pitch-book",
   "designStyle": "stripe"
 }
 ```
 
-This means: use the pitch-deck recipe, but constrain colors, typography,
-spacing, and component taste with the Stripe-like design system.
+This means: use the investment-banking pitch-book recipe, but constrain colors,
+typography, spacing, and component taste with the Stripe-like design system.
 
 ## Realtime UI
 
@@ -407,10 +492,10 @@ spacing, and component taste with the Stripe-like design system.
   "data": {
     "designTemplates": [
       {
-        "id": "html-ppt-pitch-deck",
-        "name": "html-ppt-pitch-deck",
+        "id": "ib-pitch-book",
+        "name": "IB Pitch Book",
         "scenario": "finance",
-        "description": "Investor-ready 10-slide HTML pitch deck..."
+        "description": "Institutional finance deck recipe..."
       }
     ],
     "designSystems": [
@@ -428,7 +513,7 @@ spacing, and component taste with the Stripe-like design system.
 Frontend should show this as part of the visible process:
 
 ```txt
-Loaded deck template: html-ppt-pitch-deck
+Loaded deck template: IB Pitch Book
 Loaded design system: Editorial
 ```
 
@@ -495,6 +580,9 @@ export type DesignTemplateSummary = {
   name: string;
   description?: string | null;
   scenario?: string | null;
+  exposure?: 'frontend' | 'reference' | string | null;
+  layoutCount?: number | null;
+  recommendedFlows?: unknown;
   preview?: unknown;
   previewUrl?: string | null;
   previewPages?: DesignTemplatePreviewPage[];

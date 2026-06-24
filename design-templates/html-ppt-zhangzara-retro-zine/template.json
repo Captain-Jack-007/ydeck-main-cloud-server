@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-retro-zine",
+  "slug": "html-ppt-zhangzara-retro-zine",
   "name": "Retro Zine",
   "tagline": "Beige paper with green accent and Bebas Neue + Caveat: a riso-printed zine in HTML form.",
   "mood": [
@@ -43,5 +43,58 @@
   "avoid_for": "Contexts that demand digital-native polish or fast modern-tech energy — the layered zine aesthetic intentionally feels handmade.",
   "slide_count": 10,
   "navigation": "inline keyboard handler with on-page slide counter",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/retro-zine"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/retro-zine",
+  "description": "Beige paper with green accent and Bebas Neue + Caveat: a riso-printed zine in HTML form.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": false
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts,remoteUrls,remoteFonts",
+    "layoutCoverage": "1/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "indie zine / publication",
+    "music or arts brand",
+    "creator portfolio",
+    "small-batch / craft launch",
+    "cultural / community deck"
+  ],
+  "exposure": "reference"
 }

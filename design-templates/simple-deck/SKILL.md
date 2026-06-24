@@ -1,5 +1,5 @@
 ---
-name: simple-deck
+name: "simple-deck"
 description: |
   Single-file horizontal-swipe HTML deck. Built by copying the seed
   `assets/template.html` (which carries the proven 5-rule iframe nav script)
@@ -14,11 +14,11 @@ triggers:
   - "幻灯"
   - "ppt 模板"
 od:
-  mode: deck
-  scenario: product
+  mode: "deck"
+  scenario: "product"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: true
     sections: [color, typography, layout, components]

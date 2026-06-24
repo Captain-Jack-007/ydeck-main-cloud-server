@@ -1,5 +1,5 @@
 ---
-name: open-design-landing-deck
+name: "open-design-landing-deck"
 description: >
   Produce a single-file slide deck in the Atelier Zero visual language
   (warm-paper background, italic-serif emphasis spans, coral terminating
@@ -19,16 +19,16 @@ triggers:
   - open design deck
   - open design landing deck
 od:
-  category: brand-deck
+  category: "marketing"
   surface: web
-  mode: deck
-  scenario: marketing
+  mode: "deck"
+  scenario: "marketing"
   audience: founders pitching, conference talks, internal reviews
   tone: editorial, restrained, premium
   scale: 6-15 viewport-locked slides
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   craft:
     requires:
       - typographic-rhythm

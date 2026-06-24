@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ydeck.local/schemas/design-template.json",
+  "title": "YDeck Design Template",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "slug",
+    "name",
+    "category",
+    "scenario",
+    "mode",
+    "exposure",
+    "version",
+    "canvas",
+    "palette",
+    "layouts",
+    "compatibility",
+    "capabilities",
+    "quality"
+  ],
+  "properties": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,100}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "tagline": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "ydeck-library",
+        "finance",
+        "marketing",
+        "product",
+        "education",
+        "operations",
+        "technical",
+        "creative",
+        "strategy",
+        "general",
+        "reference"
+      ]
+    },
+    "scenario": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["deck"]
+    },
+    "exposure": {
+      "type": "string",
+      "enum": ["frontend", "reference"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["minYDeckVersion"],
+      "properties": {
+        "minYDeckVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "migrationPolicy": {
+          "type": "string"
+        }
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "required": ["width", "height"],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "const": 1920
+        },
+        "height": {
+          "type": "integer",
+          "const": 1080
+        }
+      }
+    },
+    "palette": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "layouts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "layoutCount": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "recommendedFlows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "layoutIds"],
+        "additionalProperties": true,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "layoutIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "required": [
+        "supportsCharts",
+        "supportsIcons",
+        "supportsImageSlides",
+        "supportsTeachingSlides",
+        "supportsFinancialSlides",
+        "supportsSpeakerNotes"
+      ],
+      "properties": {
+        "supportsCharts": { "type": "boolean" },
+        "supportsIcons": { "type": "boolean" },
+        "supportsImageSlides": { "type": "boolean" },
+        "supportsTeachingSlides": { "type": "boolean" },
+        "supportsFinancialSlides": { "type": "boolean" },
+        "supportsSpeakerNotes": { "type": "boolean" }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "previewSafety",
+        "layoutCoverage",
+        "contrast",
+        "compositionVariety",
+        "chartReadiness",
+        "iconReadiness",
+        "generationReliability"
+      ],
+      "properties": {
+        "previewSafety": { "type": "string" },
+        "layoutCoverage": { "type": "string" },
+        "contrast": { "type": "string" },
+        "compositionVariety": { "type": "number" },
+        "chartReadiness": { "type": "number" },
+        "iconReadiness": { "type": "number" },
+        "generationReliability": { "type": "number" }
+      }
+    },
+    "bestFitDeckTypes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "preview": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  }
+}

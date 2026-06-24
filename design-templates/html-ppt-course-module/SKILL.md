@@ -1,5 +1,5 @@
 ---
-name: html-ppt-course-module
+name: "html-ppt-course-module"
 description: Online-course / workshop module deck — warm paper background + Playfair serif, persistent left sidebar of learning objectives, MCQ self-check page. Use for teaching modules, training materials, workshop slides.
 triggers:
   - "course module"
@@ -10,12 +10,12 @@ triggers:
   - "教学"
   - "课件"
 od:
-  mode: deck
-  scenario: education
+  mode: "deck"
+  scenario: "education"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

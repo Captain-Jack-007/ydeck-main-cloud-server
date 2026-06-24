@@ -1,0 +1,40 @@
+# html-ppt-presenter-mode Layouts
+
+These layout ids are the allowed vocabulary for `html-ppt-presenter-mode-reveal`. Generated slides should preserve the matching composition from the preview deck unless a repair pass is explicitly fixing that slide.
+
+## `slide_01`
+
+Role: Template slide 1.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_02`
+
+Role: Template slide 2.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_03`
+
+Role: Template slide 3.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_04`
+
+Role: Template slide 4.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_05`
+
+Role: Template slide 5.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_06`
+
+Role: Template slide 6.
+
+Use: Preserve the matching composition from the preview deck.
+

@@ -1,5 +1,5 @@
 ---
-name: html-ppt-hermes-cyber-terminal
+name: "html-ppt-hermes-cyber-terminal"
 description: 暗终端 honest-review deck — #0a0c10 黑底 + 56px 赛博网格 + CRT 暗角 + 扫描线、窗口红绿灯 chrome、`$ prompt` 命令行标题、薄荷绿 #7ed3a4 大字、JetBrains Mono、stroke-only 柱状图、blinking 光标、琥珀/绿/红三档 tag、暗色代码块。适合 CLI / agent / dev tool 测评（含 trace、diff、benchmark）。
 triggers:
   - "terminal review"
@@ -9,12 +9,12 @@ triggers:
   - "dev tool review"
   - "测评"
 od:
-  mode: deck
-  scenario: engineering
+  mode: "deck"
+  scenario: "engineering"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

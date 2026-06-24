@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-raw-grid",
+  "slug": "html-ppt-zhangzara-raw-grid",
   "name": "Raw Grid",
   "tagline": "Neo-brutalist deck with thick borders, offset shadows, and a pink/sage/ink palette.",
   "mood": [
@@ -42,5 +42,59 @@
   "avoid_for": "Contexts that need to feel soft, warm, or intentionally quiet — the brutalist borders and offset shadows commit to a graphic voice.",
   "slide_count": 10,
   "navigation": "inline keyboard handler",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/raw-grid"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/raw-grid",
+  "description": "Neo-brutalist deck with thick borders, offset shadows, and a pink/sage/ink palette.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts",
+    "layoutCoverage": "1/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "startup pitch",
+    "accelerator demo day",
+    "founder pitch",
+    "indie product launch",
+    "brand deck",
+    "creator portfolio"
+  ],
+  "exposure": "reference"
 }

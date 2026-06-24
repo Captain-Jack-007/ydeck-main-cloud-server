@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-capsule",
+  "slug": "html-ppt-zhangzara-capsule",
   "name": "Capsule",
   "tagline": "Modular pill-shaped cards on warm bone with a full pastel-pop palette.",
   "mood": [
@@ -47,5 +47,58 @@
   "avoid_for": "Contexts that require traditional institutional weight — the capsule shapes and pastel pops actively soften authority.",
   "slide_count": 10,
   "navigation": "inline keyboard handler with on-page nav dots and slide counter",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/capsule"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/capsule",
+  "description": "Modular pill-shaped cards on warm bone with a full pastel-pop palette.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": false
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts,remoteUrls,externalCss,remoteFonts",
+    "layoutCoverage": "1/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "lifestyle brand",
+    "creator portfolio",
+    "DTC product launch",
+    "wellness or beauty pitch",
+    "Y2K-tinged brand work"
+  ],
+  "exposure": "reference"
 }

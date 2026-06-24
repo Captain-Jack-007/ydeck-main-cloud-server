@@ -1,0 +1,365 @@
+{
+  "slug": "ydeck-library-teaching-exercises",
+  "name": "YDeck Teaching + Exercises",
+  "category": "ydeck-library",
+  "scenario": "teaching-exercises",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 8,
+  "tagline": "A clear instructional classroom system for lesson deck, exercise deck, training lesson, classroom slides, language learning.",
+  "tone": "clear instructional classroom",
+  "scheme": "light",
+  "palette": {
+    "background": "#F7FAFC",
+    "text": "#102033",
+    "accent": "#2563EB",
+    "secondary": "#16A34A",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "lesson deck",
+    "exercise deck",
+    "training lesson",
+    "classroom slides",
+    "language learning"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_teaching_exercises_lesson_title",
+      "name": "Lesson title",
+      "role": "Lesson title",
+      "slideOption": 1,
+      "description": "Use this layout for lesson title content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_learning_objectives",
+      "name": "Learning objectives",
+      "role": "Learning objectives",
+      "slideOption": 2,
+      "description": "Use this layout for learning objectives content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_agenda_path",
+      "name": "Agenda path",
+      "role": "Agenda path",
+      "slideOption": 3,
+      "description": "Use this layout for agenda path content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_warm_up_question",
+      "name": "Warm-up question",
+      "role": "Warm-up question",
+      "slideOption": 4,
+      "description": "Use this layout for warm-up question content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_vocabulary_cards",
+      "name": "Vocabulary cards",
+      "role": "Vocabulary cards",
+      "slideOption": 5,
+      "description": "Use this layout for vocabulary cards content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_concept_explanation",
+      "name": "Concept explanation",
+      "role": "Concept explanation",
+      "slideOption": 6,
+      "description": "Use this layout for concept explanation content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_guided_example",
+      "name": "Guided example",
+      "role": "Guided example",
+      "slideOption": 7,
+      "description": "Use this layout for guided example content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_worked_steps",
+      "name": "Worked steps",
+      "role": "Worked steps",
+      "slideOption": 8,
+      "description": "Use this layout for worked steps content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_practice_prompt",
+      "name": "Practice prompt",
+      "role": "Practice prompt",
+      "slideOption": 9,
+      "description": "Use this layout for practice prompt content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_fill_in_the_blank",
+      "name": "Fill in the blank",
+      "role": "Fill in the blank",
+      "slideOption": 10,
+      "description": "Use this layout for fill in the blank content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_matching_exercise",
+      "name": "Matching exercise",
+      "role": "Matching exercise",
+      "slideOption": 11,
+      "description": "Use this layout for matching exercise content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_multiple_choice",
+      "name": "Multiple choice",
+      "role": "Multiple choice",
+      "slideOption": 12,
+      "description": "Use this layout for multiple choice content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_sentence_builder",
+      "name": "Sentence builder",
+      "role": "Sentence builder",
+      "slideOption": 13,
+      "description": "Use this layout for sentence builder content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_reading_passage",
+      "name": "Reading passage",
+      "role": "Reading passage",
+      "slideOption": 14,
+      "description": "Use this layout for reading passage content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_comprehension_check",
+      "name": "Comprehension check",
+      "role": "Comprehension check",
+      "slideOption": 15,
+      "description": "Use this layout for comprehension check content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_pair_work",
+      "name": "Pair work",
+      "role": "Pair work",
+      "slideOption": 16,
+      "description": "Use this layout for pair work content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_role_play",
+      "name": "Role play",
+      "role": "Role play",
+      "slideOption": 17,
+      "description": "Use this layout for role play content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_teacher_instruction",
+      "name": "Teacher instruction",
+      "role": "Teacher instruction",
+      "slideOption": 18,
+      "description": "Use this layout for teacher instruction content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_student_worksheet",
+      "name": "Student worksheet",
+      "role": "Student worksheet",
+      "slideOption": 19,
+      "description": "Use this layout for student worksheet content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_answer_reveal",
+      "name": "Answer reveal",
+      "role": "Answer reveal",
+      "slideOption": 20,
+      "description": "Use this layout for answer reveal content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_common_mistakes",
+      "name": "Common mistakes",
+      "role": "Common mistakes",
+      "slideOption": 21,
+      "description": "Use this layout for common mistakes content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_progress_check",
+      "name": "Progress check",
+      "role": "Progress check",
+      "slideOption": 22,
+      "description": "Use this layout for progress check content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_summary_takeaways",
+      "name": "Summary takeaways",
+      "role": "Summary takeaways",
+      "slideOption": 23,
+      "description": "Use this layout for summary takeaways content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_homework_task",
+      "name": "Homework task",
+      "role": "Homework task",
+      "slideOption": 24,
+      "description": "Use this layout for homework task content in a teaching exercises deck."
+    },
+    {
+      "id": "yl_teaching_exercises_next_lesson_preview",
+      "name": "Next lesson preview",
+      "role": "Next lesson preview",
+      "slideOption": 25,
+      "description": "Use this layout for next lesson preview content in a teaching exercises deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "teaching_exercises_standard",
+      "name": "Teaching + Exercises Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_teaching_exercises_lesson_title",
+        "yl_teaching_exercises_learning_objectives",
+        "yl_teaching_exercises_agenda_path",
+        "yl_teaching_exercises_warm_up_question",
+        "yl_teaching_exercises_vocabulary_cards",
+        "yl_teaching_exercises_concept_explanation",
+        "yl_teaching_exercises_guided_example",
+        "yl_teaching_exercises_worked_steps",
+        "yl_teaching_exercises_practice_prompt",
+        "yl_teaching_exercises_fill_in_the_blank",
+        "yl_teaching_exercises_matching_exercise",
+        "yl_teaching_exercises_multiple_choice",
+        "yl_teaching_exercises_sentence_builder",
+        "yl_teaching_exercises_reading_passage",
+        "yl_teaching_exercises_comprehension_check"
+      ]
+    },
+    {
+      "id": "teaching_exercises_short",
+      "name": "Teaching + Exercises Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_teaching_exercises_lesson_title",
+        "yl_teaching_exercises_learning_objectives",
+        "yl_teaching_exercises_agenda_path",
+        "yl_teaching_exercises_warm_up_question",
+        "yl_teaching_exercises_guided_example",
+        "yl_teaching_exercises_practice_prompt",
+        "yl_teaching_exercises_sentence_builder",
+        "yl_teaching_exercises_common_mistakes",
+        "yl_teaching_exercises_next_lesson_preview"
+      ]
+    },
+    {
+      "id": "teaching_exercises_deep_dive",
+      "name": "Teaching + Exercises Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_teaching_exercises_lesson_title",
+        "yl_teaching_exercises_learning_objectives",
+        "yl_teaching_exercises_warm_up_question",
+        "yl_teaching_exercises_vocabulary_cards",
+        "yl_teaching_exercises_concept_explanation",
+        "yl_teaching_exercises_guided_example",
+        "yl_teaching_exercises_worked_steps",
+        "yl_teaching_exercises_practice_prompt",
+        "yl_teaching_exercises_fill_in_the_blank",
+        "yl_teaching_exercises_sentence_builder",
+        "yl_teaching_exercises_reading_passage",
+        "yl_teaching_exercises_comprehension_check",
+        "yl_teaching_exercises_pair_work",
+        "yl_teaching_exercises_role_play",
+        "yl_teaching_exercises_teacher_instruction",
+        "yl_teaching_exercises_student_worksheet",
+        "yl_teaching_exercises_answer_reveal",
+        "yl_teaching_exercises_common_mistakes",
+        "yl_teaching_exercises_summary_takeaways",
+        "yl_teaching_exercises_homework_task",
+        "yl_teaching_exercises_next_lesson_preview"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": []
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "duotone",
+      "light",
+      "thin"
+    ]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "A clear instructional classroom system for lesson deck, exercise deck, training lesson, classroom slides, language learning.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": true,
+    "supportsFinancialSlides": false,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 94,
+    "chartReadiness": 92,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "lesson deck",
+    "exercise deck",
+    "training lesson",
+    "classroom slides",
+    "language learning"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

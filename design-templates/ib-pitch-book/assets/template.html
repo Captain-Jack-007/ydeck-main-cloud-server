@@ -27,21 +27,22 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: var(--ink); color: var(--ink); }
+  html, body { min-height: 100%; background: var(--ink); color: var(--ink); }
   body {
     font-family: var(--sans);
     font-size: 14px;
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
+    overflow: auto;
   }
   .deck {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+    width: 100%;
+    min-height: 100vh;
+    overflow: visible;
     position: relative;
     background: linear-gradient(180deg, oklch(14% 0.012 70), oklch(20% 0.012 70));
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    gap: 26px;
+    padding: 54px 28px;
   }
   .source-status {
     flex: 0 0 auto;
@@ -56,16 +57,15 @@
   }
   .source-status strong { color: oklch(96% 0.03 85); }
   .stage {
-    flex: 1 1 auto;
-    min-height: 0;
     width: 100%;
-    display: flex;
-    transition: transform 480ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
+    display: grid;
+    gap: 26px;
+    justify-items: center;
   }
   .slide {
-    min-width: 100vw;
-    height: 100%;
+    width: min(100%, 1360px);
+    aspect-ratio: 16 / 9;
+    min-height: 0;
     background: var(--paper);
     display: grid;
     place-items: stretch;
@@ -73,8 +73,8 @@
     overflow: hidden;
   }
   .slide-inner {
-    width: min(1320px, 92vw);
-    height: min(820px, 86vh);
+    width: min(1320px, 92%);
+    height: min(820px, 86%);
     margin: auto;
     padding: 56px 64px 48px;
     display: grid;
@@ -294,6 +294,7 @@
   }
   .chrome button:hover { background: oklch(94% 0.008 75); }
   .chrome .counter { font-family: var(--mono); font-size: 11px; padding: 0 10px; }
+  .chrome { display: none; }
 
   @media (max-width: 760px) {
     body { overflow: auto; }
@@ -319,7 +320,7 @@
     <strong>[SOURCE STATUS]</strong> Replace with live citation status. If placeholders remain, say DEMO DATA / FICTIONAL SAMPLE here and in every footer.
   </div>
   <div class="stage" id="stage">
-    <section class="slide cover">
+    <section class="ydeck-slide slide cover">
       <div class="slide-inner">
         <header class="mast">
           <div class="brand">[Bank / Advisor]</div>
@@ -337,7 +338,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="ydeck-slide slide">
       <div class="slide-inner">
         <header class="mast">
           <div class="brand">[Bank / Advisor]</div>
@@ -367,7 +368,7 @@
       </div>
     </section>
 
-    <section class="slide">
+    <section class="ydeck-slide slide">
       <div class="slide-inner">
         <header class="mast">
           <div class="brand">[Bank / Advisor]</div>
@@ -399,38 +400,5 @@
     <button id="print" aria-label="Print as PDF" title="Print / save as PDF">PDF</button>
   </div>
 </div>
-
-<script>
-(function () {
-  const stage = document.getElementById('stage');
-  const slides = Array.from(stage.querySelectorAll('.slide'));
-  const now = document.getElementById('now');
-  const total = document.getElementById('total');
-  let i = 0;
-  total.textContent = String(slides.length).padStart(2, '0');
-
-  function go(n) {
-    i = Math.max(0, Math.min(slides.length - 1, n));
-    stage.style.transform = `translateX(-${i * 100}vw)`;
-    now.textContent = String(i + 1).padStart(2, '0');
-  }
-
-  document.getElementById('prev').addEventListener('click', () => go(i - 1));
-  document.getElementById('next').addEventListener('click', () => go(i + 1));
-  document.getElementById('print').addEventListener('click', () => window.print());
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
-      event.preventDefault();
-      go(i + 1);
-    }
-    if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
-      event.preventDefault();
-      go(i - 1);
-    }
-    if (event.key === 'Home') go(0);
-    if (event.key === 'End') go(slides.length - 1);
-  });
-}());
-</script>
 </body>
 </html>

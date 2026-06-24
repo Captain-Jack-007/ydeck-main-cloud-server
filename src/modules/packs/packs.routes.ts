@@ -20,7 +20,9 @@ import {
   readDesignSystemPreview,
 } from "../designSystems/designSystemCatalog.service";
 import {
+  listDesignTemplateDiagnostics,
   listDesignTemplates,
+  readDesignTemplateThumbnail,
   readDesignTemplatePreview,
 } from "../designTemplates/designTemplateCatalog.service";
 
@@ -61,6 +63,24 @@ packsRouter.get(
   "/design-templates",
   asyncHandler(async (_req, res) => {
     res.json(await listDesignTemplates());
+  }),
+);
+
+packsRouter.get(
+  "/design-templates/diagnostics",
+  asyncHandler(async (_req, res) => {
+    res.json(await listDesignTemplateDiagnostics());
+  }),
+);
+
+packsRouter.get(
+  "/design-templates/:id/thumbnail",
+  asyncHandler(async (req, res) => {
+    const thumbnail = await readDesignTemplateThumbnail(req.params.id);
+    if (!thumbnail) throw ApiError.notFound("Design template thumbnail not found");
+
+    res.setHeader("Cache-Control", "public, max-age=300");
+    res.type(thumbnail.contentType).send(thumbnail.body);
   }),
 );
 

@@ -1,5 +1,5 @@
 ---
-name: html-ppt-weekly-report
+name: "html-ppt-weekly-report"
 description: Team weekly / status-update deck — corporate clarity, 8-cell KPI grid, shipped list, 8-week bar chart, next-week table. Use for 周报, business reviews, team status updates, and exec dashboards.
 triggers:
   - "weekly report"
@@ -9,12 +9,12 @@ triggers:
   - "business review"
   - "wbr"
 od:
-  mode: deck
-  scenario: operations
+  mode: "deck"
+  scenario: "operations"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

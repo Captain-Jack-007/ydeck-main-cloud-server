@@ -1,0 +1,3302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YDeck · Book / Chapter Lesson Deck</title>
+    <style>
+      :root {
+        /* canvas + ink */
+        --canvas: #f6f1e5;
+        --canvas-2: #efe7d2;
+        --canvas-stage: #ece4cf;
+        --ink: #1b1814;
+        --ink-soft: #4a4541;
+        --ink-mute: #847c70;
+        /* accents */
+        --brown: #7c2d12;
+        --brown-bg: #fbede2;
+        --blue: #2563eb;
+        --blue-bg: #eaf1ff;
+        --white: #ffffff;
+        --fog: #ecede5;
+        --fog-2: #e0e2da;
+        --pin: #b45309;
+        /* lines */
+        --hair: rgba(28, 24, 20, 0.08);
+        --hair-2: rgba(28, 24, 20, 0.14);
+        --hair-3: rgba(28, 24, 20, 0.22);
+        --margin: rgba(124, 45, 18, 0.32);
+        /* depth */
+        --shadow-card: 0 1px 1px rgba(28, 24, 20, 0.04),
+          0 8px 22px -12px rgba(28, 24, 20, 0.16);
+        --shadow-page: 0 1px 1px rgba(28, 24, 20, 0.05),
+          0 18px 40px -18px rgba(28, 24, 20, 0.22);
+        --shadow-stage: 0 4px 10px rgba(28, 24, 20, 0.06),
+          0 36px 80px -28px rgba(28, 24, 20, 0.36);
+        /* type */
+        --display: 'Iowan Old Style', 'Source Serif Pro', 'Charter', Georgia,
+          'Times New Roman', serif;
+        --sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+          'Helvetica Neue', Arial, system-ui, sans-serif;
+        --mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'IBM Plex Mono',
+          Menlo, Consolas, monospace;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--canvas-stage);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: -0.005em;
+      }
+      body {
+        min-height: 100vh;
+      }
+
+      /* =============== DECK SYSTEM =============== */
+      .deck {
+        --preview-scale: 0.5;
+        position: relative;
+        width: 100vw;
+        background: var(--canvas-stage);
+      }
+      .slide-page {
+        position: relative;
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 18px;
+        page-break-after: always;
+        background: radial-gradient(
+            120% 80% at 50% 0%,
+            rgba(255, 255, 255, 0.55),
+            transparent 60%
+          ),
+          var(--canvas-stage);
+      }
+      .slide-page + .slide-page {
+        border-top: 1px solid var(--hair);
+      }
+      .stage {
+        position: relative;
+        width: calc(1920px * var(--preview-scale));
+        height: calc(1080px * var(--preview-scale));
+        overflow: hidden;
+        background: var(--canvas);
+        border-radius: 14px;
+        box-shadow: var(--shadow-stage);
+      }
+      .scale {
+        width: 1920px;
+        height: 1080px;
+        transform-origin: top left;
+        transform: scale(var(--preview-scale));
+        overflow: hidden;
+      }
+      .ydeck-slide {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        background: radial-gradient(
+            70% 50% at 88% -6%,
+            rgba(255, 255, 255, 0.55),
+            transparent 60%
+          ),
+          radial-gradient(
+            60% 50% at 6% 110%,
+            rgba(124, 45, 18, 0.04),
+            transparent 70%
+          ),
+          var(--canvas);
+        color: var(--ink);
+        overflow: hidden;
+      }
+
+      /* Nav-ready mode: only active slide visible */
+      body.deck-nav-ready {
+        overflow: hidden;
+      }
+      body.deck-nav-ready .deck {
+        height: 100vh;
+        overflow: hidden;
+      }
+      body.deck-nav-ready .slide-page {
+        position: absolute;
+        inset: 0;
+        min-height: 100vh;
+        height: 100vh;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 440ms var(--ease);
+      }
+      body.deck-nav-ready .slide-page.active,
+      body.deck-nav-ready .slide-page.is-active {
+        opacity: 1;
+        pointer-events: auto;
+        z-index: 2;
+      }
+      body.deck-nav-ready .slide-page + .slide-page {
+        border-top: 0;
+      }
+
+      /* =============== NAV CHROME =============== */
+      .deck-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        z-index: 40;
+        background: rgba(28, 24, 20, 0.08);
+      }
+      .deck-progress span {
+        display: block;
+        width: 0;
+        height: 100%;
+        background: var(--brown);
+        transition: width 260ms var(--ease);
+      }
+      #deck-nav {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%);
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 12px;
+        border: 1px solid rgba(28, 24, 20, 0.12);
+        border-radius: 999px;
+        background: rgba(246, 241, 229, 0.78);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 4px 14px -6px rgba(28, 24, 20, 0.18);
+        font-family: var(--mono);
+      }
+      #deck-nav .dot {
+        width: 7px;
+        height: 7px;
+        padding: 0;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(28, 24, 20, 0.22);
+        cursor: pointer;
+        transition: width 220ms var(--ease), background 220ms var(--ease),
+          transform 220ms var(--ease);
+      }
+      #deck-nav .dot:hover {
+        transform: scale(1.25);
+        background: rgba(28, 24, 20, 0.42);
+      }
+      #deck-nav .dot.active {
+        width: 22px;
+        background: var(--brown);
+      }
+      #deck-nav .dot:focus-visible {
+        outline: 2px solid var(--brown);
+        outline-offset: 3px;
+      }
+      #deck-counter {
+        margin-left: 6px;
+        padding-left: 10px;
+        border-left: 1px solid rgba(28, 24, 20, 0.14);
+        font-size: 10.5px;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--ink-soft);
+      }
+
+      /* =============== SLIDE CHROME (inside 1920×1080) =============== */
+      .meta {
+        position: absolute;
+        left: 112px;
+        right: 112px;
+        top: 54px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--mono);
+        font-size: 18px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-mute);
+      }
+      .meta .left {
+        display: inline-flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .meta .left .pip {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: var(--brown);
+        box-shadow: 0 0 0 4px rgba(124, 45, 18, 0.12);
+      }
+      .meta .left .scenario {
+        color: var(--ink);
+      }
+      .meta .right {
+        color: var(--ink-mute);
+        font-variant-numeric: tabular-nums;
+      }
+      .footrule {
+        position: absolute;
+        left: 112px;
+        right: 112px;
+        bottom: 50px;
+        border: 0;
+        border-top: 1px solid var(--hair-2);
+        margin: 0;
+      }
+      .footnote,
+      .footer {
+        position: absolute;
+        bottom: 48px;
+        left: 112px;
+        right: 112px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 22px;
+        border-top: 1px solid var(--hair-2);
+        font-family: var(--mono);
+        font-size: 17px;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--ink-mute);
+      }
+      .footnote em,
+      .footer em {
+        color: var(--ink-soft);
+        font-style: normal;
+      }
+      .footer > span:last-child {
+        color: var(--brown);
+      }
+
+      /* =============== TYPE =============== */
+      .serif {
+        font-family: var(--display);
+        font-weight: 400;
+        letter-spacing: -0.012em;
+      }
+      .h-cover {
+        font-family: var(--display);
+        font-weight: 400;
+        line-height: 0.94;
+        letter-spacing: -0.022em;
+        margin: 0;
+      }
+      .h-display {
+        font-family: var(--display);
+        font-weight: 400;
+        line-height: 0.98;
+        letter-spacing: -0.018em;
+        margin: 0;
+      }
+      .h-title {
+        font-family: var(--display);
+        font-weight: 400;
+        line-height: 1.02;
+        letter-spacing: -0.014em;
+        margin: 0;
+      }
+      .label {
+        font-family: var(--mono);
+        font-size: 17px;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--brown);
+      }
+      .label.muted {
+        color: var(--ink-mute);
+      }
+      .label.blue {
+        color: var(--blue);
+        background: transparent;
+      }
+      .label.light {
+        color: rgba(255, 255, 255, 0.7);
+      }
+      .copy {
+        font-size: 28px;
+        line-height: 1.42;
+        color: var(--ink-soft);
+        margin: 0;
+        font-weight: 400;
+      }
+      .small {
+        font-size: 22px;
+        line-height: 1.42;
+        color: var(--ink-soft);
+        margin: 0;
+      }
+      .micro {
+        font-family: var(--mono);
+        font-size: 14px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--ink-mute);
+      }
+      .gradient-num {
+        font-family: var(--display);
+        font-weight: 400;
+        line-height: 0.82;
+        color: var(--brown);
+      }
+
+      /* =============== SURFACES =============== */
+      .page {
+        background: var(--white);
+        border: 1px solid var(--hair);
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+      }
+      .page.flat {
+        box-shadow: none;
+        border-color: var(--hair-2);
+      }
+      .dark {
+        background: radial-gradient(
+            70% 60% at 85% -10%,
+            rgba(255, 255, 255, 0.06),
+            transparent 60%
+          ),
+          #1b1814;
+        color: var(--white);
+        border-radius: 8px;
+      }
+      .dark .label {
+        color: rgba(255, 255, 255, 0.62);
+      }
+      .blue {
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.08),
+            transparent 40%
+          ),
+          var(--blue);
+        color: var(--white);
+        border-radius: 8px;
+      }
+      .blue .label {
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .brown {
+        background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.06),
+            transparent 40%
+          ),
+          var(--brown);
+        color: var(--white);
+        border-radius: 8px;
+      }
+      .brown .label {
+        color: rgba(255, 255, 255, 0.78);
+      }
+      .fog {
+        background: var(--fog);
+        border: 1px solid var(--hair);
+        border-radius: 8px;
+      }
+      .tint-brown {
+        background: var(--brown-bg);
+        border: 1px solid rgba(124, 45, 18, 0.12);
+        border-radius: 8px;
+      }
+      .tint-blue {
+        background: var(--blue-bg);
+        border: 1px solid rgba(37, 99, 235, 0.14);
+        border-radius: 8px;
+      }
+      .rule {
+        height: 1px;
+        background: var(--hair-2);
+      }
+
+      /* =============== UI ATOMS =============== */
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        height: 40px;
+        padding: 0 16px;
+        border-radius: 999px;
+        border: 1px solid var(--hair-2);
+        background: var(--white);
+        font-family: var(--mono);
+        font-size: 15px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--ink);
+        box-shadow: 0 1px 1px rgba(28, 24, 20, 0.04);
+      }
+      .chip.solid {
+        background: var(--ink);
+        color: var(--white);
+        border-color: var(--ink);
+      }
+      .chip.brown {
+        background: var(--brown-bg);
+        color: var(--brown);
+        border-color: rgba(124, 45, 18, 0.18);
+      }
+      .chip.blue {
+        background: var(--blue-bg);
+        color: var(--blue);
+        border-color: rgba(37, 99, 235, 0.2);
+      }
+      .pin {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle at 32% 32%,
+          #d97706,
+          var(--pin) 60%,
+          #7c2d12
+        );
+        box-shadow: 0 0 0 6px rgba(180, 83, 9, 0.12),
+          0 2px 3px rgba(28, 24, 20, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      }
+      .pin.blue {
+        background: radial-gradient(
+          circle at 32% 32%,
+          #60a5fa,
+          var(--blue) 60%,
+          #1e3a8a
+        );
+        box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.12),
+          0 2px 3px rgba(28, 24, 20, 0.28),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      }
+      .lined {
+        background-image: linear-gradient(
+          to bottom,
+          transparent 0,
+          transparent 47px,
+          rgba(28, 24, 20, 0.07) 48px
+        );
+        background-size: 100% 48px;
+        background-position: 0 8px;
+      }
+      .margin-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 1.5px;
+        background: var(--margin);
+      }
+      .stamp {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-family: var(--mono);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .ribbon {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 8px;
+        background: linear-gradient(180deg, var(--brown), #5a1f0c);
+        box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.12);
+      }
+      svg {
+        max-width: 100%;
+        display: block;
+      }
+
+      /* =============== STATIC / NO-SCRIPT FALLBACK =============== */
+      @media print {
+        body {
+          background: var(--canvas-stage);
+          overflow: visible;
+        }
+        body.deck-nav-ready {
+          overflow: visible;
+        }
+        body.deck-nav-ready .deck {
+          height: auto;
+          overflow: visible;
+        }
+        body.deck-nav-ready .slide {
+          position: relative;
+          inset: auto;
+          opacity: 1;
+          pointer-events: auto;
+          transition: none;
+        }
+        .deck-progress,
+        #deck-nav {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="deck">
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_chapter_title"
+            >
+              <div class="meta">
+                <span>Book / Chapter Lesson</span><span>01 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 118px;
+                  top: 132px;
+                  width: 1684px;
+                  height: 806px;
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                "
+              >
+                <div
+                  class="page lined"
+                  style="
+                    position: relative;
+                    padding: 72px 68px;
+                    border-radius: 8px 0 0 8px;
+                    border-right: 0;
+                  "
+                >
+                  <div class="margin-line" style="left: 96px"></div>
+                  <div class="label">teacher edition</div>
+                  <h1
+                    class="serif"
+                    style="
+                      font-size: 112px;
+                      line-height: 0.92;
+                      margin: 96px 0 0;
+                      width: 650px;
+                    "
+                  >
+                    Chapter Lesson Workbook
+                  </h1>
+                  <p class="copy" style="width: 560px; margin-top: 58px">
+                    A classroom-native slide system for reading, evidence,
+                    discussion, and practice.
+                  </p>
+                </div>
+                <div
+                  class="page"
+                  style="
+                    position: relative;
+                    padding: 72px 68px;
+                    border-radius: 0 8px 8px 0;
+                  "
+                >
+                  <div
+                    style="
+                      position: absolute;
+                      left: 0;
+                      top: 0;
+                      bottom: 0;
+                      width: 8px;
+                      background: var(--brown);
+                    "
+                  ></div>
+                  <svg
+                    viewBox="0 0 650 500"
+                    aria-label="chapter book mark"
+                    style="
+                      position: absolute;
+                      right: 78px;
+                      top: 92px;
+                      width: 650px;
+                      height: 500px;
+                    "
+                  >
+                    <path
+                      d="M72 80H300c36 0 58 24 58 60v304c-26-24-58-34-96-34H72Z"
+                      fill="#E8EDF2"
+                      stroke="rgba(28,25,23,.16)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M578 80H416c-36 0-58 24-58 60v304c26-24 58-34 96-34h124Z"
+                      fill="#fff"
+                      stroke="rgba(28,25,23,.16)"
+                      stroke-width="3"
+                    />
+                    <path
+                      d="M142 172h146M142 230h166M142 288h112M430 172h92M416 230h124M448 288h78"
+                      stroke="rgba(28,25,23,.25)"
+                      stroke-width="7"
+                      stroke-linecap="round"
+                    />
+                    <path d="M358 138v310" stroke="#7C2D12" stroke-width="7" />
+                    <circle cx="358" cy="310" r="24" fill="#2563EB" />
+                  </svg>
+                  <div
+                    style="
+                      position: absolute;
+                      left: 74px;
+                      bottom: 78px;
+                      width: 560px;
+                    "
+                  >
+                    <div class="label" style="color: var(--blue)">contract</div>
+                    <p
+                      style="
+                        font-size: 42px;
+                        line-height: 1.09;
+                        font-weight: 860;
+                        margin: 28px 0 0;
+                      "
+                    >
+                      Every page is a teaching artifact, not a recolored
+                      business slide.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Open-book chapter cover</span
+                ><span>preview standard flow</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_reading_objectives"
+            >
+              <div class="meta">
+                <span>Lesson plan sheet</span><span>02 / 15</span>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  left: 142px;
+                  top: 122px;
+                  width: 1210px;
+                  height: 820px;
+                  padding: 56px 64px;
+                "
+              >
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 220px 1fr;
+                    gap: 46px;
+                  "
+                >
+                  <div>
+                    <div class="label">today</div>
+                    <div
+                      class="serif"
+                      style="
+                        font-size: 150px;
+                        line-height: 0.8;
+                        color: var(--brown);
+                        margin-top: 46px;
+                      "
+                    >
+                      4
+                    </div>
+                    <div class="rule" style="margin-top: 42px"></div>
+                    <p class="small" style="font-size: 25px; margin-top: 30px">
+                      Outcomes are written as proof actions students can
+                      demonstrate.
+                    </p>
+                  </div>
+                  <div>
+                    <h2
+                      class="serif"
+                      style="
+                        font-size: 78px;
+                        line-height: 1.02;
+                        margin: 0;
+                        width: 770px;
+                      "
+                    >
+                      What learners will prove by the end
+                    </h2>
+                    <div style="margin-top: 48px">
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: 74px 1fr 160px;
+                          gap: 24px;
+                          border-top: 1px solid var(--line);
+                          padding: 20px 0;
+                          align-items: center;
+                        "
+                      >
+                        <b style="font-size: 42px; color: var(--brown)">01</b
+                        ><span
+                          style="
+                            font-size: 31px;
+                            font-weight: 860;
+                            line-height: 1.14;
+                          "
+                          >State the chapter conflict in one exact
+                          sentence.</span
+                        ><span class="chip">explain</span>
+                      </div>
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: 74px 1fr 160px;
+                          gap: 24px;
+                          border-top: 1px solid var(--line);
+                          padding: 20px 0;
+                          align-items: center;
+                        "
+                      >
+                        <b style="font-size: 42px; color: var(--blue)">02</b
+                        ><span
+                          style="
+                            font-size: 31px;
+                            font-weight: 860;
+                            line-height: 1.14;
+                          "
+                          >Support a character reading with two text
+                          clues.</span
+                        ><span class="chip">prove</span>
+                      </div>
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: 74px 1fr 160px;
+                          gap: 24px;
+                          border-top: 1px solid var(--line);
+                          padding: 20px 0;
+                          align-items: center;
+                        "
+                      >
+                        <b style="font-size: 42px; color: var(--brown)">03</b
+                        ><span
+                          style="
+                            font-size: 31px;
+                            font-weight: 860;
+                            line-height: 1.14;
+                          "
+                          >Map how the setting changes available choices.</span
+                        ><span class="chip">locate</span>
+                      </div>
+                      <div
+                        style="
+                          display: grid;
+                          grid-template-columns: 74px 1fr 160px;
+                          gap: 24px;
+                          border-top: 1px solid var(--line);
+                          padding: 20px 0;
+                          align-items: center;
+                        "
+                      >
+                        <b style="font-size: 42px; color: var(--blue)">04</b
+                        ><span
+                          style="
+                            font-size: 31px;
+                            font-weight: 860;
+                            line-height: 1.14;
+                          "
+                          >Write a claim that connects evidence to theme.</span
+                        ><span class="chip">write</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="dark"
+                style="
+                  position: absolute;
+                  right: 150px;
+                  top: 184px;
+                  width: 335px;
+                  height: 266px;
+                  padding: 34px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="label" style="color: rgba(255, 255, 255, 0.66)">
+                  teacher note
+                </div>
+                <p
+                  style="
+                    font-size: 30px;
+                    line-height: 1.18;
+                    font-weight: 820;
+                    color: rgba(255, 255, 255, 0.86);
+                    margin: 34px 0 0;
+                  "
+                >
+                  Objective rows behave like a planning page, not feature cards.
+                </p>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  right: 150px;
+                  bottom: 170px;
+                  width: 335px;
+                  display: grid;
+                  gap: 18px;
+                "
+              >
+                <div
+                  class="fog"
+                  style="
+                    height: 82px;
+                    padding: 22px 24px;
+                    font-size: 24px;
+                    font-weight: 860;
+                    border-radius: 4px;
+                  "
+                >
+                  Read closely
+                </div>
+                <div
+                  class="fog"
+                  style="
+                    height: 82px;
+                    padding: 22px 24px;
+                    font-size: 24px;
+                    font-weight: 860;
+                    border-radius: 4px;
+                  "
+                >
+                  Mark evidence
+                </div>
+                <div
+                  class="brown"
+                  style="
+                    height: 82px;
+                    padding: 22px 24px;
+                    font-size: 24px;
+                    font-weight: 860;
+                    border-radius: 4px;
+                  "
+                >
+                  Write claim
+                </div>
+              </div>
+              <div class="footer">
+                <span>Teacher lesson-plan sheet</span
+                ><span>proof verbs and teacher rail</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_chapter_context"
+            >
+              <div class="meta">
+                <span>Board talk</span><span>03 / 15</span>
+              </div>
+              <div
+                class="dark"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 124px;
+                  width: 760px;
+                  height: 760px;
+                  padding: 58px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="label" style="color: rgba(255, 255, 255, 0.66)">
+                  before reading
+                </div>
+                <h2
+                  class="serif"
+                  style="
+                    font-size: 82px;
+                    line-height: 1;
+                    margin: 42px 0 0;
+                    color: #fff;
+                  "
+                >
+                  Give students the frame before the facts.
+                </h2>
+                <p
+                  style="
+                    font-size: 28px;
+                    line-height: 1.38;
+                    color: rgba(255, 255, 255, 0.72);
+                    width: 570px;
+                    margin-top: 44px;
+                  "
+                >
+                  Context is a board talk: what happened, what is at stake, and
+                  what readers should watch.
+                </p>
+                <div
+                  style="
+                    position: absolute;
+                    left: 58px;
+                    right: 58px;
+                    bottom: 58px;
+                    display: flex;
+                    gap: 16px;
+                  "
+                >
+                  <span
+                    class="chip"
+                    style="
+                      background: rgba(255, 255, 255, 0.08);
+                      color: #fff;
+                      border-color: rgba(255, 255, 255, 0.18);
+                    "
+                    >time</span
+                  ><span
+                    class="chip"
+                    style="
+                      background: rgba(255, 255, 255, 0.08);
+                      color: #fff;
+                      border-color: rgba(255, 255, 255, 0.18);
+                    "
+                    >place</span
+                  ><span
+                    class="chip"
+                    style="
+                      background: rgba(255, 255, 255, 0.08);
+                      color: #fff;
+                      border-color: rgba(255, 255, 255, 0.18);
+                    "
+                    >stakes</span
+                  >
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 942px;
+                  top: 152px;
+                  width: 820px;
+                  height: 704px;
+                "
+              >
+                <svg
+                  viewBox="0 0 820 704"
+                  aria-label="thread connecting pinned notes"
+                  style="
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 820px;
+                    height: 704px;
+                  "
+                >
+                  <path
+                    d="M300 210C430 246 490 150 626 178M514 552C598 486 646 362 666 234M240 260C260 390 350 470 514 552"
+                    fill="none"
+                    stroke="var(--brown)"
+                    stroke-width="4"
+                    stroke-dasharray="10 12"
+                    opacity=".68"
+                  />
+                </svg>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 0;
+                    top: 22px;
+                    width: 360px;
+                    height: 250px;
+                    padding: 34px;
+                    transform: rotate(-2deg);
+                  "
+                >
+                  <div class="pin"></div>
+                  <div class="label" style="margin-top: 32px">
+                    what came before
+                  </div>
+                  <p class="small" style="font-size: 27px; margin-top: 24px">
+                    The room already carries old rules.
+                  </p>
+                </div>
+                <div
+                  class="fog"
+                  style="
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    width: 390px;
+                    height: 300px;
+                    padding: 38px;
+                    transform: rotate(2deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="pin" style="background: var(--blue)"></div>
+                  <div
+                    class="label"
+                    style="margin-top: 34px; color: var(--blue)"
+                  >
+                    what is at stake
+                  </div>
+                  <p class="small" style="font-size: 29px; margin-top: 24px">
+                    One choice can change how the group sees courage.
+                  </p>
+                </div>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 70px;
+                    bottom: 40px;
+                    width: 460px;
+                    height: 290px;
+                    padding: 38px;
+                    transform: rotate(1.5deg);
+                  "
+                >
+                  <div class="pin"></div>
+                  <div class="label" style="margin-top: 32px">reader job</div>
+                  <p class="small" style="font-size: 31px; margin-top: 26px">
+                    Notice when silence becomes an action.
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Board talk with pinned notes</span
+                ><span>context threads</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_characters_overview"
+            >
+              <div class="meta">
+                <span>Character corkboard</span><span>04 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 126px;
+                  width: 1696px;
+                  height: 760px;
+                  background: #efe3d3;
+                  border: 1px solid rgba(28, 25, 23, 0.15);
+                  border-radius: 6px;
+                "
+              >
+                <div
+                  style="
+                    position: absolute;
+                    left: 54px;
+                    top: 52px;
+                    width: 405px;
+                  "
+                >
+                  <div class="label">motive map</div>
+                  <h2
+                    class="serif"
+                    style="font-size: 68px; line-height: 1.02; margin: 34px 0 0"
+                  >
+                    Motives are mapped like evidence.
+                  </h2>
+                </div>
+                <svg
+                  viewBox="0 0 1696 760"
+                  aria-label="character relationship strings"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 1696px;
+                    height: 760px;
+                  "
+                >
+                  <path
+                    d="M782 374L476 250M782 374L1128 222M782 374L548 560M782 374L1208 552M782 374L942 134"
+                    stroke="rgba(124,45,18,.38)"
+                    stroke-width="5"
+                  />
+                </svg>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 690px;
+                    top: 250px;
+                    width: 240px;
+                    height: 220px;
+                    padding: 30px;
+                    text-align: center;
+                  "
+                >
+                  <div
+                    class="pin"
+                    style="margin: 0 auto; background: var(--brown)"
+                  ></div>
+                  <strong
+                    style="display: block; font-size: 34px; margin-top: 30px"
+                    >Mara</strong
+                  >
+                  <p class="small" style="font-size: 21px">wants belonging</p>
+                </div>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 468px;
+                    top: 146px;
+                    width: 260px;
+                    height: 180px;
+                    padding: 28px;
+                    transform: rotate(-3deg);
+                  "
+                >
+                  <div class="label" style="color: var(--blue)">ally</div>
+                  <p class="small" style="font-size: 25px; margin-top: 22px">
+                    offers safer courage
+                  </p>
+                </div>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    right: 310px;
+                    top: 116px;
+                    width: 300px;
+                    height: 210px;
+                    padding: 30px;
+                    transform: rotate(2deg);
+                  "
+                >
+                  <div class="label">foil</div>
+                  <p class="small" style="font-size: 27px; margin-top: 24px">
+                    protects the rule everyone fears
+                  </p>
+                </div>
+                <div
+                  class="blue"
+                  style="
+                    position: absolute;
+                    left: 450px;
+                    bottom: 100px;
+                    width: 310px;
+                    height: 180px;
+                    padding: 30px;
+                    transform: rotate(2deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    pressure
+                  </div>
+                  <p
+                    style="
+                      font-size: 27px;
+                      line-height: 1.18;
+                      font-weight: 820;
+                      color: #fff;
+                      margin: 24px 0 0;
+                    "
+                  >
+                    the open door makes silence visible
+                  </p>
+                </div>
+                <div
+                  class="dark"
+                  style="
+                    position: absolute;
+                    right: 230px;
+                    bottom: 96px;
+                    width: 360px;
+                    height: 200px;
+                    padding: 32px;
+                    transform: rotate(-2deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.68)">
+                    change
+                  </div>
+                  <p
+                    style="
+                      font-size: 30px;
+                      line-height: 1.14;
+                      font-weight: 820;
+                      color: #fff;
+                      margin: 26px 0 0;
+                    "
+                  >
+                    one small action changes the group
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Character corkboard</span
+                ><span>relationship strings and motive notes</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_setting_map"
+            >
+              <div class="meta">
+                <span>Setting evidence</span><span>05 / 15</span>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 142px;
+                  width: 1060px;
+                  height: 710px;
+                  overflow: hidden;
+                "
+              >
+                <svg
+                  viewBox="0 0 1060 710"
+                  aria-label="setting map with anchored callouts"
+                  style="width: 1060px; height: 710px; display: block"
+                >
+                  <rect width="1060" height="710" fill="#E8EDF2" />
+                  <g stroke="rgba(28,25,23,.13)" stroke-width="2">
+                    <path d="M180 74V632" />
+                    <path d="M300 74V632" />
+                    <path d="M420 74V632" />
+                    <path d="M540 74V632" />
+                    <path d="M660 74V632" />
+                    <path d="M780 74V632" />
+                    <path d="M900 74V632" />
+                    <path d="M74 138H986" />
+                    <path d="M74 248H986" />
+                    <path d="M74 358H986" />
+                    <path d="M74 468H986" />
+                    <path d="M74 578H986" />
+                  </g>
+                  <path
+                    d="M196 474C154 346 226 230 356 206C474 184 536 282 642 210C760 130 914 218 892 378C878 478 770 508 698 586C598 696 478 576 366 614C286 640 220 552 196 474Z"
+                    fill="#fff"
+                    stroke="rgba(28,25,23,.2)"
+                    stroke-width="3"
+                  />
+                  <path
+                    d="M244 482C318 368 388 392 482 314C594 220 686 278 806 236"
+                    fill="none"
+                    stroke="var(--brown)"
+                    stroke-width="9"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M292 546C416 492 468 536 578 444C670 366 742 410 844 336"
+                    fill="none"
+                    stroke="var(--blue)"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                  <g>
+                    <circle cx="244" cy="482" r="24" fill="var(--brown)" />
+                    <circle cx="244" cy="482" r="8" fill="#fff" />
+                    <text
+                      x="282"
+                      y="492"
+                      fill="var(--ink)"
+                      font-size="22"
+                      font-weight="860"
+                    >
+                      home
+                    </text>
+                  </g>
+                  <g>
+                    <circle cx="482" cy="314" r="24" fill="var(--blue)" />
+                    <circle cx="482" cy="314" r="8" fill="#fff" />
+                    <text
+                      x="520"
+                      y="324"
+                      fill="var(--ink)"
+                      font-size="22"
+                      font-weight="860"
+                    >
+                      conflict
+                    </text>
+                  </g>
+                  <g>
+                    <circle cx="806" cy="236" r="24" fill="var(--brown)" />
+                    <circle cx="806" cy="236" r="8" fill="#fff" />
+                    <text
+                      x="844"
+                      y="246"
+                      fill="var(--ink)"
+                      font-size="22"
+                      font-weight="860"
+                    >
+                      turning point
+                    </text>
+                  </g>
+                  <rect
+                    x="72"
+                    y="72"
+                    width="305"
+                    height="124"
+                    rx="6"
+                    fill="var(--ink)"
+                  />
+                  <text
+                    x="104"
+                    y="124"
+                    fill="#fff"
+                    font-size="29"
+                    font-weight="860"
+                  >
+                    Spatial reading
+                  </text>
+                  <text x="104" y="164" fill="#fff" opacity=".7" font-size="21">
+                    where setting changes meaning
+                  </text>
+                </svg>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 1218px;
+                  top: 142px;
+                  width: 590px;
+                  height: 710px;
+                "
+              >
+                <div
+                  class="dark"
+                  style="height: 188px; padding: 34px; border-radius: 4px"
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.66)">
+                    map question
+                  </div>
+                  <div
+                    class="serif"
+                    style="font-size: 36px; line-height: 1.08; margin-top: 22px"
+                  >
+                    How does place limit or unlock choice?
+                  </div>
+                </div>
+                <div
+                  class="page"
+                  style="height: 490px; margin-top: 28px; padding: 28px 32px"
+                >
+                  <div class="label">fact ledger</div>
+                  <div style="margin-top: 20px">
+                    <div
+                      style="border-top: 1px solid var(--line); padding: 16px 0"
+                    >
+                      <strong style="font-size: 27px">Home base</strong>
+                      <p class="small" style="font-size: 21px; margin-top: 6px">
+                        Safety, routine, first conflict
+                      </p>
+                    </div>
+                    <div
+                      style="border-top: 1px solid var(--line); padding: 16px 0"
+                    >
+                      <strong style="font-size: 27px; color: var(--brown)"
+                        >Threshold</strong
+                      >
+                      <p class="small" style="font-size: 21px; margin-top: 6px">
+                        A choice moves the plot forward
+                      </p>
+                    </div>
+                    <div
+                      style="border-top: 1px solid var(--line); padding: 16px 0"
+                    >
+                      <strong style="font-size: 27px">Return point</strong>
+                      <p class="small" style="font-size: 21px; margin-top: 6px">
+                        The chapter shows what changed
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Spatial reading map</span
+                ><span>anchors and fact ledger</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_plot_timeline"
+            >
+              <div class="meta">
+                <span>Plot sequence</span><span>06 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 134px;
+                  width: 640px;
+                "
+              >
+                <h2
+                  class="serif"
+                  style="font-size: 80px; line-height: 1; margin: 0"
+                >
+                  Plot timeline
+                </h2>
+                <p class="copy" style="margin-top: 28px">
+                  A reading board with stages, pressure, and a visible decision
+                  gate.
+                </p>
+              </div>
+              <div
+                class="dark"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 390px;
+                  width: 1696px;
+                  height: 360px;
+                  padding: 42px;
+                  border-radius: 4px;
+                "
+              >
+                <svg
+                  viewBox="0 0 1612 276"
+                  aria-label="plot timeline board"
+                  style="width: 1612px; height: 276px; display: block"
+                >
+                  <g stroke="rgba(255,255,255,.15)" stroke-width="2">
+                    <path d="M64 86H1548" />
+                    <path d="M64 154H1548" />
+                    <path d="M64 222H1548" />
+                  </g>
+                  <path
+                    d="M86 154H1506"
+                    stroke="rgba(255,255,255,.32)"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M252 174C426 160 560 168 724 136C918 98 1090 118 1288 104"
+                    fill="none"
+                    stroke="var(--blue)"
+                    stroke-width="6"
+                    stroke-linecap="round"
+                  />
+                  <g>
+                    <path d="M188 154V210" stroke="#fff" stroke-width="4" />
+                    <rect
+                      x="112"
+                      y="188"
+                      width="230"
+                      height="94"
+                      rx="6"
+                      fill="#fff"
+                    />
+                    <text
+                      x="136"
+                      y="226"
+                      fill="var(--ink)"
+                      font-size="23"
+                      font-weight="860"
+                    >
+                      Exposition
+                    </text>
+                    <text
+                      x="136"
+                      y="258"
+                      fill="var(--ink)"
+                      opacity=".62"
+                      font-size="18"
+                    >
+                      beat 1
+                    </text>
+                  </g>
+                  <g>
+                    <path d="M518 154V84" stroke="#fff" stroke-width="4" />
+                    <rect
+                      x="442"
+                      y="58"
+                      width="230"
+                      height="94"
+                      rx="6"
+                      fill="#fff"
+                    />
+                    <text
+                      x="466"
+                      y="96"
+                      fill="var(--ink)"
+                      font-size="23"
+                      font-weight="860"
+                    >
+                      Rising action
+                    </text>
+                    <text
+                      x="466"
+                      y="128"
+                      fill="var(--ink)"
+                      opacity=".62"
+                      font-size="18"
+                    >
+                      beat 2
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      d="M848 154V210"
+                      stroke="var(--brown)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="772"
+                      y="188"
+                      width="230"
+                      height="94"
+                      rx="6"
+                      fill="var(--brown)"
+                    />
+                    <text
+                      x="796"
+                      y="226"
+                      fill="#fff"
+                      font-size="23"
+                      font-weight="860"
+                    >
+                      Turning point
+                    </text>
+                    <text
+                      x="796"
+                      y="258"
+                      fill="#fff"
+                      opacity=".72"
+                      font-size="18"
+                    >
+                      beat 3
+                    </text>
+                  </g>
+                  <g>
+                    <path
+                      d="M1178 154V104"
+                      stroke="var(--blue)"
+                      stroke-width="4"
+                    />
+                    <rect
+                      x="1102"
+                      y="82"
+                      width="230"
+                      height="94"
+                      rx="6"
+                      fill="var(--blue)"
+                    />
+                    <text
+                      x="1126"
+                      y="120"
+                      fill="#fff"
+                      font-size="23"
+                      font-weight="860"
+                    >
+                      Consequence
+                    </text>
+                    <text
+                      x="1126"
+                      y="152"
+                      fill="#fff"
+                      opacity=".72"
+                      font-size="18"
+                    >
+                      beat 4
+                    </text>
+                  </g>
+                  <circle cx="724" cy="136" r="18" fill="var(--brown)" />
+                  <text
+                    x="760"
+                    y="144"
+                    fill="#fff"
+                    font-size="22"
+                    font-weight="860"
+                  >
+                    decision gate
+                  </text>
+                </svg>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 790px;
+                  width: 1696px;
+                  height: 120px;
+                  display: grid;
+                  grid-template-columns: 1.15fr 0.85fr 1fr;
+                  gap: 18px;
+                "
+              >
+                <div class="page" style="padding: 24px 28px">
+                  <div class="label">cause</div>
+                  <p class="small" style="font-size: 23px; margin-top: 14px">
+                    What creates pressure before the turning point?
+                  </p>
+                </div>
+                <div
+                  class="brown"
+                  style="padding: 24px 28px; border-radius: 4px"
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    choice
+                  </div>
+                  <p
+                    style="
+                      font-size: 23px;
+                      line-height: 1.28;
+                      margin: 14px 0 0;
+                      color: rgba(255, 255, 255, 0.82);
+                    "
+                  >
+                    Which decision changes the direction?
+                  </p>
+                </div>
+                <div class="page" style="padding: 24px 28px">
+                  <div class="label" style="color: var(--blue)">
+                    consequence
+                  </div>
+                  <p class="small" style="font-size: 23px; margin-top: 14px">
+                    What new problem or insight appears after it?
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Plot sequence board</span
+                ><span>labeled beats and decision gate</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_key_excerpt"
+            >
+              <div class="meta">
+                <span>Annotated spread</span><span>07 / 15</span>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  left: 124px;
+                  top: 122px;
+                  width: 1672px;
+                  height: 820px;
+                  padding: 0;
+                  overflow: hidden;
+                "
+              >
+                <div
+                  class="lined"
+                  style="
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 800px;
+                    height: 820px;
+                    padding: 72px 64px;
+                    border-right: 1px solid var(--line);
+                  "
+                >
+                  <div class="margin-line" style="left: 98px"></div>
+                  <div class="label">source text</div>
+                  <div
+                    class="serif"
+                    style="font-size: 54px; line-height: 1.22; margin-top: 66px"
+                  >
+                    "The door was open, but nobody moved toward it."
+                  </div>
+                  <p
+                    class="small"
+                    style="
+                      position: absolute;
+                      left: 64px;
+                      right: 64px;
+                      bottom: 72px;
+                      font-size: 27px;
+                    "
+                  >
+                    Students read once for plot, then again for meaning.
+                  </p>
+                </div>
+                <div
+                  style="
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    width: 872px;
+                    height: 820px;
+                    padding: 72px 70px;
+                  "
+                >
+                  <h2
+                    class="serif"
+                    style="
+                      font-size: 78px;
+                      line-height: 1;
+                      margin: 0;
+                      width: 640px;
+                    "
+                  >
+                    Annotation rail
+                  </h2>
+                  <svg
+                    viewBox="0 0 760 520"
+                    aria-label="annotation connectors"
+                    style="
+                      position: absolute;
+                      left: 70px;
+                      top: 250px;
+                      width: 760px;
+                      height: 520px;
+                    "
+                  >
+                    <path
+                      d="M28 104C206 134 296 178 406 210M512 304C408 348 340 404 250 458"
+                      fill="none"
+                      stroke="var(--brown)"
+                      stroke-width="4"
+                      stroke-dasharray="9 12"
+                      opacity=".62"
+                    />
+                  </svg>
+                  <div
+                    class="fog"
+                    style="
+                      position: absolute;
+                      left: 70px;
+                      top: 260px;
+                      width: 520px;
+                      height: 130px;
+                      padding: 30px;
+                      border-radius: 4px;
+                    "
+                  >
+                    <div class="label">plot</div>
+                    <p class="small" style="font-size: 26px; margin-top: 14px">
+                      A chance to leave exists.
+                    </p>
+                  </div>
+                  <div
+                    class="blue"
+                    style="
+                      position: absolute;
+                      right: 70px;
+                      top: 416px;
+                      width: 500px;
+                      height: 140px;
+                      padding: 30px;
+                      border-radius: 4px;
+                    "
+                  >
+                    <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                      character
+                    </div>
+                    <p
+                      style="
+                        font-size: 27px;
+                        line-height: 1.28;
+                        color: rgba(255, 255, 255, 0.85);
+                        margin-top: 14px;
+                      "
+                    >
+                      Fear is stronger than opportunity.
+                    </p>
+                  </div>
+                  <div
+                    class="dark"
+                    style="
+                      position: absolute;
+                      left: 154px;
+                      bottom: 70px;
+                      width: 560px;
+                      height: 150px;
+                      padding: 32px;
+                      border-radius: 4px;
+                    "
+                  >
+                    <div class="label" style="color: rgba(255, 255, 255, 0.68)">
+                      theme
+                    </div>
+                    <p
+                      style="
+                        font-size: 30px;
+                        line-height: 1.24;
+                        color: rgba(255, 255, 255, 0.85);
+                        margin-top: 16px;
+                      "
+                    >
+                      Freedom is not only physical.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Annotated book spread</span
+                ><span>quote, margin notes, connectors</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_vocabulary_from_text"
+            >
+              <div class="meta">
+                <span>Vocabulary tray</span><span>08 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 148px;
+                  width: 610px;
+                "
+              >
+                <div class="label">word from text</div>
+                <div
+                  style="
+                    font-size: 120px;
+                    line-height: 0.9;
+                    font-weight: 900;
+                    margin-top: 54px;
+                    color: var(--brown);
+                  "
+                >
+                  reluctant
+                </div>
+                <p class="copy" style="width: 530px; margin-top: 42px">
+                  Students infer the word from behavior before they check the
+                  definition.
+                </p>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  right: 112px;
+                  top: 132px;
+                  width: 930px;
+                  height: 770px;
+                  padding: 54px;
+                "
+              >
+                <div
+                  style="
+                    height: 150px;
+                    border-bottom: 1px solid var(--line);
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 22px;
+                  "
+                >
+                  <span class="chip">not willing yet</span
+                  ><span class="chip">hesitant</span
+                  ><span class="chip">holds back</span>
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 24px;
+                    margin-top: 44px;
+                  "
+                >
+                  <div
+                    class="fog"
+                    style="height: 210px; padding: 34px; border-radius: 4px"
+                  >
+                    <div class="label">text clue</div>
+                    <p class="small" style="font-size: 30px; margin-top: 30px">
+                      "nobody moved"
+                    </p>
+                  </div>
+                  <div
+                    class="blue"
+                    style="height: 210px; padding: 34px; border-radius: 4px"
+                  >
+                    <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                      inference
+                    </div>
+                    <p
+                      style="
+                        font-size: 30px;
+                        line-height: 1.24;
+                        color: rgba(255, 255, 255, 0.85);
+                        margin-top: 30px;
+                      "
+                    >
+                      They can move, but do not want to act.
+                    </p>
+                  </div>
+                  <div class="page" style="height: 210px; padding: 34px">
+                    <div class="label" style="color: var(--blue)">
+                      definition
+                    </div>
+                    <p class="small" style="font-size: 30px; margin-top: 30px">
+                      hesitant or unwilling
+                    </p>
+                  </div>
+                  <div
+                    class="brown"
+                    style="height: 210px; padding: 34px; border-radius: 4px"
+                  >
+                    <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                      use it
+                    </div>
+                    <p
+                      style="
+                        font-size: 30px;
+                        line-height: 1.24;
+                        color: rgba(255, 255, 255, 0.85);
+                        margin-top: 30px;
+                      "
+                    >
+                      She was reluctant to speak first.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Vocabulary tray</span
+                ><span>word, clue, inference, usage</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_main_idea"
+            >
+              <div class="meta">
+                <span>Claim ladder</span><span>09 / 15</span>
+              </div>
+              <h2
+                class="serif"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 148px;
+                  width: 720px;
+                  font-size: 82px;
+                  line-height: 1;
+                  margin: 0;
+                "
+              >
+                Build the idea from smaller observations.
+              </h2>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  bottom: 150px;
+                  width: 650px;
+                  height: 180px;
+                  padding: 34px;
+                "
+              >
+                <div class="label">teacher check</div>
+                <p class="small" style="font-size: 29px; margin-top: 22px">
+                  A main idea slide shows synthesis, not three equal cards.
+                </p>
+              </div>
+              <svg
+                viewBox="0 0 1020 650"
+                aria-label="claim ladder diagram"
+                style="
+                  position: absolute;
+                  right: 112px;
+                  top: 160px;
+                  width: 1020px;
+                  height: 650px;
+                "
+              >
+                <path
+                  d="M150 560H870"
+                  stroke="rgba(28,25,23,.16)"
+                  stroke-width="4"
+                />
+                <path
+                  d="M240 480H800"
+                  stroke="rgba(28,25,23,.16)"
+                  stroke-width="4"
+                />
+                <path
+                  d="M330 400H730"
+                  stroke="rgba(28,25,23,.16)"
+                  stroke-width="4"
+                />
+                <path
+                  d="M420 320H660"
+                  stroke="rgba(28,25,23,.16)"
+                  stroke-width="4"
+                />
+                <rect
+                  x="104"
+                  y="502"
+                  width="360"
+                  height="116"
+                  rx="6"
+                  fill="#fff"
+                  stroke="rgba(28,25,23,.16)"
+                />
+                <text
+                  x="134"
+                  y="548"
+                  fill="#7C2D12"
+                  font-size="24"
+                  font-weight="860"
+                >
+                  notice
+                </text>
+                <text
+                  x="134"
+                  y="586"
+                  fill="#1C1917"
+                  font-size="29"
+                  font-weight="860"
+                >
+                  Nobody moves.
+                </text>
+                <rect
+                  x="238"
+                  y="384"
+                  width="430"
+                  height="116"
+                  rx="6"
+                  fill="#E8EDF2"
+                  stroke="rgba(28,25,23,.12)"
+                />
+                <text
+                  x="268"
+                  y="430"
+                  fill="#2563EB"
+                  font-size="24"
+                  font-weight="860"
+                >
+                  connect
+                </text>
+                <text
+                  x="268"
+                  y="468"
+                  fill="#1C1917"
+                  font-size="29"
+                  font-weight="860"
+                >
+                  Fear blocks action.
+                </text>
+                <rect
+                  x="390"
+                  y="254"
+                  width="470"
+                  height="130"
+                  rx="6"
+                  fill="#1C1917"
+                />
+                <text
+                  x="424"
+                  y="304"
+                  fill="#fff"
+                  opacity=".72"
+                  font-size="24"
+                  font-weight="860"
+                >
+                  claim
+                </text>
+                <text
+                  x="424"
+                  y="346"
+                  fill="#fff"
+                  font-size="31"
+                  font-weight="860"
+                >
+                  Freedom requires courage.
+                </text>
+                <path
+                  d="M414 500L486 384M574 384L612 254"
+                  stroke="#7C2D12"
+                  stroke-width="7"
+                  stroke-linecap="round"
+                />
+              </svg>
+              <div class="footer">
+                <span>Claim ladder</span><span>notice to connect to claim</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_theme_analysis"
+            >
+              <div class="meta">
+                <span>Theme constellation</span><span>10 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 120px;
+                  top: 150px;
+                  width: 690px;
+                "
+              >
+                <div class="label">theme analysis</div>
+                <h2
+                  class="serif"
+                  style="font-size: 82px; line-height: 1; margin: 38px 0 0"
+                >
+                  Theme is a pattern, not a word.
+                </h2>
+                <p class="copy" style="margin-top: 38px; width: 560px">
+                  The constellation layout lets evidence orbit the theme claim.
+                </p>
+              </div>
+              <svg
+                viewBox="0 0 880 710"
+                aria-label="theme constellation"
+                style="
+                  position: absolute;
+                  right: 126px;
+                  top: 150px;
+                  width: 880px;
+                  height: 710px;
+                "
+              >
+                <circle cx="440" cy="354" r="150" fill="#1C1917" />
+                <text
+                  x="440"
+                  y="326"
+                  text-anchor="middle"
+                  fill="#fff"
+                  opacity=".68"
+                  font-size="24"
+                  font-weight="860"
+                >
+                  theme claim
+                </text>
+                <text
+                  x="440"
+                  y="374"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="34"
+                  font-weight="860"
+                >
+                  Freedom begins
+                </text>
+                <text
+                  x="440"
+                  y="418"
+                  text-anchor="middle"
+                  fill="#fff"
+                  font-size="34"
+                  font-weight="860"
+                >
+                  despite fear
+                </text>
+                <g stroke="#7C2D12" stroke-width="4" opacity=".58">
+                  <path d="M310 268L196 170" />
+                  <path d="M570 266L706 176" />
+                  <path d="M314 448L160 552" />
+                  <path d="M568 450L724 548" />
+                </g>
+                <g>
+                  <circle
+                    cx="196"
+                    cy="170"
+                    r="92"
+                    fill="#fff"
+                    stroke="rgba(28,25,23,.16)"
+                  />
+                  <text
+                    x="196"
+                    y="164"
+                    text-anchor="middle"
+                    fill="#7C2D12"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    topic
+                  </text>
+                  <text
+                    x="196"
+                    y="200"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    font-size="25"
+                    font-weight="860"
+                  >
+                    freedom
+                  </text>
+                </g>
+                <g>
+                  <circle
+                    cx="706"
+                    cy="176"
+                    r="104"
+                    fill="#E8EDF2"
+                    stroke="rgba(28,25,23,.12)"
+                  />
+                  <text
+                    x="706"
+                    y="166"
+                    text-anchor="middle"
+                    fill="#2563EB"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    pressure
+                  </text>
+                  <text
+                    x="706"
+                    y="202"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    font-size="25"
+                    font-weight="860"
+                  >
+                    fear
+                  </text>
+                </g>
+                <g>
+                  <circle cx="160" cy="552" r="98" fill="#7C2D12" />
+                  <text
+                    x="160"
+                    y="544"
+                    text-anchor="middle"
+                    fill="#fff"
+                    opacity=".72"
+                    font-size="22"
+                    font-weight="860"
+                  >
+                    evidence
+                  </text>
+                  <text
+                    x="160"
+                    y="580"
+                    text-anchor="middle"
+                    fill="#fff"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    open door
+                  </text>
+                </g>
+                <g>
+                  <circle
+                    cx="724"
+                    cy="548"
+                    r="98"
+                    fill="#fff"
+                    stroke="rgba(28,25,23,.16)"
+                  />
+                  <text
+                    x="724"
+                    y="540"
+                    text-anchor="middle"
+                    fill="#7C2D12"
+                    font-size="22"
+                    font-weight="860"
+                  >
+                    effect
+                  </text>
+                  <text
+                    x="724"
+                    y="576"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    reader tension
+                  </text>
+                </g>
+              </svg>
+              <div class="footer">
+                <span>Theme constellation</span
+                ><span>evidence orbiting claim</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_literary_devices"
+            >
+              <div class="meta">
+                <span>Author toolkit</span><span>11 / 15</span>
+              </div>
+              <div
+                class="dark"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 130px;
+                  width: 600px;
+                  height: 770px;
+                  padding: 58px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="label" style="color: rgba(255, 255, 255, 0.68)">
+                  literary devices
+                </div>
+                <h2
+                  class="serif"
+                  style="
+                    font-size: 78px;
+                    line-height: 1;
+                    margin: 38px 0 0;
+                    color: #fff;
+                  "
+                >
+                  Name the device, then name the reader effect.
+                </h2>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 790px;
+                  top: 150px;
+                  width: 1010px;
+                  height: 720px;
+                "
+              >
+                <svg
+                  viewBox="0 0 1010 720"
+                  aria-label="tool bench rails"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 1010px;
+                    height: 720px;
+                  "
+                >
+                  <path
+                    d="M84 610H930"
+                    stroke="rgba(28,25,23,.18)"
+                    stroke-width="10"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M164 112L264 610M480 80L520 610M790 130L704 610"
+                    stroke="rgba(28,25,23,.11)"
+                    stroke-width="6"
+                  />
+                </svg>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 470px;
+                    height: 270px;
+                    padding: 38px;
+                    transform: rotate(-1.5deg);
+                  "
+                >
+                  <div class="label">symbol</div>
+                  <p
+                    class="small"
+                    style="
+                      font-size: 34px;
+                      font-weight: 860;
+                      color: var(--ink);
+                      margin-top: 32px;
+                    "
+                  >
+                    The open door becomes possible change.
+                  </p>
+                </div>
+                <div
+                  class="fog"
+                  style="
+                    position: absolute;
+                    right: 0;
+                    top: 72px;
+                    width: 470px;
+                    height: 250px;
+                    padding: 38px;
+                    transform: rotate(1.5deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: var(--blue)">contrast</div>
+                  <p
+                    class="small"
+                    style="
+                      font-size: 34px;
+                      font-weight: 860;
+                      color: var(--ink);
+                      margin-top: 32px;
+                    "
+                  >
+                    Open door, frozen bodies.
+                  </p>
+                </div>
+                <div
+                  class="blue"
+                  style="
+                    position: absolute;
+                    left: 80px;
+                    bottom: 76px;
+                    width: 420px;
+                    height: 250px;
+                    padding: 38px;
+                    transform: rotate(1deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    imagery
+                  </div>
+                  <p
+                    style="
+                      font-size: 33px;
+                      line-height: 1.13;
+                      font-weight: 860;
+                      color: #fff;
+                      margin-top: 32px;
+                    "
+                  >
+                    The room feels quiet but tense.
+                  </p>
+                </div>
+                <div
+                  class="brown"
+                  style="
+                    position: absolute;
+                    right: 80px;
+                    bottom: 0;
+                    width: 460px;
+                    height: 270px;
+                    padding: 38px;
+                    transform: rotate(-1deg);
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    effect
+                  </div>
+                  <p
+                    style="
+                      font-size: 33px;
+                      line-height: 1.13;
+                      font-weight: 860;
+                      color: #fff;
+                      margin-top: 32px;
+                    "
+                  >
+                    Readers feel the choice before it is named.
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Author toolkit</span
+                ><span>device, example, reader effect</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_character_analysis"
+            >
+              <div class="meta">
+                <span>Character dossier</span><span>12 / 15</span>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  left: 130px;
+                  top: 128px;
+                  width: 1660px;
+                  height: 770px;
+                  padding: 58px;
+                "
+              >
+                <div
+                  class="brown"
+                  style="
+                    position: absolute;
+                    left: 58px;
+                    top: 58px;
+                    width: 430px;
+                    height: 654px;
+                    padding: 44px;
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    profile
+                  </div>
+                  <div
+                    style="
+                      font-size: 78px;
+                      line-height: 0.94;
+                      font-weight: 900;
+                      margin-top: 70px;
+                    "
+                  >
+                    Mara
+                  </div>
+                  <p
+                    style="
+                      font-size: 28px;
+                      line-height: 1.34;
+                      color: rgba(255, 255, 255, 0.78);
+                      margin-top: 40px;
+                    "
+                  >
+                    Caught between safety and honest action.
+                  </p>
+                  <div
+                    class="stamp"
+                    style="
+                      position: absolute;
+                      left: 44px;
+                      bottom: 44px;
+                      width: 112px;
+                      height: 112px;
+                      color: rgba(255, 255, 255, 0.7);
+                      transform: rotate(-9deg);
+                    "
+                  >
+                    file
+                  </div>
+                </div>
+                <div
+                  style="
+                    position: absolute;
+                    left: 560px;
+                    top: 76px;
+                    width: 980px;
+                  "
+                >
+                  <h2
+                    class="serif"
+                    style="font-size: 74px; line-height: 1; margin: 0"
+                  >
+                    Analyze change through evidence.
+                  </h2>
+                  <div style="margin-top: 64px">
+                    <div
+                      style="
+                        display: grid;
+                        grid-template-columns: 190px 1fr 130px;
+                        gap: 26px;
+                        align-items: center;
+                        border-top: 1px solid var(--line);
+                        padding-top: 24px;
+                      "
+                    >
+                      <strong style="font-size: 32px; color: var(--brown)"
+                        >Before</strong
+                      >
+                      <p class="small" style="font-size: 29px; margin: 0">
+                        Avoids attention and waits for someone else to decide.
+                      </p>
+                      <span class="chip">safe</span>
+                    </div>
+                    <div
+                      style="
+                        display: grid;
+                        grid-template-columns: 190px 1fr 130px;
+                        gap: 26px;
+                        align-items: center;
+                        border-top: 1px solid var(--line);
+                        padding-top: 24px;
+                        margin-top: 24px;
+                      "
+                    >
+                      <strong style="font-size: 32px; color: var(--blue)"
+                        >Pressure</strong
+                      >
+                      <p class="small" style="font-size: 29px; margin: 0">
+                        The open door makes silence look like a choice.
+                      </p>
+                      <span class="chip">visible</span>
+                    </div>
+                    <div
+                      style="
+                        display: grid;
+                        grid-template-columns: 190px 1fr 130px;
+                        gap: 26px;
+                        align-items: center;
+                        border-top: 1px solid var(--line);
+                        padding-top: 24px;
+                        margin-top: 24px;
+                      "
+                    >
+                      <strong style="font-size: 32px; color: var(--brown)"
+                        >After</strong
+                      >
+                      <p class="small" style="font-size: 29px; margin: 0">
+                        Takes one small action that changes the group.
+                      </p>
+                      <span class="chip">changed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Character dossier</span
+                ><span>before, pressure, after</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_quote_evidence"
+            >
+              <div class="meta">
+                <span>Proof chain</span><span>13 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 150px;
+                  width: 640px;
+                "
+              >
+                <div class="label">quote evidence</div>
+                <h2
+                  class="serif"
+                  style="font-size: 82px; line-height: 1; margin: 38px 0 0"
+                >
+                  Evidence must travel all the way to meaning.
+                </h2>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  right: 112px;
+                  top: 130px;
+                  width: 970px;
+                  height: 780px;
+                "
+              >
+                <div
+                  class="dark"
+                  style="
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 730px;
+                    height: 210px;
+                    padding: 44px;
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="serif" style="font-size: 42px; line-height: 1.18">
+                    "Nobody moved toward it."
+                  </div>
+                </div>
+                <svg
+                  viewBox="0 0 970 780"
+                  aria-label="proof chain connectors"
+                  style="
+                    position: absolute;
+                    inset: 0;
+                    width: 970px;
+                    height: 780px;
+                  "
+                >
+                  <path
+                    d="M360 210V300C360 350 480 350 480 400V492"
+                    fill="none"
+                    stroke="var(--brown)"
+                    stroke-width="5"
+                    stroke-dasharray="10 12"
+                  />
+                </svg>
+                <div
+                  class="page"
+                  style="
+                    position: absolute;
+                    left: 120px;
+                    top: 300px;
+                    width: 360px;
+                    height: 150px;
+                    padding: 30px;
+                  "
+                >
+                  <div class="label">quote says</div>
+                  <p class="small" style="font-size: 26px; margin-top: 18px">
+                    The exit is available.
+                  </p>
+                </div>
+                <div
+                  class="fog"
+                  style="
+                    position: absolute;
+                    right: 70px;
+                    top: 430px;
+                    width: 390px;
+                    height: 160px;
+                    padding: 32px;
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: var(--blue)">
+                    quote implies
+                  </div>
+                  <p class="small" style="font-size: 27px; margin-top: 18px">
+                    The obstacle is internal.
+                  </p>
+                </div>
+                <div
+                  class="blue"
+                  style="
+                    position: absolute;
+                    left: 220px;
+                    bottom: 0;
+                    width: 540px;
+                    height: 190px;
+                    padding: 38px;
+                    border-radius: 4px;
+                  "
+                >
+                  <div class="label" style="color: rgba(255, 255, 255, 0.72)">
+                    claim proves
+                  </div>
+                  <p
+                    style="
+                      font-size: 34px;
+                      line-height: 1.16;
+                      font-weight: 860;
+                      color: #fff;
+                      margin-top: 22px;
+                    "
+                  >
+                    Courage is the true threshold.
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Citation-to-meaning chain</span
+                ><span>quote to inference to claim</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_comprehension_questions"
+            >
+              <div class="meta">
+                <span>Answer-state worksheet</span><span>14 / 15</span>
+              </div>
+              <div
+                class="dark"
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 130px;
+                  width: 1696px;
+                  height: 330px;
+                  padding: 54px 62px;
+                  border-radius: 4px;
+                "
+              >
+                <div class="label" style="color: rgba(255, 255, 255, 0.66)">
+                  quick check
+                </div>
+                <div
+                  style="
+                    font-size: 56px;
+                    line-height: 1.08;
+                    font-weight: 860;
+                    margin-top: 34px;
+                    color: #fff;
+                    width: 1240px;
+                  "
+                >
+                  Why does nobody move toward the open door?
+                </div>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 190px;
+                  right: 190px;
+                  top: 540px;
+                  display: grid;
+                  grid-template-columns: 1fr 1fr 1fr;
+                  gap: 26px;
+                "
+              >
+                <div class="page" style="height: 210px; padding: 34px">
+                  <strong style="font-size: 52px; color: var(--brown)"
+                    >A</strong
+                  >
+                  <p class="small" style="font-size: 30px; margin-top: 26px">
+                    They do not see it.
+                  </p>
+                </div>
+                <div
+                  class="brown"
+                  style="
+                    height: 240px;
+                    padding: 34px;
+                    margin-top: -30px;
+                    border-radius: 4px;
+                  "
+                >
+                  <strong style="font-size: 52px; color: #fff">B</strong>
+                  <p
+                    style="
+                      font-size: 32px;
+                      line-height: 1.2;
+                      font-weight: 860;
+                      color: #fff;
+                      margin-top: 26px;
+                    "
+                  >
+                    They are afraid to choose.
+                  </p>
+                  <div
+                    class="label"
+                    style="color: rgba(255, 255, 255, 0.72); margin-top: 28px"
+                  >
+                    best supported
+                  </div>
+                </div>
+                <div class="page" style="height: 210px; padding: 34px">
+                  <strong style="font-size: 52px; color: var(--blue)">C</strong>
+                  <p class="small" style="font-size: 30px; margin-top: 26px">
+                    They are waiting for night.
+                  </p>
+                </div>
+              </div>
+              <div class="footer">
+                <span>Answer-state worksheet</span
+                ><span>selected answer and rationale</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide-page">
+        <div class="stage">
+          <div class="scale">
+            <section
+              class="ydeck-slide"
+              data-layout-id="yl_book_chapter_lesson_discussion_prompt"
+            >
+              <div class="meta">
+                <span>Seminar mat</span><span>15 / 15</span>
+              </div>
+              <div
+                style="
+                  position: absolute;
+                  left: 112px;
+                  top: 130px;
+                  width: 760px;
+                "
+              >
+                <div class="label">discussion prompt</div>
+                <h2
+                  class="serif"
+                  style="font-size: 84px; line-height: 1; margin: 38px 0 0"
+                >
+                  Move from correct answer to thoughtful conversation.
+                </h2>
+                <p class="copy" style="width: 620px; margin-top: 40px">
+                  The discussion layout shows speaking roles and evidence
+                  movement instead of another response grid.
+                </p>
+              </div>
+              <div
+                class="page"
+                style="
+                  position: absolute;
+                  right: 112px;
+                  top: 122px;
+                  width: 820px;
+                  height: 820px;
+                  padding: 54px;
+                "
+              >
+                <svg
+                  viewBox="0 0 710 710"
+                  aria-label="seminar discussion mat"
+                  style="width: 710px; height: 710px; display: block"
+                >
+                  <circle
+                    cx="355"
+                    cy="355"
+                    r="210"
+                    fill="none"
+                    stroke="rgba(28,25,23,.14)"
+                    stroke-width="4"
+                  />
+                  <circle cx="355" cy="355" r="110" fill="#E8EDF2" />
+                  <text
+                    x="355"
+                    y="345"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    font-size="30"
+                    font-weight="860"
+                  >
+                    theme
+                  </text>
+                  <text
+                    x="355"
+                    y="382"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    opacity=".62"
+                    font-size="21"
+                  >
+                    small courage
+                  </text>
+                  <circle cx="180" cy="210" r="70" fill="#7C2D12" />
+                  <text
+                    x="180"
+                    y="220"
+                    text-anchor="middle"
+                    fill="#fff"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    claim
+                  </text>
+                  <circle cx="530" cy="210" r="70" fill="#2563EB" />
+                  <text
+                    x="530"
+                    y="220"
+                    text-anchor="middle"
+                    fill="#fff"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    quote
+                  </text>
+                  <circle
+                    cx="180"
+                    cy="510"
+                    r="70"
+                    fill="#E8EDF2"
+                    stroke="rgba(28,25,23,.14)"
+                  />
+                  <text
+                    x="180"
+                    y="520"
+                    text-anchor="middle"
+                    fill="#1C1917"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    listen
+                  </text>
+                  <circle cx="530" cy="510" r="70" fill="#1C1917" />
+                  <text
+                    x="530"
+                    y="520"
+                    text-anchor="middle"
+                    fill="#fff"
+                    font-size="24"
+                    font-weight="860"
+                  >
+                    revise
+                  </text>
+                  <path
+                    d="M234 244C292 282 310 310 328 334M474 244C424 286 398 310 382 334M234 482C292 430 312 404 334 382M474 482C432 430 404 402 382 382"
+                    fill="none"
+                    stroke="#7C2D12"
+                    stroke-width="5"
+                    stroke-linecap="round"
+                    opacity=".72"
+                  />
+                </svg>
+              </div>
+              <div class="footer">
+                <span>Seminar mat</span
+                ><span>claim, quote, listen, revise</span>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="deck-progress" aria-hidden="true"><span></span></div>
+    <nav id="deck-nav" role="tablist" aria-label="Slide navigation"></nav>
+
+    <script>
+      (function () {
+        var deck = document.querySelector('.deck');
+        if (!deck) return;
+        var slides = Array.prototype.slice.call(
+          deck.querySelectorAll('.slide-page')
+        );
+        if (!slides.length) return;
+
+        var nav = document.getElementById('deck-nav');
+        var progressFill = document.querySelector('.deck-progress span');
+        var index = 0;
+        var dots = [];
+
+        // Build dots
+        slides.forEach(function (slide, i) {
+          var dot = document.createElement('button');
+          dot.type = 'button';
+          dot.className = 'dot';
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+          dot.addEventListener('click', function () {
+            go(i);
+          });
+          nav.appendChild(dot);
+          dots.push(dot);
+        });
+
+        var counter = document.createElement('span');
+        counter.id = 'deck-counter';
+        nav.appendChild(counter);
+
+        // Switch into nav-ready mode after dots are wired
+        document.body.classList.add('deck-nav-ready');
+
+        // Scale the 1920×1080 stage to fit the viewport
+        function fitScale() {
+          var pad = 36;
+          var vw = window.innerWidth - pad;
+          var vh = window.innerHeight - pad - 64; // leave room for nav dock
+          var s = Math.min(vw / 1920, vh / 1080);
+          s = Math.max(0.18, Math.min(s, 0.92));
+          deck.style.setProperty('--preview-scale', s.toFixed(4));
+        }
+
+        function go(i) {
+          if (i < 0) i = 0;
+          if (i > slides.length - 1) i = slides.length - 1;
+          index = i;
+          slides.forEach(function (s, k) {
+            var on = k === i;
+            s.classList.toggle('active', on);
+            s.classList.toggle('is-active', on);
+          });
+          dots.forEach(function (d, k) {
+            var on = k === i;
+            d.classList.toggle('active', on);
+            if (on) d.setAttribute('aria-current', 'true');
+            else d.removeAttribute('aria-current');
+          });
+          counter.textContent = i + 1 + ' / ' + slides.length;
+          if (progressFill) {
+            var pct = slides.length > 1 ? (i / (slides.length - 1)) * 100 : 100;
+            progressFill.style.width = pct + '%';
+          }
+        }
+
+        function next() {
+          go(Math.min(index + 1, slides.length - 1));
+        }
+        function prev() {
+          go(Math.max(index - 1, 0));
+        }
+
+        // Keyboard
+        function isEditable(el) {
+          if (!el) return false;
+          var tag = (el.tagName || '').toLowerCase();
+          if (tag === 'input' || tag === 'select' || tag === 'textarea')
+            return true;
+          return el.isContentEditable === true;
+        }
+        window.addEventListener('keydown', function (e) {
+          if (isEditable(e.target)) return;
+          switch (e.key) {
+            case 'ArrowRight':
+            case 'ArrowDown':
+            case 'PageDown':
+            case ' ':
+              e.preventDefault();
+              next();
+              break;
+            case 'ArrowLeft':
+            case 'ArrowUp':
+            case 'PageUp':
+              e.preventDefault();
+              prev();
+              break;
+            case 'Home':
+              e.preventDefault();
+              go(0);
+              break;
+            case 'End':
+              e.preventDefault();
+              go(slides.length - 1);
+              break;
+          }
+        });
+
+        // Wheel / trackpad
+        var wheelAcc = 0;
+        var wheelTimer = null;
+        window.addEventListener(
+          'wheel',
+          function (e) {
+            wheelAcc += e.deltaX + e.deltaY;
+            if (Math.abs(wheelAcc) > 60) {
+              if (wheelAcc > 0) next();
+              else prev();
+              wheelAcc = 0;
+            }
+            clearTimeout(wheelTimer);
+            wheelTimer = setTimeout(function () {
+              wheelAcc = 0;
+            }, 160);
+          },
+          { passive: true }
+        );
+
+        // Touch
+        var touchX = 0,
+          touchY = 0,
+          touching = false;
+        window.addEventListener(
+          'touchstart',
+          function (e) {
+            if (!e.touches.length) return;
+            touchX = e.touches[0].clientX;
+            touchY = e.touches[0].clientY;
+            touching = true;
+          },
+          { passive: true }
+        );
+        window.addEventListener(
+          'touchend',
+          function (e) {
+            if (!touching || !e.changedTouches.length) return;
+            touching = false;
+            var dx = e.changedTouches[0].clientX - touchX;
+            var dy = e.changedTouches[0].clientY - touchY;
+            if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+              if (dx < 0) next();
+              else prev();
+            }
+          },
+          { passive: true }
+        );
+
+        // Iframe focus safety
+        window.addEventListener('pointerdown', function () {
+          try {
+            window.focus();
+          } catch (e) {}
+        });
+
+        // Fit + boot
+        window.addEventListener('resize', fitScale);
+        fitScale();
+        go(0);
+        try {
+          window.focus();
+        } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>

@@ -1,5 +1,5 @@
 ---
-name: kami-deck
+name: "kami-deck"
 description: >
   Produce a print-grade slide deck in the kami (紙 / 纸) design system —
   warm parchment background (or ink-blue for cover / chapter slides),
@@ -17,16 +17,16 @@ triggers:
   - print-style slides
   - kami slides
 od:
-  category: brand-deck
+  category: "marketing"
   surface: web
-  mode: deck
-  scenario: marketing
+  mode: "deck"
+  scenario: "marketing"
   audience: founders, researchers, design studios, conference talks
   tone: editorial, restrained, print-first
   scale: 6-15 viewport-locked slides
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   craft:

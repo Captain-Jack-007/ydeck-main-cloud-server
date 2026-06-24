@@ -1,5 +1,5 @@
 ---
-name: replit-deck
+name: "replit-deck"
 description: |
   Single-file horizontal-swipe HTML deck in the style of Replit Slides's
   landing-page template gallery. Eight distinct themes (helix, holm, vance,
@@ -18,11 +18,11 @@ triggers:
   - "bluehouse"
   - "bevel campaign"
 od:
-  mode: deck
-  scenario: product
+  mode: "deck"
+  scenario: "product"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   inputs:
@@ -76,7 +76,7 @@ replit-deck/
 
 ### Step 0 — Pre-flight (mandatory reads)
 
-1. Read `assets/template.html` end-to-end. The `[data-theme]` blocks carry the tokens; the `<script>` at the bottom solves five iframe nav bugs — **do not rewrite it**.
+1. Read `assets/template.html` end-to-end for theme tokens. Generated and preview HTML must stay static and script-free for YDeck export safety.
 2. Read `references/themes.md` → pick **one** theme that matches the user's brief. If the user already picked a theme via `od.inputs.theme`, use that.
 3. Read `references/layouts.md` → you'll copy `<section>` blocks from here.
 4. Read `references/checklist.md` → P0 must pass before emit.

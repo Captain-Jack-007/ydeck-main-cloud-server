@@ -1,0 +1,145 @@
+{
+  "slug": "ib-pitch-book",
+  "name": "ib-pitch-book",
+  "description": "Investment-banking pitch book for strategic alternatives — trading comps,",
+  "category": "finance",
+  "scenario": "finance",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "palette": {
+    "background": "#F7F3EA",
+    "text": "#141512",
+    "accent": "#8B1E1E",
+    "secondary": "#2F6B4F"
+  },
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_02",
+      "name": "Slide 2",
+      "role": "Template slide 2",
+      "slideNumber": 2,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_03",
+      "name": "Slide 3",
+      "role": "Template slide 3",
+      "slideNumber": 3,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_04",
+      "name": "Slide 4",
+      "role": "Template slide 4",
+      "slideNumber": 4,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_05",
+      "name": "Slide 5",
+      "role": "Template slide 5",
+      "slideNumber": 5,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_06",
+      "name": "Slide 6",
+      "role": "Template slide 6",
+      "slideNumber": 6,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_07",
+      "name": "Slide 7",
+      "role": "Template slide 7",
+      "slideNumber": 7,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_08",
+      "name": "Slide 8",
+      "role": "Template slide 8",
+      "slideNumber": 8,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_09",
+      "name": "Slide 9",
+      "role": "Template slide 9",
+      "slideNumber": 9,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_10",
+      "name": "Slide 10",
+      "role": "Template slide 10",
+      "slideNumber": 10,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": false,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "10/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 30,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "ib pitch book"
+  ],
+  "exposure": "frontend",
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

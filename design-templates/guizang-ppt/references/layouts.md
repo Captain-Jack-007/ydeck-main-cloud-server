@@ -628,3 +628,60 @@ For a 25-30 page talk, the following rhythm is recommended:
 8. **Hero Close** (last page, a question or thanks)
 
 Hero pages and non-hero pages should alternate at a **2-3 : 1 ratio**; don't run more than 3 consecutive non-hero pages, nor more than 2 consecutive hero pages.
+
+## Compatibility Layout Ids
+
+## `slide_01`
+
+Role: Template slide 1.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_02`
+
+Role: Template slide 2.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_03`
+
+Role: Template slide 3.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_04`
+
+Role: Template slide 4.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_05`
+
+Role: Template slide 5.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_06`
+
+Role: Template slide 6.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_07`
+
+Role: Template slide 7.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_08`
+
+Role: Template slide 8.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_09`
+
+Role: Template slide 9.
+
+Use: Preserve the matching composition from the preview deck.
+

@@ -1,0 +1,816 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YDeck Training Workshop Preview</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#FFFCF4;color:#18181B;font-family:"Avenir Next", "Helvetica Neue", Arial, sans-serif;letter-spacing:0}
+body{overflow:auto}
+.deck{--preview-scale:.625;width:100%;background:#FFFCF4}
+.slide-page{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:0;background:#FFFCF4;page-break-after:always}
+.stage{width:calc(1920px * var(--preview-scale));height:calc(1080px * var(--preview-scale));overflow:hidden;background:#FFFCF4}
+.scale{width:1920px;height:1080px;transform-origin:top left;transform:scale(var(--preview-scale));overflow:hidden}
+.ydeck-slide{width:1920px;height:1080px;position:relative;overflow:hidden;letter-spacing:0}
+.topline{position:absolute;left:112px;right:112px;top:54px;display:flex;justify-content:space-between;font-size:18px;letter-spacing:.08em;text-transform:uppercase;opacity:.64}
+.eyebrow{position:absolute;left:112px;top:112px;font-size:20px;letter-spacing:.12em;text-transform:uppercase;font-weight:840}
+.title{margin:0;font-size:76px;line-height:1.03;font-weight:880}
+.copy{font-size:29px;line-height:1.34;margin:26px 0 0}
+.footer{position:absolute;left:112px;right:112px;bottom:54px;display:flex;justify-content:space-between;font-size:20px;opacity:.62}
+.num{font-size:18px;letter-spacing:.1em;text-transform:uppercase;opacity:.64;font-weight:840}
+.card{border-radius:8px;border:1px solid rgba(17,24,39,.13);background:rgba(255,255,255,.78);padding:30px}
+.dark-card{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:#FFFFFF}
+.pill{border-radius:999px;padding:9px 15px;font-size:18px;font-weight:800;display:inline-block}
+svg{max-width:100%}
+@media(max-width:1308px){.deck{--preview-scale:.625}}
+@media(max-width:1200px){.deck{--preview-scale:.58}}
+@media(max-width:1120px){.deck{--preview-scale:.535}}
+@media(max-width:1040px){.deck{--preview-scale:.49}}
+@media(max-width:960px){.deck{--preview-scale:.445}}
+@media(max-width:880px){.deck{--preview-scale:.4}}
+@media(max-width:800px){.deck{--preview-scale:.35}}
+@media(max-width:680px){.deck{--preview-scale:.285}}
+@media(max-width:560px){.deck{--preview-scale:.22}}
+</style>
+</head>
+<body>
+<main class="deck">
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_title_statement" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>01 / 15</span></div>
+
+<div style="position:absolute;left:170px;top:190px;width:1040px;">
+  <div class="num" style="color:#0F766E;opacity:1;">ydeck-library · preview module</div>
+  <h2 style="margin:92px 0 0;font-family:Georgia,'Times New Roman',serif;font-size:104px;line-height:.98;font-weight:760;letter-spacing:-1px;color:#18181B;">Training Workshop</h2>
+  <p style="font-size:28px;line-height:1.42;color:rgba(24,24,27,0.62);width:640px;margin:72px 0 0;">A facilitation-ready training deck with objectives, concepts, demos, exercises, reflection, and recap slides.</p>
+</div>
+<div style="position:absolute;right:170px;bottom:132px;display:flex;gap:16px;">
+  <span style="font-family:Menlo,monospace;font-size:17px;border:1px solid rgba(24,24,27,0.12);background:#E7E0D3;padding:10px 16px;border-radius:4px;">25 layouts</span>
+  <span style="font-family:Menlo,monospace;font-size:17px;border:1px solid rgba(24,24,27,0.12);background:#E7E0D3;padding:10px 16px;border-radius:4px;">classroom-ready</span>
+  <span style="font-family:Menlo,monospace;font-size:17px;border:1px solid rgba(24,24,27,0.12);background:#E7E0D3;padding:10px 16px;border-radius:4px;">static HTML</span>
+</div>
+<div class="footer"><span>Opening thesis</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_context_map" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>02 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:18%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 2 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">concept</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Context map</h2>
+    <p style="font-size:29px;line-height:1.44;color:rgba(24,24,27,0.66);width:900px;margin:30px 0 0;">This layout explains one idea, gives a worked pattern, and leaves room for teacher narration or student notes.</p>
+    <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;margin-top:58px;">
+      <div style="background:#E7E0D3;border:1px solid rgba(24,24,27,0.1);border-radius:8px;padding:34px;">
+        <div class="num">Rule of thumb</div>
+        <div style="font-size:36px;line-height:1.16;font-weight:820;margin-top:28px;">Name the idea before asking learners to use it.</div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;display:grid;gap:18px;">
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">1</span><div><strong style="font-size:25px;">Definition</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:#7C3AED;display:grid;place-items:center;color:#FFFFFF;font-weight:860;">2</span><div><strong style="font-size:25px;">Example</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">3</span><div><strong style="font-size:25px;">Check</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Context map</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_problem_solution" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>03 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:24%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 3 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">concept</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Problem and response</h2>
+    <p style="font-size:29px;line-height:1.44;color:rgba(24,24,27,0.66);width:900px;margin:30px 0 0;">This layout explains one idea, gives a worked pattern, and leaves room for teacher narration or student notes.</p>
+    <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;margin-top:58px;">
+      <div style="background:#E7E0D3;border:1px solid rgba(24,24,27,0.1);border-radius:8px;padding:34px;">
+        <div class="num">Rule of thumb</div>
+        <div style="font-size:36px;line-height:1.16;font-weight:820;margin-top:28px;">Name the idea before asking learners to use it.</div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;display:grid;gap:18px;">
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">1</span><div><strong style="font-size:25px;">Definition</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:#7C3AED;display:grid;place-items:center;color:#FFFFFF;font-weight:860;">2</span><div><strong style="font-size:25px;">Example</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">3</span><div><strong style="font-size:25px;">Check</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Problem and response</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_audience_insight" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>04 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:30%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 4 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">concept</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Audience insight</h2>
+    <p style="font-size:29px;line-height:1.44;color:rgba(24,24,27,0.66);width:900px;margin:30px 0 0;">This layout explains one idea, gives a worked pattern, and leaves room for teacher narration or student notes.</p>
+    <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;margin-top:58px;">
+      <div style="background:#E7E0D3;border:1px solid rgba(24,24,27,0.1);border-radius:8px;padding:34px;">
+        <div class="num">Rule of thumb</div>
+        <div style="font-size:36px;line-height:1.16;font-weight:820;margin-top:28px;">Name the idea before asking learners to use it.</div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;display:grid;gap:18px;">
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">1</span><div><strong style="font-size:25px;">Definition</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:#7C3AED;display:grid;place-items:center;color:#FFFFFF;font-weight:860;">2</span><div><strong style="font-size:25px;">Example</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">3</span><div><strong style="font-size:25px;">Check</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Audience insight</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_metric_dashboard" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>05 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:36%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 5 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">progress check</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Metric dashboard</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:74px;">
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Accuracy</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">78%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:78%;height:100%;background:#7C3AED;"></div></div>
+      </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Confidence</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">64%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:64%;height:100%;background:#0F766E;"></div></div>
+      </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Participation</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">86%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:86%;height:100%;background:#7C3AED;"></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Metric dashboard</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_evidence_grid" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>06 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:42%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 6 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">reading evidence</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:70px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Evidence grid</h2>
+    <div style="display:grid;grid-template-columns:.82fr 1.18fr;gap:28px;margin-top:58px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:42px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:40px;line-height:1.22;">"Evidence becomes useful when students can point to it, not just remember it."</div>
+        <div style="height:8px;width:160px;background:#7C3AED;border-radius:999px;margin-top:42px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Text clue</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Interpretation</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Vocabulary</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Discussion</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Evidence grid</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_comparison_matrix" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>07 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:48%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 7 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">practice</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Comparison matrix</h2>
+    <div style="display:grid;grid-template-columns:1.08fr .92fr;gap:28px;margin-top:56px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:40px;">
+        <div class="num" style="color:rgba(255,255,255,.62);">student task</div>
+        <div style="font-size:44px;line-height:1.1;font-weight:860;margin-top:36px;">Choose, write, compare, then explain your answer.</div>
+        <ol style="font-size:24px;line-height:1.58;color:rgba(255,255,255,.72);margin:42px 0 0;padding-left:28px;">
+          <li>Read the prompt carefully.</li>
+          <li>Make one answer visible.</li>
+          <li>Defend it with evidence.</li>
+        </ol>
+      </div>
+      <div style="display:grid;gap:16px;">
+        <div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">A</span>
+          <strong style="font-size:27px;">Possible answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#7C3AED;border:1px solid rgba(24,24,27,0.12);color:#FFFFFF;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-weight:860;">B</span>
+          <strong style="font-size:27px;">Best supported answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">C</span>
+          <strong style="font-size:27px;">Common distractor</strong>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Comparison matrix</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_timeline_process" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+
+
+<div style="position:absolute;left:112px;top:54px;width:1696px;height:32px;display:flex;justify-content:space-between;align-items:center;">
+  <span class="num" style="color:#0F766E;opacity:1;">plot sequence</span>
+  <span class="num">cause / choice / consequence</span>
+</div>
+<div style="position:absolute;left:112px;top:160px;width:680px;height:190px;">
+  <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:76px;line-height:1.02;margin:0;color:#18181B;">Timeline process</h2>
+  <p style="font-size:27px;line-height:1.34;color:rgba(24,24,27,0.64);margin:26px 0 0;">A plot timeline should show sequence, pressure, and the moment that changes the chapter.</p>
+</div>
+<div style="position:absolute;left:112px;top:390px;width:1696px;height:360px;background:#18181B;color:#FFFFFF;border-radius:8px;padding:42px;">
+  <svg viewBox="0 0 1612 276" aria-label="Plot timeline with lanes and milestones" style="width:1612px;height:276px;display:block;">
+    <g stroke="rgba(255,255,255,.14)" stroke-width="2">
+      <path d="M64 86H1548"/><path d="M64 154H1548"/><path d="M64 222H1548"/>
+    </g>
+    <path d="M86 154H1506" stroke="rgba(255,255,255,.32)" stroke-width="4" stroke-linecap="round"/>
+    <g>
+        <path d="M188 178V154" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+        <rect x="112" y="92" width="230" height="94" rx="8" fill="#FFFFFF" opacity=".95"/>
+        <text x="136" y="130" fill="#18181B" font-size="23" font-weight="860">Exposition</text>
+        <text x="136" y="162" fill="#18181B" opacity=".64" font-size="18">chapter beat 1</text>
+      </g><g>
+        <path d="M518 126V154" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+        <rect x="442" y="40" width="230" height="94" rx="8" fill="#FFFFFF" opacity=".95"/>
+        <text x="466" y="78" fill="#18181B" font-size="23" font-weight="860">Rising action</text>
+        <text x="466" y="110" fill="#18181B" opacity=".64" font-size="18">chapter beat 2</text>
+      </g><g>
+        <path d="M848 212V154" stroke="#7C3AED" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+        <rect x="772" y="126" width="230" height="94" rx="8" fill="#7C3AED" opacity="1"/>
+        <text x="796" y="164" fill="#FFFFFF" font-size="23" font-weight="860">Turning point</text>
+        <text x="796" y="196" fill="#FFFFFF" opacity=".64" font-size="18">chapter beat 3</text>
+      </g><g>
+        <path d="M1178 148V154" stroke="#0F766E" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+        <rect x="1102" y="62" width="230" height="94" rx="8" fill="#0F766E" opacity="1"/>
+        <text x="1126" y="100" fill="#FFFFFF" font-size="23" font-weight="860">Consequence</text>
+        <text x="1126" y="132" fill="#FFFFFF" opacity=".64" font-size="18">chapter beat 4</text>
+      </g><g>
+        <path d="M1508 198V154" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" opacity=".82"/>
+        <rect x="1432" y="112" width="230" height="94" rx="8" fill="#FFFFFF" opacity=".95"/>
+        <text x="1456" y="150" fill="#18181B" font-size="23" font-weight="860">Reflection</text>
+        <text x="1456" y="182" fill="#18181B" opacity=".64" font-size="18">chapter beat 5</text>
+      </g>
+    <path d="M198 210C390 168 548 186 724 118C920 42 1074 88 1288 62" fill="none" stroke="#0F766E" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="724" cy="118" r="18" fill="#7C3AED"/>
+    <text x="760" y="126" fill="#FFFFFF" font-size="22" font-weight="860">decision gate</text>
+  </svg>
+</div>
+<div style="position:absolute;left:112px;top:790px;width:1696px;height:120px;display:grid;grid-template-columns:1.15fr .85fr 1fr;gap:18px;">
+  <div style="background:#FFFFFF;color:#18181B;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:24px 28px;">
+    <div class="num" style="color:#7C3AED;opacity:1;">Cause</div>
+    <p style="font-size:23px;line-height:1.28;margin:14px 0 0;color:rgba(24,24,27,0.66);">What creates pressure before the turning point?</p>
+  </div><div style="background:#7C3AED;color:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:24px 28px;">
+    <div class="num" style="color:rgba(255,255,255,.7);opacity:1;">Choice</div>
+    <p style="font-size:23px;line-height:1.28;margin:14px 0 0;color:rgba(255,255,255,.82);">Which decision changes the direction of the chapter?</p>
+  </div><div style="background:#FFFFFF;color:#18181B;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:24px 28px;">
+    <div class="num" style="color:#0F766E;opacity:1;">Consequence</div>
+    <p style="font-size:23px;line-height:1.28;margin:14px 0 0;color:rgba(24,24,27,0.66);">What new problem or insight appears after it?</p>
+  </div>
+</div>
+<div class="footer"><span>Timeline process</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_operating_model" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>09 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:60%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 9 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">concept</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Operating model</h2>
+    <p style="font-size:29px;line-height:1.44;color:rgba(24,24,27,0.66);width:900px;margin:30px 0 0;">This layout explains one idea, gives a worked pattern, and leaves room for teacher narration or student notes.</p>
+    <div style="display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;margin-top:58px;">
+      <div style="background:#E7E0D3;border:1px solid rgba(24,24,27,0.1);border-radius:8px;padding:34px;">
+        <div class="num">Rule of thumb</div>
+        <div style="font-size:36px;line-height:1.16;font-weight:820;margin-top:28px;">Name the idea before asking learners to use it.</div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;display:grid;gap:18px;">
+        <div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">1</span><div><strong style="font-size:25px;">Definition</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:#7C3AED;display:grid;place-items:center;color:#FFFFFF;font-weight:860;">2</span><div><strong style="font-size:25px;">Example</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div><div style="display:grid;grid-template-columns:42px 1fr;gap:18px;align-items:start;"><span style="width:42px;height:42px;border-radius:50%;background:rgba(24,24,27,0.08);display:grid;place-items:center;color:#18181B;font-weight:860;">3</span><div><strong style="font-size:25px;">Check</strong><p style="font-size:19px;line-height:1.35;color:rgba(24,24,27,0.58);margin:6px 0 0;">Short, inspectable content block for the generated lesson.</p></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Operating model</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_image_feature" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>10 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:66%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 10 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">reading evidence</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:70px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Image feature</h2>
+    <div style="display:grid;grid-template-columns:.82fr 1.18fr;gap:28px;margin-top:58px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:42px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:40px;line-height:1.22;">"Evidence becomes useful when students can point to it, not just remember it."</div>
+        <div style="height:8px;width:160px;background:#7C3AED;border-radius:999px;margin-top:42px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Text clue</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Interpretation</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Vocabulary</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Discussion</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Image feature</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_risk_controls" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>11 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:72%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 11 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">practice</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Risk controls</h2>
+    <div style="display:grid;grid-template-columns:1.08fr .92fr;gap:28px;margin-top:56px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:40px;">
+        <div class="num" style="color:rgba(255,255,255,.62);">student task</div>
+        <div style="font-size:44px;line-height:1.1;font-weight:860;margin-top:36px;">Choose, write, compare, then explain your answer.</div>
+        <ol style="font-size:24px;line-height:1.58;color:rgba(255,255,255,.72);margin:42px 0 0;padding-left:28px;">
+          <li>Read the prompt carefully.</li>
+          <li>Make one answer visible.</li>
+          <li>Defend it with evidence.</li>
+        </ol>
+      </div>
+      <div style="display:grid;gap:16px;">
+        <div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">A</span>
+          <strong style="font-size:27px;">Possible answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#7C3AED;border:1px solid rgba(24,24,27,0.12);color:#FFFFFF;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-weight:860;">B</span>
+          <strong style="font-size:27px;">Best supported answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">C</span>
+          <strong style="font-size:27px;">Common distractor</strong>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Risk controls</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_financial_logic" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>12 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:78%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 12 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">progress check</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Financial logic</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:22px;margin-top:74px;">
+      <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Accuracy</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">78%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:78%;height:100%;background:#7C3AED;"></div></div>
+      </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Confidence</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">64%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:64%;height:100%;background:#0F766E;"></div></div>
+      </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;">
+        <div class="num">Participation</div>
+        <strong style="display:block;font-size:74px;margin-top:30px;">86%</strong>
+        <div style="height:14px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:28px;"><div style="width:86%;height:100%;background:#7C3AED;"></div></div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Financial logic</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_teaching_exercise" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>13 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:84%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 13 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">practice</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:72px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Exercise or working slide</h2>
+    <div style="display:grid;grid-template-columns:1.08fr .92fr;gap:28px;margin-top:56px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:40px;">
+        <div class="num" style="color:rgba(255,255,255,.62);">student task</div>
+        <div style="font-size:44px;line-height:1.1;font-weight:860;margin-top:36px;">Choose, write, compare, then explain your answer.</div>
+        <ol style="font-size:24px;line-height:1.58;color:rgba(255,255,255,.72);margin:42px 0 0;padding-left:28px;">
+          <li>Read the prompt carefully.</li>
+          <li>Make one answer visible.</li>
+          <li>Defend it with evidence.</li>
+        </ol>
+      </div>
+      <div style="display:grid;gap:16px;">
+        <div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">A</span>
+          <strong style="font-size:27px;">Possible answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#7C3AED;border:1px solid rgba(24,24,27,0.12);color:#FFFFFF;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:rgba(0,0,0,.16);display:grid;place-items:center;font-weight:860;">B</span>
+          <strong style="font-size:27px;">Best supported answer</strong>
+        </div><div style="height:104px;border-radius:8px;background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);color:#18181B;display:flex;align-items:center;gap:22px;padding:0 28px;">
+          <span style="width:46px;height:46px;border-radius:50%;background:#E7E0D3;display:grid;place-items:center;font-weight:860;">C</span>
+          <strong style="font-size:27px;">Common distractor</strong>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Exercise or working slide</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_quote_evidence" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>14 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:rgba(24,24,27,0.12);"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:90%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 14 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">reading evidence</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:70px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Quote and evidence</h2>
+    <div style="display:grid;grid-template-columns:.82fr 1.18fr;gap:28px;margin-top:58px;">
+      <div style="background:#18181B;color:#FFFFFF;border-radius:8px;padding:42px;">
+        <div style="font-family:Georgia,'Times New Roman',serif;font-size:40px;line-height:1.22;">"Evidence becomes useful when students can point to it, not just remember it."</div>
+        <div style="height:8px;width:160px;background:#7C3AED;border-radius:999px;margin-top:42px;"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Text clue</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Interpretation</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#7C3AED;opacity:1;">Vocabulary</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div><div style="background:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:30px;">
+          <div class="num" style="color:#0F766E;opacity:1;">Discussion</div>
+          <p style="font-size:23px;line-height:1.34;color:rgba(24,24,27,0.66);margin:24px 0 0;">A generated slot for source material, teacher notes, or learner response.</p>
+        </div>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Quote and evidence</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+<section class="slide-page"><div class="stage"><div class="scale"><section data-layout-id="yl_closing_decision" class="ydeck-slide" style="background:#FFFCF4;color:#18181B;">
+<div class="topline"><span>YDeck Training Workshop</span><span>15 / 15</span></div>
+
+<aside style="position:absolute;left:112px;top:96px;bottom:96px;width:320px;border-right:1px solid rgba(24,24,27,0.12);padding:34px 34px 34px 0;">
+    <div class="num" style="color:#0F766E;opacity:1;">ydeck-library</div>
+    <div style="font-size:24px;line-height:1.12;font-weight:860;margin-top:34px;color:#18181B;">Training Workshop</div>
+    <div style="margin-top:60px;" class="num">Learning path</div>
+    <ol style="list-style:none;padding:0;margin:22px 0 0;display:grid;gap:18px;">
+      <li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Set objective</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Model example</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Practice</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:rgba(24,24,27,0.48);">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#0F766E;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:640;">Check understanding</span>
+      </li><li style="display:flex;gap:14px;align-items:flex-start;color:#18181B;">
+        <span style="width:22px;height:22px;border-radius:50%;margin-top:3px;background:#7C3AED;"></span>
+        <span style="font-size:21px;line-height:1.22;font-weight:840;">Assign next step</span>
+      </li>
+    </ol>
+    <div style="position:absolute;left:0;right:34px;bottom:0;">
+      <div class="num">Module progress</div>
+      <div style="height:10px;border-radius:999px;background:rgba(24,24,27,0.1);overflow:hidden;margin-top:16px;"><div style="width:96%;height:100%;background:#0F766E;"></div></div>
+      <p style="font-size:17px;color:rgba(24,24,27,0.56);line-height:1.35;margin-top:16px;">Page 15 of 15 · preview sampler</p>
+    </div>
+  </aside>
+<div style="position:absolute;left:536px;top:144px;width:1170px;height:790px;">
+  <div class="num" style="color:#0F766E;opacity:1;">wrap-up</div>
+    <h2 style="font-family:Georgia,'Times New Roman',serif;font-size:76px;line-height:1.04;font-weight:760;margin:28px 0 0;color:#18181B;">Closing decision</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:64px;">
+      <div style="background:#18181B;color:#FFFFFF;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;min-height:148px;">
+        <strong style="font-size:31px;">What changed?</strong>
+        <p style="font-size:20px;line-height:1.34;color:rgba(255,255,255,.68);margin:18px 0 0;">Clear close-out prompt for the generated lesson.</p>
+      </div><div style="background:#FFFFFF;color:#18181B;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;min-height:148px;">
+        <strong style="font-size:31px;">What can learners do now?</strong>
+        <p style="font-size:20px;line-height:1.34;color:rgba(24,24,27,0.6);margin:18px 0 0;">Clear close-out prompt for the generated lesson.</p>
+      </div><div style="background:#FFFFFF;color:#18181B;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;min-height:148px;">
+        <strong style="font-size:31px;">What needs practice?</strong>
+        <p style="font-size:20px;line-height:1.34;color:rgba(24,24,27,0.6);margin:18px 0 0;">Clear close-out prompt for the generated lesson.</p>
+      </div><div style="background:#FFFFFF;color:#18181B;border:1px solid rgba(24,24,27,0.12);border-radius:8px;padding:34px;min-height:148px;">
+        <strong style="font-size:31px;">What comes next?</strong>
+        <p style="font-size:20px;line-height:1.34;color:rgba(24,24,27,0.6);margin:18px 0 0;">Clear close-out prompt for the generated lesson.</p>
+      </div>
+    </div>
+</div>
+<div class="footer"><span>Closing decision</span><span>ydeck-library · 15 layouts</span></div>
+</section></div></div></section>
+</main>
+</body>
+</html>

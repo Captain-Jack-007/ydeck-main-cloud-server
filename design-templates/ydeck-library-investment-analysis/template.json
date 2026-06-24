@@ -1,0 +1,391 @@
+{
+  "slug": "ydeck-library-investment-analysis",
+  "name": "YDeck Investment Analysis",
+  "category": "ydeck-library",
+  "scenario": "investment-analysis",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 8,
+  "tagline": "An institutional investment memo system for investment analysis, startup investment, real estate analysis, market analysis, fund memo.",
+  "tone": "institutional investment memo",
+  "scheme": "light",
+  "palette": {
+    "background": "#F5F2EA",
+    "text": "#111814",
+    "accent": "#065F46",
+    "secondary": "#B7791F",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "investment analysis",
+    "startup investment",
+    "real estate analysis",
+    "market analysis",
+    "fund memo"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_investment_analysis_investment_thesis",
+      "name": "Investment thesis",
+      "role": "Investment thesis",
+      "slideOption": 1,
+      "description": "Use this layout for investment thesis content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_asset_snapshot",
+      "name": "Asset snapshot",
+      "role": "Asset snapshot",
+      "slideOption": 2,
+      "description": "Use this layout for asset snapshot content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_opportunity_context",
+      "name": "Opportunity context",
+      "role": "Opportunity context",
+      "slideOption": 3,
+      "description": "Use this layout for opportunity context content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_market_size",
+      "name": "Market size",
+      "role": "Market size",
+      "slideOption": 4,
+      "description": "Use this layout for market size content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_macro_indicators",
+      "name": "Macro indicators",
+      "role": "Macro indicators",
+      "slideOption": 5,
+      "description": "Use this layout for macro indicators content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_industry_structure",
+      "name": "Industry structure",
+      "role": "Industry structure",
+      "slideOption": 6,
+      "description": "Use this layout for industry structure content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_business_model",
+      "name": "Business model",
+      "role": "Business model",
+      "slideOption": 7,
+      "description": "Use this layout for business model content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_product_asset_quality",
+      "name": "Product asset quality",
+      "role": "Product asset quality",
+      "slideOption": 8,
+      "description": "Use this layout for product asset quality content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_traction_performance",
+      "name": "Traction performance",
+      "role": "Traction performance",
+      "slideOption": 9,
+      "description": "Use this layout for traction performance content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_unit_economics",
+      "name": "Unit economics",
+      "role": "Unit economics",
+      "slideOption": 10,
+      "description": "Use this layout for unit economics content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_financial_forecast",
+      "name": "Financial forecast",
+      "role": "Financial forecast",
+      "slideOption": 11,
+      "description": "Use this layout for financial forecast content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_valuation_logic",
+      "name": "Valuation logic",
+      "role": "Valuation logic",
+      "slideOption": 12,
+      "description": "Use this layout for valuation logic content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_competitive_landscape",
+      "name": "Competitive landscape",
+      "role": "Competitive landscape",
+      "slideOption": 13,
+      "description": "Use this layout for competitive landscape content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_management_team",
+      "name": "Management team",
+      "role": "Management team",
+      "slideOption": 14,
+      "description": "Use this layout for management team content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_regulation_policy",
+      "name": "Regulation policy",
+      "role": "Regulation policy",
+      "slideOption": 15,
+      "description": "Use this layout for regulation policy content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_risk_matrix",
+      "name": "Risk matrix",
+      "role": "Risk matrix",
+      "slideOption": 16,
+      "description": "Use this layout for risk matrix content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_mitigation_plan",
+      "name": "Mitigation plan",
+      "role": "Mitigation plan",
+      "slideOption": 17,
+      "description": "Use this layout for mitigation plan content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_scenario_analysis",
+      "name": "Scenario analysis",
+      "role": "Scenario analysis",
+      "slideOption": 18,
+      "description": "Use this layout for scenario analysis content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_roi_logic",
+      "name": "ROI logic",
+      "role": "ROI logic",
+      "slideOption": 19,
+      "description": "Use this layout for roi logic content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_deal_structure",
+      "name": "Deal structure",
+      "role": "Deal structure",
+      "slideOption": 20,
+      "description": "Use this layout for deal structure content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_entry_strategy",
+      "name": "Entry strategy",
+      "role": "Entry strategy",
+      "slideOption": 21,
+      "description": "Use this layout for entry strategy content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_exit_options",
+      "name": "Exit options",
+      "role": "Exit options",
+      "slideOption": 22,
+      "description": "Use this layout for exit options content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_recommendation",
+      "name": "Recommendation",
+      "role": "Recommendation",
+      "slideOption": 23,
+      "description": "Use this layout for recommendation content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_investment_committee",
+      "name": "Investment committee",
+      "role": "Investment committee",
+      "slideOption": 24,
+      "description": "Use this layout for investment committee content in a investment analysis deck."
+    },
+    {
+      "id": "yl_investment_analysis_next_steps",
+      "name": "Next steps",
+      "role": "Next steps",
+      "slideOption": 25,
+      "description": "Use this layout for next steps content in a investment analysis deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "investment_analysis_standard",
+      "name": "Investment Analysis Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_investment_analysis_investment_thesis",
+        "yl_investment_analysis_asset_snapshot",
+        "yl_investment_analysis_opportunity_context",
+        "yl_investment_analysis_market_size",
+        "yl_investment_analysis_macro_indicators",
+        "yl_investment_analysis_industry_structure",
+        "yl_investment_analysis_business_model",
+        "yl_investment_analysis_product_asset_quality",
+        "yl_investment_analysis_traction_performance",
+        "yl_investment_analysis_unit_economics",
+        "yl_investment_analysis_financial_forecast",
+        "yl_investment_analysis_valuation_logic",
+        "yl_investment_analysis_competitive_landscape",
+        "yl_investment_analysis_management_team",
+        "yl_investment_analysis_regulation_policy"
+      ]
+    },
+    {
+      "id": "investment_analysis_short",
+      "name": "Investment Analysis Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_investment_analysis_investment_thesis",
+        "yl_investment_analysis_asset_snapshot",
+        "yl_investment_analysis_opportunity_context",
+        "yl_investment_analysis_market_size",
+        "yl_investment_analysis_business_model",
+        "yl_investment_analysis_traction_performance",
+        "yl_investment_analysis_competitive_landscape",
+        "yl_investment_analysis_entry_strategy",
+        "yl_investment_analysis_next_steps"
+      ]
+    },
+    {
+      "id": "investment_analysis_deep_dive",
+      "name": "Investment Analysis Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_investment_analysis_investment_thesis",
+        "yl_investment_analysis_asset_snapshot",
+        "yl_investment_analysis_market_size",
+        "yl_investment_analysis_macro_indicators",
+        "yl_investment_analysis_industry_structure",
+        "yl_investment_analysis_business_model",
+        "yl_investment_analysis_product_asset_quality",
+        "yl_investment_analysis_traction_performance",
+        "yl_investment_analysis_unit_economics",
+        "yl_investment_analysis_competitive_landscape",
+        "yl_investment_analysis_management_team",
+        "yl_investment_analysis_regulation_policy",
+        "yl_investment_analysis_risk_matrix",
+        "yl_investment_analysis_mitigation_plan",
+        "yl_investment_analysis_scenario_analysis",
+        "yl_investment_analysis_roi_logic",
+        "yl_investment_analysis_deal_structure",
+        "yl_investment_analysis_entry_strategy",
+        "yl_investment_analysis_recommendation",
+        "yl_investment_analysis_investment_committee",
+        "yl_investment_analysis_next_steps"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": [
+      "yl_investment_analysis_investment_thesis",
+      "yl_investment_analysis_asset_snapshot",
+      "yl_investment_analysis_opportunity_context",
+      "yl_investment_analysis_market_size",
+      "yl_investment_analysis_macro_indicators",
+      "yl_investment_analysis_industry_structure",
+      "yl_investment_analysis_business_model",
+      "yl_investment_analysis_product_asset_quality",
+      "yl_investment_analysis_traction_performance",
+      "yl_investment_analysis_unit_economics",
+      "yl_investment_analysis_financial_forecast",
+      "yl_investment_analysis_valuation_logic",
+      "yl_investment_analysis_competitive_landscape",
+      "yl_investment_analysis_management_team",
+      "yl_investment_analysis_regulation_policy",
+      "yl_investment_analysis_risk_matrix",
+      "yl_investment_analysis_mitigation_plan",
+      "yl_investment_analysis_scenario_analysis",
+      "yl_investment_analysis_roi_logic",
+      "yl_investment_analysis_deal_structure",
+      "yl_investment_analysis_entry_strategy",
+      "yl_investment_analysis_exit_options",
+      "yl_investment_analysis_recommendation",
+      "yl_investment_analysis_investment_committee",
+      "yl_investment_analysis_next_steps"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "duotone",
+      "light",
+      "thin"
+    ]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "An institutional investment memo system for investment analysis, startup investment, real estate analysis, market analysis, fund memo.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 94,
+    "chartReadiness": 92,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "investment analysis",
+    "startup investment",
+    "real estate analysis",
+    "market analysis",
+    "fund memo"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

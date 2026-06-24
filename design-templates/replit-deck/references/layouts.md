@@ -4,6 +4,15 @@ Ten paste-ready `<section class="slide">` blocks. Each has a **theme pairing** n
 
 All layouts assume `<body data-theme="…">` is already set.
 
+## Frontend-safe preview layout ids
+
+The static YDeck catalog preview exposes these normalized layout ids:
+
+- `slide_01`
+- `slide_02`
+- `slide_03`
+- `slide_04`
+
 ---
 
 ## L01 · cover-hero  (all themes)
@@ -455,3 +464,23 @@ Replit slide-12: bold headline w/ inline pill, 3-card row underneath.
 | Artwork / image feature | L06 gallery-plate (vance) |
 | Data-heavy analytical page | L08 finance-hero-grid (world-*) |
 | Bold statement with supporting tiles | L10 pill-headline-cards-row (bluehouse) |
+
+## Compatibility Layout Ids
+
+## `slide_01`
+
+Role: Template slide 1.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_02`
+
+Role: Template slide 2.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_03`
+
+Role: Template slide 3.
+
+Use: Preserve the matching composition from the preview deck.

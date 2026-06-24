@@ -1,5 +1,5 @@
 ---
-name: html-ppt-graphify-dark-graph
+name: "html-ppt-graphify-dark-graph"
 description: 暗底知识图谱 deck — #06060c→#0e1020 深夜渐变 + 漂浮 blur orbs、封面 SVG 力导向图谱、彩虹渐变标题、JetBrains Mono 命令行高亮、glass-morphism 卡片。适合 dev-tool / CLI / 知识图谱 / 数据可视化的发布会，"AI-native + 科幻 + 暖色" 调子。
 triggers:
   - "知识图谱"
@@ -9,12 +9,12 @@ triggers:
   - "cli launch"
   - "data viz launch"
 od:
-  mode: deck
-  scenario: engineering
+  mode: "deck"
+  scenario: "engineering"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

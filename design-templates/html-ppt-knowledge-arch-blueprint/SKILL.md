@@ -1,5 +1,5 @@
 ---
-name: html-ppt-knowledge-arch-blueprint
+name: "html-ppt-knowledge-arch-blueprint"
 description: 奶油蓝图架构 deck — 奶油纸 #F0EAE0 底色 + 单一锈红 #B5392A 高亮、48px 蓝图网格 mask、2px 黑边硬卡片、pipeline 步骤盒（其中一个抬高）、右侧锈红 insight callout、Playfair 衬线大字、SVG 虚线反馈环。零渐变零软阴影，认真且印刷友好。
 triggers:
   - "architecture"
@@ -9,12 +9,12 @@ triggers:
   - "data flow"
   - "engineering whitepaper"
 od:
-  mode: deck
-  scenario: engineering
+  mode: "deck"
+  scenario: "engineering"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

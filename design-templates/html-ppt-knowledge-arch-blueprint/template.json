@@ -1,0 +1,108 @@
+{
+  "slug": "html-ppt-knowledge-arch-blueprint",
+  "name": "html-ppt-knowledge-arch-blueprint",
+  "description": "奶油蓝图架构 deck — 奶油纸 #F0EAE0 底色 + 单一锈红 #B5392A 高亮、48px 蓝图网格 mask、2px 黑边硬卡片、pipeline 步骤盒（其中一个抬高）、右侧锈红 insight callout、Playfair 衬线大字、SVG 虚线反馈环。零渐变零软阴影，认真且印刷友好。",
+  "category": "general",
+  "scenario": "engineering",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 8,
+  "minSlides": 8,
+  "palette": {
+    "background": "#F7F3EA",
+    "text": "#141512",
+    "accent": "#2563EB",
+    "secondary": "#2F6B4F"
+  },
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_02",
+      "name": "Slide 2",
+      "role": "Template slide 2",
+      "slideNumber": 2,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_03",
+      "name": "Slide 3",
+      "role": "Template slide 3",
+      "slideNumber": 3,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_04",
+      "name": "Slide 4",
+      "role": "Template slide 4",
+      "slideNumber": 4,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_05",
+      "name": "Slide 5",
+      "role": "Template slide 5",
+      "slideNumber": 5,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_06",
+      "name": "Slide 6",
+      "role": "Template slide 6",
+      "slideNumber": 6,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_07",
+      "name": "Slide 7",
+      "role": "Template slide 7",
+      "slideNumber": 7,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_08",
+      "name": "Slide 8",
+      "role": "Template slide 8",
+      "slideNumber": 8,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": false,
+    "supportsIcons": false,
+    "supportsImageSlides": false,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:remoteUrls,remoteFonts",
+    "layoutCoverage": "8/8",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 30,
+    "iconReadiness": 30,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "architecture"
+  ],
+  "exposure": "reference"
+}

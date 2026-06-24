@@ -1,0 +1,112 @@
+# Signal Layouts
+
+These layout ids are the allowed vocabulary for `html-ppt-zhangzara-signal`. Generated slides should preserve the matching composition from the preview deck unless a repair pass is explicitly fixing that slide.
+
+## `slide_01`
+
+Role: Template slide 1.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_02`
+
+Role: Template slide 2.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_03`
+
+Role: Template slide 3.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_04`
+
+Role: Template slide 4.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_05`
+
+Role: Template slide 5.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_06`
+
+Role: Template slide 6.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_07`
+
+Role: Template slide 7.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_08`
+
+Role: Template slide 8.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_09`
+
+Role: Template slide 9.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_10`
+
+Role: Template slide 10.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_11`
+
+Role: Template slide 11.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_12`
+
+Role: Template slide 12.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_13`
+
+Role: Template slide 13.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_14`
+
+Role: Template slide 14.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_15`
+
+Role: Template slide 15.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_16`
+
+Role: Template slide 16.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_17`
+
+Role: Template slide 17.
+
+Use: Preserve the matching composition from the preview deck.
+
+## `slide_18`
+
+Role: Template slide 18.
+
+Use: Preserve the matching composition from the preview deck.
+

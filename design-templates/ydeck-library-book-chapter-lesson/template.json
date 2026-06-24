@@ -1,0 +1,371 @@
+{
+  "slug": "ydeck-library-book-chapter-lesson",
+  "name": "YDeck Book / Chapter Lesson Deck",
+  "category": "ydeck-library",
+  "scenario": "book-chapter-lesson",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 15,
+  "preview": {
+    "authoring": "manual"
+  },
+  "tagline": "A literary classroom workbook system for book lesson, chapter lesson, reading lesson, literature class, textbook lesson.",
+  "tone": "literary classroom workbook",
+  "scheme": "light",
+  "palette": {
+    "background": "#FBF7EF",
+    "text": "#1C1917",
+    "accent": "#7C2D12",
+    "secondary": "#2563EB",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "book lesson",
+    "chapter lesson",
+    "reading lesson",
+    "literature class",
+    "textbook lesson"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_book_chapter_lesson_chapter_title",
+      "name": "Chapter title",
+      "role": "Chapter title",
+      "slideOption": 1,
+      "description": "Use this layout for chapter title content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_reading_objectives",
+      "name": "Reading objectives",
+      "role": "Reading objectives",
+      "slideOption": 2,
+      "description": "Use this layout for reading objectives content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_chapter_context",
+      "name": "Chapter context",
+      "role": "Chapter context",
+      "slideOption": 3,
+      "description": "Use this layout for chapter context content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_characters_overview",
+      "name": "Characters overview",
+      "role": "Characters overview",
+      "slideOption": 4,
+      "description": "Use this layout for characters overview content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_setting_map",
+      "name": "Setting map",
+      "role": "Setting map",
+      "slideOption": 5,
+      "description": "Use this layout for setting map content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_plot_timeline",
+      "name": "Plot timeline",
+      "role": "Plot timeline",
+      "slideOption": 6,
+      "description": "Use this layout for plot timeline content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_key_excerpt",
+      "name": "Key excerpt",
+      "role": "Key excerpt",
+      "slideOption": 7,
+      "description": "Use this layout for key excerpt content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_vocabulary_from_text",
+      "name": "Vocabulary from text",
+      "role": "Vocabulary from text",
+      "slideOption": 8,
+      "description": "Use this layout for vocabulary from text content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_main_idea",
+      "name": "Main idea",
+      "role": "Main idea",
+      "slideOption": 9,
+      "description": "Use this layout for main idea content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_theme_analysis",
+      "name": "Theme analysis",
+      "role": "Theme analysis",
+      "slideOption": 10,
+      "description": "Use this layout for theme analysis content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_literary_devices",
+      "name": "Literary devices",
+      "role": "Literary devices",
+      "slideOption": 11,
+      "description": "Use this layout for literary devices content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_character_analysis",
+      "name": "Character analysis",
+      "role": "Character analysis",
+      "slideOption": 12,
+      "description": "Use this layout for character analysis content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_quote_evidence",
+      "name": "Quote evidence",
+      "role": "Quote evidence",
+      "slideOption": 13,
+      "description": "Use this layout for quote evidence content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_comprehension_questions",
+      "name": "Comprehension questions",
+      "role": "Comprehension questions",
+      "slideOption": 14,
+      "description": "Use this layout for comprehension questions content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_discussion_prompt",
+      "name": "Discussion prompt",
+      "role": "Discussion prompt",
+      "slideOption": 15,
+      "description": "Use this layout for discussion prompt content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_close_reading_task",
+      "name": "Close reading task",
+      "role": "Close reading task",
+      "slideOption": 16,
+      "description": "Use this layout for close reading task content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_compare_contrast",
+      "name": "Compare contrast",
+      "role": "Compare contrast",
+      "slideOption": 17,
+      "description": "Use this layout for compare contrast content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_creative_response",
+      "name": "Creative response",
+      "role": "Creative response",
+      "slideOption": 18,
+      "description": "Use this layout for creative response content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_writing_prompt",
+      "name": "Writing prompt",
+      "role": "Writing prompt",
+      "slideOption": 19,
+      "description": "Use this layout for writing prompt content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_grammar_from_text",
+      "name": "Grammar from text",
+      "role": "Grammar from text",
+      "slideOption": 20,
+      "description": "Use this layout for grammar from text content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_quiz_check",
+      "name": "Quiz check",
+      "role": "Quiz check",
+      "slideOption": 21,
+      "description": "Use this layout for quiz check content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_answer_key",
+      "name": "Answer key",
+      "role": "Answer key",
+      "slideOption": 22,
+      "description": "Use this layout for answer key content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_chapter_summary",
+      "name": "Chapter summary",
+      "role": "Chapter summary",
+      "slideOption": 23,
+      "description": "Use this layout for chapter summary content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_homework_reading",
+      "name": "Homework reading",
+      "role": "Homework reading",
+      "slideOption": 24,
+      "description": "Use this layout for homework reading content in a book chapter lesson deck."
+    },
+    {
+      "id": "yl_book_chapter_lesson_next_chapter_preview",
+      "name": "Next chapter preview",
+      "role": "Next chapter preview",
+      "slideOption": 25,
+      "description": "Use this layout for next chapter preview content in a book chapter lesson deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "book_chapter_lesson_standard",
+      "name": "Book / Chapter Lesson Deck Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_book_chapter_lesson_chapter_title",
+        "yl_book_chapter_lesson_reading_objectives",
+        "yl_book_chapter_lesson_chapter_context",
+        "yl_book_chapter_lesson_characters_overview",
+        "yl_book_chapter_lesson_setting_map",
+        "yl_book_chapter_lesson_plot_timeline",
+        "yl_book_chapter_lesson_key_excerpt",
+        "yl_book_chapter_lesson_vocabulary_from_text",
+        "yl_book_chapter_lesson_main_idea",
+        "yl_book_chapter_lesson_theme_analysis",
+        "yl_book_chapter_lesson_literary_devices",
+        "yl_book_chapter_lesson_character_analysis",
+        "yl_book_chapter_lesson_quote_evidence",
+        "yl_book_chapter_lesson_comprehension_questions",
+        "yl_book_chapter_lesson_discussion_prompt"
+      ]
+    },
+    {
+      "id": "book_chapter_lesson_short",
+      "name": "Book / Chapter Lesson Deck Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_book_chapter_lesson_chapter_title",
+        "yl_book_chapter_lesson_reading_objectives",
+        "yl_book_chapter_lesson_chapter_context",
+        "yl_book_chapter_lesson_characters_overview",
+        "yl_book_chapter_lesson_key_excerpt",
+        "yl_book_chapter_lesson_main_idea",
+        "yl_book_chapter_lesson_quote_evidence",
+        "yl_book_chapter_lesson_quiz_check",
+        "yl_book_chapter_lesson_next_chapter_preview"
+      ]
+    },
+    {
+      "id": "book_chapter_lesson_deep_dive",
+      "name": "Book / Chapter Lesson Deck Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_book_chapter_lesson_chapter_title",
+        "yl_book_chapter_lesson_reading_objectives",
+        "yl_book_chapter_lesson_characters_overview",
+        "yl_book_chapter_lesson_setting_map",
+        "yl_book_chapter_lesson_plot_timeline",
+        "yl_book_chapter_lesson_key_excerpt",
+        "yl_book_chapter_lesson_vocabulary_from_text",
+        "yl_book_chapter_lesson_main_idea",
+        "yl_book_chapter_lesson_theme_analysis",
+        "yl_book_chapter_lesson_quote_evidence",
+        "yl_book_chapter_lesson_comprehension_questions",
+        "yl_book_chapter_lesson_discussion_prompt",
+        "yl_book_chapter_lesson_close_reading_task",
+        "yl_book_chapter_lesson_compare_contrast",
+        "yl_book_chapter_lesson_creative_response",
+        "yl_book_chapter_lesson_writing_prompt",
+        "yl_book_chapter_lesson_grammar_from_text",
+        "yl_book_chapter_lesson_quiz_check",
+        "yl_book_chapter_lesson_chapter_summary",
+        "yl_book_chapter_lesson_homework_reading",
+        "yl_book_chapter_lesson_next_chapter_preview"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": [
+      "yl_book_chapter_lesson_setting_map",
+      "yl_book_chapter_lesson_plot_timeline",
+      "yl_book_chapter_lesson_theme_analysis",
+      "yl_book_chapter_lesson_character_analysis"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": ["duotone", "light", "thin"]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "A literary classroom workbook system for book lesson, chapter lesson, reading lesson, literature class, textbook lesson.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html",
+    "authoring": "manual",
+    "policy": "Do not overwrite with the generic preview generator. This preview is hand-authored against DESIGN.md."
+  },
+  "capabilities": {
+    "supportsCharts": false,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": true,
+    "supportsFinancialSlides": false,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 97,
+    "chartReadiness": 45,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "book lesson",
+    "chapter lesson",
+    "reading lesson",
+    "literature class",
+    "textbook lesson"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

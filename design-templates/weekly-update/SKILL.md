@@ -1,5 +1,5 @@
 ---
-name: weekly-update
+name: "weekly-update"
 description: |
   Single-file horizontal-swipe slide deck for a weekly team update —
   shipped, in flight, blocked, metrics, asks. 6–8 slides. Use when the
@@ -12,11 +12,11 @@ triggers:
   - "weekly review"
   - "周报演示"
 od:
-  mode: deck
-  scenario: operations
+  mode: "deck"
+  scenario: "operations"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: true
     sections: [color, typography, layout, components]

@@ -1,5 +1,5 @@
 ---
-name: html-ppt-presenter-mode
+name: "html-ppt-presenter-mode"
 description: 演讲者模式专用 deck — tokyo-night 默认主题，5 套主题 T 键切换，每页带 150-300 字逐字稿示例（<aside class="notes">），按 S 打开 popup（CURRENT / NEXT / SCRIPT / TIMER 四张磁吸卡片）。用于技术分享、公开演讲、课程讲解，怕忘词或要提词器的场景。
 triggers:
   - "presenter mode"
@@ -10,12 +10,12 @@ triggers:
   - "presenter view"
   - "演讲"
 od:
-  mode: deck
-  scenario: engineering
+  mode: "deck"
+  scenario: "engineering"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-8-bit-orbit",
+  "slug": "html-ppt-zhangzara-8-bit-orbit",
   "name": "8-Bit Orbit",
   "tagline": "Pixel-art neon arcade aesthetic on a deep navy void.",
   "mood": [
@@ -44,5 +44,122 @@
   "avoid_for": "Contexts where the dark neon palette would actively work against the message — quiet institutional finance disclosures, healthcare patient-facing materials, traditional luxury.",
   "slide_count": 10,
   "navigation": "inline keyboard handler with on-page nav dots and slide counter",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/8-bit-orbit"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/8-bit-orbit",
+  "description": "Pixel-art neon arcade aesthetic on a deep navy void.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 10,
+  "minSlides": 10,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_02",
+      "name": "Slide 2",
+      "role": "Template slide 2",
+      "slideNumber": 2,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_03",
+      "name": "Slide 3",
+      "role": "Template slide 3",
+      "slideNumber": 3,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_04",
+      "name": "Slide 4",
+      "role": "Template slide 4",
+      "slideNumber": 4,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_05",
+      "name": "Slide 5",
+      "role": "Template slide 5",
+      "slideNumber": 5,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_06",
+      "name": "Slide 6",
+      "role": "Template slide 6",
+      "slideNumber": 6,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_07",
+      "name": "Slide 7",
+      "role": "Template slide 7",
+      "slideNumber": 7,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_08",
+      "name": "Slide 8",
+      "role": "Template slide 8",
+      "slideNumber": 8,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_09",
+      "name": "Slide 9",
+      "role": "Template slide 9",
+      "slideNumber": 9,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_10",
+      "name": "Slide 10",
+      "role": "Template slide 10",
+      "slideNumber": 10,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts,remoteUrls,externalCss,remoteFonts",
+    "layoutCoverage": "10/10",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "gaming pitch",
+    "hackathon demo",
+    "web3 / crypto deck",
+    "indie product launch",
+    "developer tools",
+    "synthwave brand"
+  ],
+  "exposure": "reference"
 }

@@ -11,7 +11,10 @@
     "dev:with-db": "npm run dev",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "validate:templates": "node scripts/validate-templates.js",
+    "templates:regen:ydeck-library": "node scripts/regenerate-ydeck-library-previews.js",
+    "templates:design:ydeck-library": "node scripts/generate-ydeck-design-docs.js"
   },
   "keywords": [],
   "author": "",
@@ -19,9 +22,11 @@
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/vision": "^5.3.7",
+    "@phosphor-icons/core": "^2.1.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
+    "echarts": "^6.1.0",
     "express": "^4.22.2",
     "express-rate-limit": "^8.5.2",
     "helmet": "^8.2.0",

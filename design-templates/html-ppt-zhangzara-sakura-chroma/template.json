@@ -1,5 +1,5 @@
 {
-  "slug": "zhangzara-sakura-chroma",
+  "slug": "html-ppt-zhangzara-sakura-chroma",
   "name": "Sakura Chroma",
   "tagline": "Vintage Japanese cassette-package aesthetic: cream paper, diagonal rainbow ribbons, condensed bold type, JIS-style spec checkboxes.",
   "mood": [
@@ -50,5 +50,108 @@
   "avoid_for": "Decks that need restrained, corporate, or quiet typography — the bold condensed lockups, ribbon stripes, and primary-colour palette are intentionally loud and product-page-y.",
   "slide_count": 8,
   "navigation": "vanilla JS (arrow keys, space, Home/End, touch swipe)",
-  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/sakura-chroma"
+  "source": "https://github.com/zarazhangrui/beautiful-html-templates/tree/main/templates/sakura-chroma",
+  "description": "Vintage Japanese cassette-package aesthetic: cream paper, diagonal rainbow ribbons, condensed bold type, JIS-style spec checkboxes.",
+  "category": "marketing",
+  "scenario": "marketing",
+  "mode": "deck",
+  "version": "1.0.0",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "slideCount": 8,
+  "minSlides": 8,
+  "layouts": [
+    {
+      "id": "slide_01",
+      "name": "Slide 1",
+      "role": "Template slide 1",
+      "slideNumber": 1,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_02",
+      "name": "Slide 2",
+      "role": "Template slide 2",
+      "slideNumber": 2,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_03",
+      "name": "Slide 3",
+      "role": "Template slide 3",
+      "slideNumber": 3,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_04",
+      "name": "Slide 4",
+      "role": "Template slide 4",
+      "slideNumber": 4,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_05",
+      "name": "Slide 5",
+      "role": "Template slide 5",
+      "slideNumber": 5,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_06",
+      "name": "Slide 6",
+      "role": "Template slide 6",
+      "slideNumber": 6,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_07",
+      "name": "Slide 7",
+      "role": "Template slide 7",
+      "slideNumber": 7,
+      "description": "Preserve the matching composition from the preview deck."
+    },
+    {
+      "id": "slide_08",
+      "name": "Slide 8",
+      "role": "Template slide 8",
+      "slideNumber": 8,
+      "description": "Preserve the matching composition from the preview deck."
+    }
+  ],
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "legacy-runtime:scripts,remoteUrls,externalCss,remoteFonts",
+    "layoutCoverage": "8/8",
+    "contrast": "manual-review",
+    "compositionVariety": 70,
+    "chartReadiness": 68,
+    "iconReadiness": 55,
+    "generationReliability": 60
+  },
+  "bestFitDeckTypes": [
+    "product launch or catalogue",
+    "indie hardware or analog studio brand",
+    "music label or release schedule",
+    "creative studio annual report",
+    "magazine or zine pitch",
+    "vintage-flavored brand campaign"
+  ],
+  "exposure": "reference"
 }

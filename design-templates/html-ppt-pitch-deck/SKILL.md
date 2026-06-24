@@ -1,5 +1,5 @@
 ---
-name: html-ppt-pitch-deck
+name: "html-ppt-pitch-deck"
 description: Investor-ready 10-slide HTML pitch deck — white + blue→purple gradient hero, big numbers, traction bar chart, $4.5M-style ask page. Use when the user wants a fundraising deck, seed-round pitch, or VC meeting slides.
 triggers:
   - "pitch deck"
@@ -10,12 +10,12 @@ triggers:
   - "vc deck"
   - "pitch slides"
 od:
-  mode: deck
-  scenario: finance
+  mode: "deck"
+  scenario: "finance"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true

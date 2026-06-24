@@ -1,0 +1,375 @@
+{
+  "slug": "ydeck-library-policy-brief",
+  "name": "YDeck Government / Policy Brief",
+  "category": "ydeck-library",
+  "scenario": "policy-brief",
+  "version": "1.0.0",
+  "mode": "deck",
+  "exposure": "frontend",
+  "layoutCount": 25,
+  "minSlides": 8,
+  "previewSlideCount": 8,
+  "tagline": "A public sector policy memo system for policy brief, government presentation, development program, public sector update, program proposal.",
+  "tone": "public sector policy memo",
+  "scheme": "light",
+  "palette": {
+    "background": "#F5F6F8",
+    "text": "#111827",
+    "accent": "#1E3A8A",
+    "secondary": "#B45309",
+    "porcelain": "#FFFFFF",
+    "fog": "#E8EDF2"
+  },
+  "bestFor": [
+    "policy brief",
+    "government presentation",
+    "development program",
+    "public sector update",
+    "program proposal"
+  ],
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "layouts": [
+    {
+      "id": "yl_policy_brief_brief_title",
+      "name": "Brief title",
+      "role": "Brief title",
+      "slideOption": 1,
+      "description": "Use this layout for brief title content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_executive_brief",
+      "name": "Executive brief",
+      "role": "Executive brief",
+      "slideOption": 2,
+      "description": "Use this layout for executive brief content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_problem_statement",
+      "name": "Problem statement",
+      "role": "Problem statement",
+      "slideOption": 3,
+      "description": "Use this layout for problem statement content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_population_impact",
+      "name": "Population impact",
+      "role": "Population impact",
+      "slideOption": 4,
+      "description": "Use this layout for population impact content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_evidence_snapshot",
+      "name": "Evidence snapshot",
+      "role": "Evidence snapshot",
+      "slideOption": 5,
+      "description": "Use this layout for evidence snapshot content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_current_policy",
+      "name": "Current policy",
+      "role": "Current policy",
+      "slideOption": 6,
+      "description": "Use this layout for current policy content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_gap_analysis",
+      "name": "Gap analysis",
+      "role": "Gap analysis",
+      "slideOption": 7,
+      "description": "Use this layout for gap analysis content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_stakeholder_map",
+      "name": "Stakeholder map",
+      "role": "Stakeholder map",
+      "slideOption": 8,
+      "description": "Use this layout for stakeholder map content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_policy_options",
+      "name": "Policy options",
+      "role": "Policy options",
+      "slideOption": 9,
+      "description": "Use this layout for policy options content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_recommended_option",
+      "name": "Recommended option",
+      "role": "Recommended option",
+      "slideOption": 10,
+      "description": "Use this layout for recommended option content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_implementation_model",
+      "name": "Implementation model",
+      "role": "Implementation model",
+      "slideOption": 11,
+      "description": "Use this layout for implementation model content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_program_timeline",
+      "name": "Program timeline",
+      "role": "Program timeline",
+      "slideOption": 12,
+      "description": "Use this layout for program timeline content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_budget_allocation",
+      "name": "Budget allocation",
+      "role": "Budget allocation",
+      "slideOption": 13,
+      "description": "Use this layout for budget allocation content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_beneficiary_journey",
+      "name": "Beneficiary journey",
+      "role": "Beneficiary journey",
+      "slideOption": 14,
+      "description": "Use this layout for beneficiary journey content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_regional_map",
+      "name": "Regional map",
+      "role": "Regional map",
+      "slideOption": 15,
+      "description": "Use this layout for regional map content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_risk_safeguards",
+      "name": "Risk safeguards",
+      "role": "Risk safeguards",
+      "slideOption": 16,
+      "description": "Use this layout for risk safeguards content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_monitoring_metrics",
+      "name": "Monitoring metrics",
+      "role": "Monitoring metrics",
+      "slideOption": 17,
+      "description": "Use this layout for monitoring metrics content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_legal_regulatory",
+      "name": "Legal regulatory",
+      "role": "Legal regulatory",
+      "slideOption": 18,
+      "description": "Use this layout for legal regulatory content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_partnership_model",
+      "name": "Partnership model",
+      "role": "Partnership model",
+      "slideOption": 19,
+      "description": "Use this layout for partnership model content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_case_example",
+      "name": "Case example",
+      "role": "Case example",
+      "slideOption": 20,
+      "description": "Use this layout for case example content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_equity_inclusion",
+      "name": "Equity inclusion",
+      "role": "Equity inclusion",
+      "slideOption": 21,
+      "description": "Use this layout for equity inclusion content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_communications_plan",
+      "name": "Communications plan",
+      "role": "Communications plan",
+      "slideOption": 22,
+      "description": "Use this layout for communications plan content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_decision_request",
+      "name": "Decision request",
+      "role": "Decision request",
+      "slideOption": 23,
+      "description": "Use this layout for decision request content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_next_steps",
+      "name": "Next steps",
+      "role": "Next steps",
+      "slideOption": 24,
+      "description": "Use this layout for next steps content in a policy brief deck."
+    },
+    {
+      "id": "yl_policy_brief_appendix_sources",
+      "name": "Appendix sources",
+      "role": "Appendix sources",
+      "slideOption": 25,
+      "description": "Use this layout for appendix sources content in a policy brief deck."
+    }
+  ],
+  "recommendedFlows": [
+    {
+      "id": "policy_brief_standard",
+      "name": "Government / Policy Brief Standard Flow",
+      "description": "Balanced flow for a normal generated deck.",
+      "layoutIds": [
+        "yl_policy_brief_brief_title",
+        "yl_policy_brief_executive_brief",
+        "yl_policy_brief_problem_statement",
+        "yl_policy_brief_population_impact",
+        "yl_policy_brief_evidence_snapshot",
+        "yl_policy_brief_current_policy",
+        "yl_policy_brief_gap_analysis",
+        "yl_policy_brief_stakeholder_map",
+        "yl_policy_brief_policy_options",
+        "yl_policy_brief_recommended_option",
+        "yl_policy_brief_implementation_model",
+        "yl_policy_brief_program_timeline",
+        "yl_policy_brief_budget_allocation",
+        "yl_policy_brief_beneficiary_journey",
+        "yl_policy_brief_regional_map"
+      ]
+    },
+    {
+      "id": "policy_brief_short",
+      "name": "Government / Policy Brief Short Flow",
+      "description": "Compact flow for concise decks.",
+      "layoutIds": [
+        "yl_policy_brief_brief_title",
+        "yl_policy_brief_executive_brief",
+        "yl_policy_brief_problem_statement",
+        "yl_policy_brief_population_impact",
+        "yl_policy_brief_gap_analysis",
+        "yl_policy_brief_policy_options",
+        "yl_policy_brief_budget_allocation",
+        "yl_policy_brief_equity_inclusion",
+        "yl_policy_brief_appendix_sources"
+      ]
+    },
+    {
+      "id": "policy_brief_deep_dive",
+      "name": "Government / Policy Brief Deep Dive Flow",
+      "description": "Expanded flow for research-heavy or detailed decks.",
+      "layoutIds": [
+        "yl_policy_brief_brief_title",
+        "yl_policy_brief_executive_brief",
+        "yl_policy_brief_population_impact",
+        "yl_policy_brief_evidence_snapshot",
+        "yl_policy_brief_current_policy",
+        "yl_policy_brief_gap_analysis",
+        "yl_policy_brief_stakeholder_map",
+        "yl_policy_brief_policy_options",
+        "yl_policy_brief_recommended_option",
+        "yl_policy_brief_budget_allocation",
+        "yl_policy_brief_beneficiary_journey",
+        "yl_policy_brief_regional_map",
+        "yl_policy_brief_risk_safeguards",
+        "yl_policy_brief_monitoring_metrics",
+        "yl_policy_brief_legal_regulatory",
+        "yl_policy_brief_partnership_model",
+        "yl_policy_brief_case_example",
+        "yl_policy_brief_equity_inclusion",
+        "yl_policy_brief_decision_request",
+        "yl_policy_brief_next_steps",
+        "yl_policy_brief_appendix_sources"
+      ]
+    }
+  ],
+  "charting": {
+    "library": "echarts",
+    "mode": "server-static-svg",
+    "slideHtmlPolicy": "Embed returned SVG inline. Do not include chart scripts, remote assets, canvas runtime, or CDN URLs in slide HTML.",
+    "supportedTypes": [
+      "bar",
+      "line",
+      "area",
+      "pie",
+      "doughnut",
+      "funnel",
+      "scatter"
+    ],
+    "recommendedLayouts": [
+      "yl_policy_brief_population_impact",
+      "yl_policy_brief_evidence_snapshot",
+      "yl_policy_brief_gap_analysis",
+      "yl_policy_brief_stakeholder_map",
+      "yl_policy_brief_program_timeline",
+      "yl_policy_brief_budget_allocation",
+      "yl_policy_brief_regional_map",
+      "yl_policy_brief_risk_safeguards",
+      "yl_policy_brief_monitoring_metrics"
+    ]
+  },
+  "icons": {
+    "library": "phosphor",
+    "mode": "server-inline-svg",
+    "defaultStyle": "duotone",
+    "policy": "Use create_icon_visual for icon groups. Embed returned HTML/SVG inline. Do not use emoji, generic stars, crude custom icons, remote icon fonts, CDN icon scripts, or browser-side icon packages in slide HTML.",
+    "supportedStyles": [
+      "duotone",
+      "light",
+      "thin"
+    ]
+  },
+  "imageRules": {
+    "mode": "local-or-generated-assets-only",
+    "policy": "Use uploaded or generated assets resolved by the backend. Do not embed remote URLs in slide HTML."
+  },
+  "description": "A public sector policy memo system for policy brief, government presentation, development program, public sector update, program proposal.",
+  "compatibility": {
+    "minYDeckVersion": "0.4.0",
+    "migrationPolicy": "preserve generated deck artifacts; use template version only for new generations"
+  },
+  "preview": {
+    "type": "html",
+    "entry": "example.html"
+  },
+  "capabilities": {
+    "supportsCharts": true,
+    "supportsIcons": true,
+    "supportsImageSlides": true,
+    "supportsTeachingSlides": false,
+    "supportsFinancialSlides": true,
+    "supportsSpeakerNotes": true
+  },
+  "quality": {
+    "previewSafety": "pass",
+    "layoutCoverage": "25/25",
+    "contrast": "pass",
+    "compositionVariety": 94,
+    "chartReadiness": 92,
+    "iconReadiness": 92,
+    "generationReliability": 88
+  },
+  "bestFitDeckTypes": [
+    "policy brief",
+    "government presentation",
+    "development program",
+    "public sector update",
+    "program proposal"
+  ],
+  "typography": {
+    "source": "server-safe-local-fonts",
+    "fontStacks": {
+      "sans": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "display": "\"Avenir Next\", \"Helvetica Neue\", Arial, sans-serif",
+      "editorial": "\"New York\", \"Bodoni 72\", Georgia, serif",
+      "serif": "Charter, Georgia, \"Times New Roman\", serif",
+      "mono": "Menlo, \"SF NS Mono\", \"Courier New\", monospace",
+      "condensed": "\"Avenir Next Condensed\", \"DIN Condensed\", \"Arial Narrow\", sans-serif",
+      "cjkSans": "\"Hiragino Sans\", \"Hiragino Sans GB\", \"Heiti SC\", sans-serif",
+      "cjkSerif": "\"Hiragino Mincho ProN\", \"Songti SC\", serif"
+    },
+    "fontRoles": {
+      "headings": "display",
+      "body": "sans",
+      "labels": "condensed",
+      "numbers": "display",
+      "code": "mono",
+      "quotes": "editorial",
+      "cjk": "cjkSans"
+    },
+    "policy": "Use these local server-renderable stacks. Do not use remote font imports or CDN font URLs in preview or generated slide HTML."
+  }
+}

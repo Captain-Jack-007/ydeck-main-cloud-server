@@ -1,5 +1,5 @@
 ---
-name: html-ppt-tech-sharing
+name: "html-ppt-tech-sharing"
 description: Conference / internal tech-talk deck — GitHub-dark, JetBrains Mono, terminal code blocks, agenda + Q&A pages. Use for engineering presentations, internal sharing sessions, conference talks, and code-heavy walkthroughs.
 triggers:
   - "tech sharing"
@@ -9,12 +9,12 @@ triggers:
   - "conference talk"
   - "dev talk"
 od:
-  mode: deck
-  scenario: engineering
+  mode: "deck"
+  scenario: "engineering"
   upstream: "https://github.com/lewislulu/html-ppt-skill"
   preview:
     type: html
-    entry: index.html
+    entry: "example.html"
   design_system:
     requires: false
   speaker_notes: true
