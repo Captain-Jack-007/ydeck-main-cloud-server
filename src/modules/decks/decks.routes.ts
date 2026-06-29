@@ -514,6 +514,7 @@ async function projectSummary(project: DeckProjectDoc) {
     hasDeckArtifact: Boolean(artifact),
     thumbnailUrl: thumbnailUrlForArtifact(artifact),
     previewHtml: firstSlideHtml(artifact),
+    sourceRef: isRecord(meta.sourceRef) ? meta.sourceRef : null,
     meta: enrichedMeta,
   };
 }

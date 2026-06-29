@@ -19,6 +19,7 @@
   "type": "commonjs",
   "dependencies": {
     "@google-cloud/vision": "^5.3.7",
+    "@napi-rs/canvas": "^1.0.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
@@ -31,6 +32,7 @@
     "multer": "^2.2.0",
     "nanoid": "^5.1.11",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.7.76",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
     "playwright": "^1.61.0",

@@ -29,12 +29,22 @@ import {
 } from '../agents/tools/cloudDeck.tools';
 import { jobBus, type JobEvent } from '../decks/jobs.events';
 import { recordUsage } from '../usage/usage.service';
+import {
+  createSourcePlaceholder,
+  deleteSource,
+  getPageImageBuffer,
+  getSourceDetail,
+  listSourceCollections,
+  resolveBookReference,
+  searchBookContent,
+} from '../documents/sourceLibrary.service';
 
 export const apiCompatRouter: Router = Router();
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024 },
+  // Books/PDFs can be large; allow up to 50MB per upload.
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
 
 interface RenderJob {
@@ -222,9 +232,14 @@ apiCompatRouter.post(
     const storageUrl = `data:${
       file.mimetype || 'application/octet-stream'
     };base64,${file.buffer.toString('base64')}`;
+    const projectId =
+      typeof req.body?.projectId === 'string' && isObjectId(req.body.projectId)
+        ? req.body.projectId
+        : null;
     const saved = await FileModel.create({
       workspaceId,
-      scope: 'workspace',
+      projectId,
+      scope: projectId ? 'job' : 'workspace',
       kind: 'upload',
       filename: file.originalname || 'upload',
       mimeType: file.mimetype || null,
@@ -233,17 +248,166 @@ apiCompatRouter.post(
       checksum,
       meta: { source: 'api_compat_upload' },
     });
+
+    // Register the upload in the Source Library as `processing`; the background
+    // source-index worker reads the bytes back from the stored File and indexes
+    // it durably (survives restarts). The UI polls status until `indexed`.
+    let source: { sourceId: string | null; status: string } = {
+      sourceId: null,
+      status: 'skipped',
+    };
+    try {
+      const placeholder = await createSourcePlaceholder({
+        fileId: saved.id,
+        workspaceId,
+        projectId,
+        ownerId: req.auth!.userId,
+        filename: saved.filename,
+        mimeType: saved.mimeType,
+        sizeBytes: saved.sizeBytes,
+        buffer: file.buffer,
+      });
+      source = { sourceId: placeholder.id, status: placeholder.status };
+    } catch {
+      source = { sourceId: null, status: 'failed' };
+    }
+
     res.status(201).json({
       success: true,
       fileId: saved.id,
+      sourceId: source.sourceId,
       file: {
         id: saved.id,
         fileId: saved.id,
         filename: saved.filename,
         mimeType: saved.mimeType,
         sizeBytes: saved.sizeBytes,
+        sourceId: source.sourceId,
+        status: source.status,
       },
     });
+  })
+);
+
+// --- Source Library (persistent book/document sources) ----------------------
+
+apiCompatRouter.get(
+  '/sources',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const sources = await listSourceCollections({ workspaceId });
+    res.json({ success: true, sources });
+  })
+);
+
+apiCompatRouter.get(
+  '/sources/:id',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id))
+      throw ApiError.badRequest('Invalid source id');
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const detail = await getSourceDetail({
+      workspaceId,
+      sourceId: req.params.id,
+    });
+    if (!detail) throw ApiError.notFound('Source not found');
+    res.json({ success: true, ...detail });
+  })
+);
+
+apiCompatRouter.delete(
+  '/sources/:id',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id))
+      throw ApiError.badRequest('Invalid source id');
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const deleted = await deleteSource({ workspaceId, sourceId: req.params.id });
+    if (!deleted) throw ApiError.notFound('Source not found');
+    res.json({ success: true });
+  })
+);
+
+// Resolve a natural reference ("Lesson 5", "pages 23-45") to a page range so
+// the UI can confirm low-confidence matches before generating.
+apiCompatRouter.post(
+  '/sources/:id/resolve',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id))
+      throw ApiError.badRequest('Invalid source id');
+    const reference = String(req.body?.reference ?? '').trim();
+    if (!reference) throw ApiError.badRequest('Missing reference');
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const result = await resolveBookReference({
+      workspaceId,
+      sourceId: req.params.id,
+      reference,
+    });
+    res.json({ success: true, ...result });
+  })
+);
+
+// Semantic "search this book" — returns the most relevant passages w/ pages.
+apiCompatRouter.post(
+  '/sources/:id/search',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id))
+      throw ApiError.badRequest('Invalid source id');
+    const query = String(req.body?.query ?? '').trim();
+    if (!query) throw ApiError.badRequest('Missing query');
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const result = await searchBookContent({
+      workspaceId,
+      sourceId: req.params.id,
+      query,
+      topK: Number(req.body?.topK) || undefined,
+    });
+    res.json({ success: true, ...result });
+  })
+);
+
+// Render (and cache) a single page as a PNG thumbnail.
+apiCompatRouter.get(
+  '/sources/:id/pages/:n/image',
+  requireUser,
+  asyncHandler(async (req, res) => {
+    if (!isObjectId(req.params.id))
+      throw ApiError.badRequest('Invalid source id');
+    const pageNumber = Number(req.params.n);
+    if (!Number.isInteger(pageNumber) || pageNumber < 1)
+      throw ApiError.badRequest('Invalid page number');
+    const workspaceId = await resolveWorkspaceId(
+      req.auth!.userId,
+      req.query?.workspaceId
+    );
+    const png = await getPageImageBuffer({
+      workspaceId,
+      sourceId: req.params.id,
+      pageNumber,
+    });
+    if (!png) throw ApiError.notFound('Page image unavailable');
+    res.setHeader('Content-Type', 'image/png');
+    res.setHeader('Cache-Control', 'private, max-age=86400');
+    res.send(png);
   })
 );
 

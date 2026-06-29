@@ -12,6 +12,9 @@ export type CloudProviderName =
 export interface LlmGenerateOptions {
   temperature?: number;
   maxTokens?: number;
+  // Max retries on transient 429/5xx responses. Defaults to LLM_MAX_RETRIES;
+  // set 0 for low-priority background calls that shouldn't compete for tokens.
+  maxRetries?: number;
 }
 
 export interface ModelStatus {
@@ -438,6 +441,65 @@ class FallbackProvider implements CloudLlmProvider {
   }
 }
 
+// Provider rate limits (e.g. OpenAI's per-minute TPM) return 429 with a short
+// suggested wait. Retry those transient failures with backoff instead of
+// failing the whole deck run.
+const LLM_MAX_RETRIES = 4;
+const LLM_MAX_BACKOFF_MS = 12_000;
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function retryDelayMs(res: Response, body: string, attempt: number): number {
+  const header = res.headers.get('retry-after');
+  if (header) {
+    const seconds = Number(header);
+    if (Number.isFinite(seconds)) return Math.min(LLM_MAX_BACKOFF_MS, seconds * 1000 + 250);
+  }
+  // OpenAI puts the wait in the message, e.g. "try again in 1.092s" / "...in 320ms".
+  const sec = /try again in (\d+(?:\.\d+)?)s/i.exec(body);
+  if (sec) return Math.min(LLM_MAX_BACKOFF_MS, Math.ceil(Number(sec[1]) * 1000) + 250);
+  const ms = /try again in (\d+)ms/i.exec(body);
+  if (ms) return Math.min(LLM_MAX_BACKOFF_MS, Number(ms[1]) + 250);
+  const backoff = Math.min(LLM_MAX_BACKOFF_MS, 600 * 2 ** attempt);
+  return backoff + Math.floor(Math.random() * 250);
+}
+
+async function llmFetchWithRetry(
+  endpoint: string,
+  init: RequestInit,
+  providerName: string,
+  maxRetries: number,
+): Promise<Response> {
+  let lastDetail = '';
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    let res: Response;
+    try {
+      res = await fetch(endpoint, init);
+    } catch (err) {
+      lastDetail = (err as Error).message;
+      if (attempt >= maxRetries) throw err;
+      await sleep(Math.min(LLM_MAX_BACKOFF_MS, 600 * 2 ** attempt));
+      continue;
+    }
+    if (res.ok) return res;
+    const detail = await res.text();
+    if (!RETRYABLE_STATUS.has(res.status) || attempt >= maxRetries) {
+      throw new Error(`${providerName} request failed: ${res.status} ${detail}`);
+    }
+    const waitMs = retryDelayMs(res, detail, attempt);
+    logger.warn(
+      { provider: providerName, status: res.status, attempt: attempt + 1, waitMs },
+      'cloud_llm.retry_after_rate_limit'
+    );
+    lastDetail = detail;
+    await sleep(waitMs);
+  }
+  throw new Error(`${providerName} request failed after retries: ${lastDetail}`);
+}
+
 async function callOpenAICompatible(input: {
   endpoint: string;
   apiKey: string;
@@ -447,24 +509,25 @@ async function callOpenAICompatible(input: {
   providerName: string;
   cfg: EffectiveCloudConfig;
 }): Promise<string> {
-  const res = await fetch(input.endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...(input.apiKey ? { Authorization: `Bearer ${input.apiKey}` } : {}),
+  const res = await llmFetchWithRetry(
+    input.endpoint,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(input.apiKey ? { Authorization: `Bearer ${input.apiKey}` } : {}),
+      },
+      body: JSON.stringify({
+        model: input.model,
+        temperature: input.options.temperature ?? 0.4,
+        max_tokens: input.options.maxTokens ?? 3500,
+        stream: input.cfg.streamOutput,
+        messages: [{ role: 'user', content: input.prompt }],
+      }),
     },
-    body: JSON.stringify({
-      model: input.model,
-      temperature: input.options.temperature ?? 0.4,
-      max_tokens: input.options.maxTokens ?? 3500,
-      stream: input.cfg.streamOutput,
-      messages: [{ role: 'user', content: input.prompt }],
-    }),
-  });
-  if (!res.ok)
-    throw new Error(
-      `${input.providerName} request failed: ${res.status} ${await res.text()}`
-    );
+    input.providerName,
+    input.options.maxRetries ?? LLM_MAX_RETRIES,
+  );
   if (input.cfg.streamOutput) {
     return readSseTextStream(res, input.providerName, input.cfg, (data) => {
       const body = JSON.parse(data) as {

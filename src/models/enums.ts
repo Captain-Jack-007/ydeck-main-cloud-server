@@ -27,3 +27,31 @@ export type PackType = (typeof PACK_TYPES)[number];
 
 export const SOCIAL_PROVIDERS = ["telegram", "google", "facebook"] as const;
 export type SocialProvider = (typeof SOCIAL_PROVIDERS)[number];
+
+export const SOURCE_COLLECTION_TYPES = [
+  "book",
+  "course",
+  "report",
+  "manual",
+  "paper_bundle",
+  "other",
+] as const;
+export type SourceCollectionType = (typeof SOURCE_COLLECTION_TYPES)[number];
+
+export const SOURCE_COLLECTION_STATUSES = [
+  "uploaded",
+  "processing",
+  "indexed",
+  "error",
+] as const;
+export type SourceCollectionStatus = (typeof SOURCE_COLLECTION_STATUSES)[number];
+
+export const BOOK_SECTION_TYPES = [
+  "chapter",
+  "lesson",
+  "unit",
+  "section",
+  "part",
+  "module",
+] as const;
+export type BookSectionType = (typeof BOOK_SECTION_TYPES)[number];

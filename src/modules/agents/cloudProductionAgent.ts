@@ -64,6 +64,13 @@ import {
   qaArtifactSchema,
 } from './cloudWorkflow.contract';
 import { emitCloudEvent, selectCloudWorkflow } from './cloudOrchestrator';
+import {
+  listSourceCollections,
+  parsePageRange,
+  readDocumentPages,
+  resolveBookReference,
+  searchBookContent,
+} from '../documents/sourceLibrary.service';
 
 type DeckBrief = typeof deckBriefSchema._output;
 type PlanArtifact = typeof planArtifactSchema._output;
@@ -117,6 +124,16 @@ interface ContextArtifact {
   pluginPacks: unknown[];
   designSystems: DesignSystemContext[];
   previousDeckVersion: unknown;
+}
+
+interface DeckSourceRef {
+  sourceId: string;
+  sourceTitle: string;
+  fileId: string | null;
+  sectionId: string | null;
+  sectionTitle: string | null;
+  pageRange: { start: number; end: number } | null;
+  matchedBy: string;
 }
 
 interface FileExtractionArtifact {
@@ -535,8 +552,177 @@ async function fileExtractionAgent(
   ctx: RunContext
 ): Promise<FileExtractionArtifact> {
   recordToolUsage(ctx, 'list_files', 'db', 'file_extractor');
+  const workspaceId = String(ctx.job.workspaceId);
+  const projectId = ctx.job.projectId ? String(ctx.job.projectId) : undefined;
   const fileId =
     typeof ctx.input.fileId === 'string' ? ctx.input.fileId : undefined;
+
+  // If the user named a page range ("pages 12-24"), pull exactly those pages
+  // from the paginated upload instead of dumping the whole book at the model.
+  const promptText =
+    typeof ctx.input.prompt === 'string'
+      ? ctx.input.prompt
+      : typeof ctx.input.userPrompt === 'string'
+        ? ctx.input.userPrompt
+        : typeof ctx.project.description === 'string'
+          ? ctx.project.description
+          : '';
+  const pageRange = parsePageRange(promptText);
+
+  const libraryDocs = await listSourceCollections({
+    workspaceId,
+    projectId,
+    limit: 5,
+  });
+
+  if (libraryDocs.length > 0) {
+    // Prefer real per-page text from the indexed source.
+    recordToolUsage(ctx, 'retrieve_book_pages', 'db', 'file_extractor');
+    const targets = fileId
+      ? libraryDocs.filter((d) => d.fileId === fileId)
+      : libraryDocs.slice(0, 1);
+    const chosen = targets.length ? targets : libraryDocs.slice(0, 1);
+    const readPerDoc = Math.floor(14_000 / chosen.length) || 14_000;
+    const fileSummaries: Array<{
+      id: string;
+      filename: string;
+      mimeType: string | null;
+      sizeBytes: number | null;
+      text: string;
+    }> = [];
+    let resolvedRangeNote = '';
+    let sourceRef: DeckSourceRef | null = null;
+    for (const summary of chosen) {
+      // Resolve an effective page range: explicit "pages 23-45" wins; otherwise
+      // try to resolve a section reference like "Lesson 5" to its pages.
+      let fromPage = pageRange?.fromPage;
+      let toPage = pageRange?.toPage;
+      let sectionId: string | undefined;
+      let sectionTitle: string | undefined;
+      let matchedBy: string = pageRange ? 'pages' : 'whole_book';
+      let resolvedRef = false;
+      if (!pageRange && promptText.trim()) {
+        const resolved = await resolveBookReference({
+          workspaceId,
+          projectId,
+          sourceId: summary.id,
+          reference: promptText,
+        });
+        if (resolved.ok && resolved.startPage && resolved.endPage) {
+          fromPage = resolved.startPage;
+          toPage = resolved.endPage;
+          sectionId = resolved.sectionId;
+          sectionTitle = resolved.sectionTitle;
+          matchedBy = resolved.matchedBy ?? 'section';
+          resolvedRef = true;
+          resolvedRangeNote = resolved.sectionTitle
+            ? `\n\n(Focused on ${resolved.sectionTitle}, pages ${fromPage}-${toPage}.)`
+            : `\n\n(Focused on pages ${fromPage}-${toPage}.)`;
+        }
+      }
+
+      // Topical fallback: no explicit pages and no section match, but the user
+      // named a subject — pull the most relevant passages via semantic search
+      // instead of dumping the whole book.
+      if (!pageRange && !resolvedRef && promptText.trim()) {
+        const search = await searchBookContent({
+          workspaceId,
+          projectId,
+          sourceId: summary.id,
+          query: promptText,
+          topK: 8,
+        }).catch(() => null);
+        if (search?.ok && search.hits && search.hits.length) {
+          recordToolUsage(ctx, 'search_book_content', 'db', 'file_extractor');
+          const text = search.hits
+            .map((h) => `[Pages ${h.startPage}-${h.endPage}] ${h.text}`)
+            .join('\n\n')
+            .slice(0, readPerDoc);
+          fileSummaries.push({
+            id: summary.fileId ?? summary.id,
+            filename: summary.filename,
+            mimeType: summary.mimeType,
+            sizeBytes: null,
+            text,
+          });
+          if (!sourceRef) {
+            sourceRef = {
+              sourceId: summary.id,
+              sourceTitle: summary.title ?? summary.filename,
+              fileId: summary.fileId ?? null,
+              sectionId: null,
+              sectionTitle: null,
+              pageRange: null,
+              matchedBy: `search_${search.method ?? 'keyword'}`,
+            };
+          }
+          resolvedRangeNote =
+            '\n\n(Focused on the passages most relevant to the request.)';
+          continue;
+        }
+      }
+
+      // Remember the primary source so the generated deck links back to it.
+      if (!sourceRef) {
+        sourceRef = {
+          sourceId: summary.id,
+          sourceTitle: summary.title ?? summary.filename,
+          fileId: summary.fileId ?? null,
+          sectionId: sectionId ?? null,
+          sectionTitle: sectionTitle ?? null,
+          pageRange: fromPage && toPage ? { start: fromPage, end: toPage } : null,
+          matchedBy,
+        };
+      }
+      const read = await readDocumentPages({
+        workspaceId,
+        projectId,
+        documentId: summary.id,
+        fromPage,
+        toPage,
+        maxChars: readPerDoc,
+      });
+      fileSummaries.push({
+        id: summary.fileId ?? summary.id,
+        filename: summary.filename,
+        mimeType: summary.mimeType,
+        sizeBytes: null,
+        text: read.ok ? read.text ?? '' : '',
+      });
+    }
+    if (sourceRef && projectId) {
+      await DeckProjectModel.updateOne(
+        { _id: projectId },
+        { $set: { 'meta.sourceRef': sourceRef } }
+      ).catch(() => undefined);
+    }
+    const rangeNote = pageRange
+      ? pageRange.fromPage === pageRange.toPage
+        ? `\n\n(Focused on page ${pageRange.fromPage} as requested.)`
+        : `\n\n(Focused on pages ${pageRange.fromPage}-${pageRange.toPage} as requested.)`
+      : resolvedRangeNote;
+    const joined = fileSummaries
+      .map((file) => `# ${file.filename}\n${file.text}`)
+      .join('\n\n')
+      .slice(0, 14_000);
+    if (joined) {
+      recordToolUsage(ctx, 'summarize_file', 'llm', 'file_extractor');
+      const schema = fileExtractionSchema();
+      return callJsonAgent(
+        ctx,
+        'file_extractor',
+        jsonPrompt(
+          'File Extraction Agent',
+          { files: fileSummaries, pageRange: pageRange ?? null },
+          'Summarize the provided document pages into JSON: summary, keyFacts, suggestedSlides, importantSections.' +
+            rangeNote
+        ),
+        schema,
+        { temperature: 0.2, maxTokens: 1600 }
+      );
+    }
+  }
+
   const query: Record<string, unknown> = { workspaceId: ctx.job.workspaceId };
   if (fileId) query._id = fileId;
   else query.$or = [{ projectId: ctx.job.projectId }, { projectId: null }];

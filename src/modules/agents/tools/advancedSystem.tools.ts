@@ -11,6 +11,7 @@ import {
   WorkspacePreferenceModel,
 } from "../../../models";
 import { isGoogleVisionOcrConfigured, isTencentOcrConfigured, runGoogleVisionOcr, runTencentOcr, type OcrResult } from "../../ocr/googleVisionOcr.service";
+import { readDocumentPages } from "../../documents/sourceLibrary.service";
 import { renderDeckScreenshots, renderSlideScreenshot } from "../../render/render.service";
 import { reviewDeckWithVision, reviewSlideWithVision } from "../../visionQa/visionQa.service";
 import { saveCloudDeckArtifact, type CloudDeckArtifact } from "./cloudDeck.tools";
@@ -121,6 +122,18 @@ const ADVANCED_TOOL_SPECS: AdvancedToolSpec[] = [
 
   { name: "list_files", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "context"], description: "Lists uploaded project files." },
   { name: "read_file", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "content"], description: "Reads plain text or extracted file content." },
+  { name: "list_source_collections", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "context", "outline", "content"], description: "Lists the user's persistent uploaded sources (books/courses/reports) with page counts, section counts, and indexing status." },
+  { name: "get_book_status", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "context"], description: "Checks whether an uploaded source finished indexing (processing/indexed/error) with page and section counts." },
+  { name: "list_book_sections", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "context", "outline", "content"], description: "Lists detected chapters/lessons/units of a source with their page ranges." },
+  { name: "resolve_book_reference", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "outline", "content"], description: "Resolves 'Lesson 5' / 'pages 23-45' / 'the grammar section' to a concrete page range in a source." },
+  { name: "retrieve_book_pages", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "outline", "content"], description: "Reads a specific page range (e.g. pages 12-24) from an uploaded source." },
+  { name: "retrieve_book_section", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "outline", "content"], description: "Reads the full text of a chapter/lesson/unit, by sectionId or a natural reference." },
+  { name: "search_book_content", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "outline", "content"], description: "Semantic search inside a source for a topic/question; returns the most relevant passages with page numbers." },
+  { name: "summarize_book_range", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "outline", "content"], description: "Summarizes a page range, section, or reference of a source into a short study summary." },
+  { name: "extract_book_images", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file", "visual_asset", "content"], description: "Renders page images from a source for a page range so the deck can reuse the book's figures/visuals." },
+  { name: "create_source_collection", group: ADVANCED_TOOL_GROUPS.file_document, risk: "write", agents: ["file", "orchestrator"], description: "Registers an uploaded file as a persistent Source (book/course/report) and indexes it in the background." },
+  { name: "ingest_book", group: ADVANCED_TOOL_GROUPS.file_document, risk: "write", agents: ["file", "orchestrator"], description: "Ingests/(re)indexes an uploaded file into the Source Library." },
+  { name: "create_deck_from_source_range", group: ADVANCED_TOOL_GROUPS.file_document, risk: "write", agents: ["orchestrator", "content"], description: "Starts a book-aware deck from a resolved source range/section (slides/quiz/teacher/bilingual/homework) and links it back to the source." },
   { name: "extract_pdf", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file"], description: "Extracts text, headings, tables, and images from a PDF file.", execute: extractFileLike("pdf") },
   { name: "extract_docx", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file"], description: "Extracts text, headings, tables, and structure from a Word document.", execute: extractFileLike("docx") },
   { name: "extract_pptx", group: ADVANCED_TOOL_GROUPS.file_document, risk: "read", agents: ["file"], description: "Reads existing PPTX text, slide titles, notes, layout hints, and media metadata.", execute: extractFileLike("pptx") },
@@ -344,6 +357,40 @@ async function createProjectSnapshot(args: Record<string, unknown>, ctx: ToolCon
 
 function extractFileLike(kind: "pdf" | "docx" | "pptx") {
   return async (args: Record<string, unknown>, ctx: ToolContext): Promise<ToolResult> => {
+    // PDFs are paginated on upload, so prefer the real per-page text from the
+    // library instead of reading the binary as raw bytes.
+    if (kind === "pdf" && ctx.workspaceId) {
+      const fileId = typeof args.fileId === "string" ? args.fileId : undefined;
+      const documentId = typeof args.documentId === "string" ? args.documentId : undefined;
+      const filename = typeof args.filename === "string" ? args.filename : undefined;
+      const fromPage = typeof args.fromPage === "number" ? args.fromPage : undefined;
+      const toPage = typeof args.toPage === "number" ? args.toPage : undefined;
+      const pages = await readDocumentPages({
+        workspaceId: ctx.workspaceId,
+        projectId: ctx.projectId,
+        fileId,
+        documentId,
+        filename,
+        fromPage,
+        toPage,
+        maxChars: 50_000,
+      });
+      if (pages.ok) {
+        const text = pages.text ?? "";
+        return okJson(`Extracted PDF text from ${pages.source?.title ?? "document"}.`, {
+          kind,
+          sourceId: pages.source?.id ?? null,
+          pageCount: pages.source?.pageCount ?? 0,
+          fromPage: pages.fromPage,
+          toPage: pages.toPage,
+          text,
+          headings: inferHeadings(text),
+          tables: [],
+          images: [],
+          truncated: pages.truncated ?? false,
+        });
+      }
+    }
     const fileResult = await executeRegisteredTool("read_file", { fileId: args.fileId, path: args.path }, ctx);
     if (!fileResult.ok) return fileResult;
     const text = String(fileResult.content ?? "");
