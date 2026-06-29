@@ -1,12 +1,19 @@
 import { z } from "zod";
-import { env } from "../../../config/env";
 import { registerTool } from "./registry";
 import type { ToolResult } from "./types";
+import {
+  isTavilyConfigured,
+  tavilySearch,
+  type WebSearchHit,
+} from "../../research/tavily.service";
 
 const WebSearchArgsSchema = z.object({
   query: z.string().min(1).max(500),
   limit: z.number().int().min(1).max(10).default(5),
   fetchContent: z.boolean().default(false),
+  // Bias toward the latest/most recent results. Omit to auto-detect from the
+  // query ("latest", "today", "2026", "news", ...).
+  recency: z.boolean().optional(),
 });
 
 const WebFetchArgsSchema = z.object({
@@ -24,12 +31,12 @@ export function registerWebTools(): void {
   registerTool({
     name: "web_search",
     description:
-      "Search the public web. Returns {url, title, snippet} hits. Set fetchContent=true to fetch top result bodies.",
+      "Search the public web for up-to-date information. Returns {url, title, snippet, publishedDate} hits and a synthesized answer. Set recency=true (or ask for 'latest') to bias toward recent results; fetchContent=true to fetch top result bodies.",
     risk: "external",
     schema: WebSearchArgsSchema,
     execute: async (args): Promise<ToolResult> => {
       try {
-        const results = await webSearch(args.query, args.limit);
+        const { results, answer } = await webSearch(args.query, args.limit, args.recency);
         const enriched = args.fetchContent
           ? await Promise.all(
               results.map(async (r) => ({
@@ -38,7 +45,17 @@ export function registerWebTools(): void {
               })),
             )
           : results;
-        return { ok: true, content: `${enriched.length} results`, data: { results: enriched, provider: env.tavilyApiKey ? "tavily" : "duckduckgo-html" } };
+        return {
+          ok: true,
+          content: answer
+            ? `${enriched.length} results. Answer: ${answer}`
+            : `${enriched.length} results`,
+          data: {
+            results: enriched,
+            answer,
+            provider: isTavilyConfigured() ? "tavily" : "duckduckgo-html",
+          },
+        };
       } catch (err) {
         return { ok: false, content: `web_search failed: ${(err as Error).message}`, error: "SEARCH_FAILED" };
       }
@@ -69,10 +86,12 @@ export function registerWebTools(): void {
     execute: async (args, ctx): Promise<ToolResult> => {
       try {
         const findings: Array<{ title: string; url: string; snippet: string; excerpt?: string }> = [];
+        const answers: string[] = [];
         for (let round = 1; round <= args.maxRounds; round += 1) {
           const query = round === 1 ? args.question : `${args.question} details examples`;
           ctx.publish?.({ channel: "agent.research", payload: { round, status: "searching", query } });
-          const results = await webSearch(query, args.pagesPerRound);
+          const { results, answer } = await webSearch(query, args.pagesPerRound);
+          if (answer) answers.push(answer);
           for (const result of results) {
             ctx.publish?.({ channel: "agent.research", payload: { round, status: "fetching", url: result.url } });
             const excerpt = await webFetchText(result.url, 1800).catch(() => "");
@@ -82,6 +101,7 @@ export function registerWebTools(): void {
         const report = [
           `# Research: ${args.question}`,
           "",
+          ...(answers.length ? [`**Summary:** ${answers[0]}`, ""] : []),
           ...findings.map((f, i) => [`## ${i + 1}. ${f.title}`, f.url, f.snippet, f.excerpt ?? ""].join("\n\n")),
         ].join("\n\n");
         return { ok: true, content: `Research complete (${findings.length} findings)`, data: { findings, report } };
@@ -92,42 +112,17 @@ export function registerWebTools(): void {
   });
 }
 
-async function webSearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
-  if (env.tavilyApiKey) return tavilySearch(query, limit);
-  return duckDuckGoSearch(query, limit);
-}
-
-async function tavilySearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {
-  const res = await fetch("https://api.tavily.com/search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${env.tavilyApiKey}`,
-    },
-    body: JSON.stringify({
-      query,
-      max_results: limit,
-      search_depth: "advanced",
-      include_answer: false,
-      include_raw_content: false,
-    }),
-  });
-  if (!res.ok) throw new Error(`Tavily search failed: ${res.status} ${await res.text()}`);
-  const body = (await res.json()) as {
-    results?: Array<{
-      title?: string;
-      url?: string;
-      content?: string;
-    }>;
-  };
-  return (body.results ?? [])
-    .filter((result) => result.url)
-    .slice(0, limit)
-    .map((result) => ({
-      title: result.title ?? result.url ?? "Untitled source",
-      url: result.url ?? "",
-      snippet: result.content ?? "",
-    }));
+async function webSearch(
+  query: string,
+  limit: number,
+  recency?: boolean,
+): Promise<{ results: WebSearchHit[]; answer?: string }> {
+  // Tavily (advanced depth + recency + synthesized answer) when configured;
+  // otherwise scrape DuckDuckGo HTML (no answer, no recency control).
+  if (isTavilyConfigured()) {
+    return tavilySearch(query, { limit, recency, includeAnswer: true });
+  }
+  return { results: await duckDuckGoSearch(query, limit) };
 }
 
 async function duckDuckGoSearch(query: string, limit: number): Promise<Array<{ title: string; url: string; snippet: string }>> {

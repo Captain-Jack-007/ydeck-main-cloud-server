@@ -1,5 +1,5 @@
 import { randomToken } from "../../lib/crypto";
-import { env } from "../../config/env";
+import { isTavilyConfigured, tavilySearch as tavilyDeepSearch } from "./tavily.service";
 
 export type ResearchMode = "off" | "auto" | "required" | "file_only";
 
@@ -61,11 +61,14 @@ export async function runLiveResearch(input: RunResearchInput): Promise<Research
   const facts: ResearchFact[] = [];
   const accessedAt = new Date().toISOString();
   const targetSources = input.maxSourcesPerQuery ?? 4;
+  let synthesizedAnswer = "";
 
   for (const query of queryPlan) {
     let results: SearchResult[] = [];
     try {
-      results = await webSearch(query.query, Math.min(targetSources * 3, 10));
+      const search = await webSearch(query.query, Math.min(targetSources * 3, 10));
+      results = search.results;
+      if (!synthesizedAnswer && search.answer) synthesizedAnswer = search.answer;
     } catch (err) {
       internalWarnings.push(`Search failed for "${query.query}": ${(err as Error).message}`);
       continue;
@@ -115,9 +118,11 @@ export async function runLiveResearch(input: RunResearchInput): Promise<Research
     jobId: input.jobId,
     status: usedSources.length ? "complete" : internalWarnings.length ? "partial" : "skipped",
     queryPlan,
-    summary: usedSources.length
-      ? `Research completed with ${usedSources.length} useful sources and ${uniqueFacts.length} extracted facts.`
-      : "No useful live web research sources were found.",
+    summary: synthesizedAnswer
+      ? `${synthesizedAnswer}\n\n(${usedSources.length} sources, ${uniqueFacts.length} facts.)`
+      : usedSources.length
+        ? `Research completed with ${usedSources.length} useful sources and ${uniqueFacts.length} extracted facts.`
+        : "No useful live web research sources were found.",
     facts: uniqueFacts,
     sources: usedSources.length ? usedSources.slice(0, 12) : [],
     warnings: publicWarnings,
@@ -195,43 +200,20 @@ function buildResearchQueryPlan(input: RunResearchInput): ResearchQuery[] {
   return dedupeQueries(queries);
 }
 
-async function webSearch(query: string, limit: number): Promise<SearchResult[]> {
-  if (env.tavilyApiKey) return tavilySearch(query, limit);
-  return duckDuckGoSearch(query, limit);
-}
-
-async function tavilySearch(query: string, limit: number): Promise<SearchResult[]> {
-  const res = await fetch("https://api.tavily.com/search", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${env.tavilyApiKey}`,
-    },
-    body: JSON.stringify({
-      query,
-      max_results: limit,
-      search_depth: "advanced",
-      include_answer: false,
-      include_raw_content: false,
-    }),
-  });
-  if (!res.ok) throw new Error(`Tavily search failed: ${res.status} ${await res.text()}`);
-  const body = (await res.json()) as {
-    results?: Array<{
-      title?: string;
-      url?: string;
-      content?: string;
-      score?: number;
-    }>;
-  };
-  return (body.results ?? [])
-    .filter((result) => result.url)
-    .slice(0, limit)
-    .map((result) => ({
-      title: result.title ?? result.url ?? "Untitled source",
-      url: result.url ?? "",
-      snippet: result.content ?? "",
-    }));
+async function webSearch(
+  query: string,
+  limit: number,
+): Promise<{ results: SearchResult[]; answer?: string }> {
+  // Tavily advanced search (with recency auto-detected from the query and a
+  // synthesized answer) when configured; otherwise DuckDuckGo HTML scraping.
+  if (isTavilyConfigured()) {
+    const r = await tavilyDeepSearch(query, { limit, includeAnswer: true });
+    return {
+      results: r.results.map((h) => ({ title: h.title, url: h.url, snippet: h.snippet })),
+      answer: r.answer,
+    };
+  }
+  return { results: await duckDuckGoSearch(query, limit) };
 }
 
 async function duckDuckGoSearch(query: string, limit: number): Promise<SearchResult[]> {
