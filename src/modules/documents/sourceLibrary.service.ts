@@ -140,10 +140,21 @@ export async function indexSource(
     ).catch(() => undefined);
   }
 
+  // Persist page/section counts now (status stays `processing`) so that section
+  // summarization, which reads pages back via readDocumentPages, sees the real
+  // pageCount instead of the placeholder 0. Status only flips to a terminal
+  // value at the very end, so a crash before then leaves the source
+  // `processing` to be re-indexed idempotently.
+  source.pageCount = pagination.pageCount;
+  source.sectionCount = sections.length;
+  source.tocDetected = tocDetected;
+  source.sectionsDetected = sections.length > 0;
+  source.language = detectLanguage(pagination.pages);
+  await source.save().catch(() => undefined);
+
   // Build retrieval chunks + embeddings for semantic search. Best-effort: a
   // failure here (e.g. no embeddings key) leaves the source fully usable for
-  // page/section retrieval, just without "search this book". Done before the
-  // status flip so a crash leaves the source `processing` to be re-indexed.
+  // page/section retrieval, just without "search this book".
   try {
     await buildChunks(source, pagination.pages, params.workspaceId);
   } catch {
@@ -159,11 +170,6 @@ export async function indexSource(
     // ignore — summaries are an enhancement
   }
 
-  source.pageCount = pagination.pageCount;
-  source.sectionCount = sections.length;
-  source.tocDetected = tocDetected;
-  source.sectionsDetected = sections.length > 0;
-  source.language = detectLanguage(pagination.pages);
   // ready/empty are indexed (empty = no selectable text, still a valid source);
   // unsupported/failed are errors.
   source.status =
